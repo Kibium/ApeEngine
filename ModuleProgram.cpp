@@ -98,14 +98,15 @@ bool ModuleProgram::Init() {
 	
 }
 
+//This updates the the color of the triangle
 update_status ModuleProgram::Update() {
+
 	timeValue = SDL_GetTicks();
 	float greenValue = (sin(timeValue/800) / 2.0f) + 0.5f;
 	int vertexColorLocation = glGetUniformLocation(program, "myColor");
 	glUseProgram(program);
-	glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+	glUniform4f(vertexColorLocation, greenValue, 0, greenValue, 1.0f);
 
-	cout << greenValue << endl;
 	return UPDATE_CONTINUE;
 }
 
