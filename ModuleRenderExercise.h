@@ -21,6 +21,7 @@ public:
 	float* buffer_data = nullptr;
 	GLuint vbo;
 	GLuint vbo2;
+	unsigned int VAO;
 
 	math::float3  up, target;
 	math::float3 cameraPos, camDirection, camUp, camRight;

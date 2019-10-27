@@ -313,7 +313,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="default.fs.txt" />
-    <Text Include="default.vs.txt" />
+    <Text Include="default.fs" />
+    <Text Include="default.vs" />
   </ItemGroup>
 </Project>

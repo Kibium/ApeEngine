@@ -185,8 +185,8 @@
     <ClCompile Include="ModuleProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="default.fs.txt" />
-    <Text Include="default.vs.txt" />
+    <Text Include="default.fs" />
+    <Text Include="default.vs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\include\Geometry\KDTree.inl" />

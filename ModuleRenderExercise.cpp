@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleRenderExercise.h"
+#include "ModuleProgram.h"
 
 ModuleRenderExercise::ModuleRenderExercise() {}
 ModuleRenderExercise::~ModuleRenderExercise() {}
@@ -21,7 +22,7 @@ bool ModuleRenderExercise::Init() {
 									0.0f, 1.f, 0.0f };
 
 	//Cam position
-	cameraPos = float3(0.1, 0.05, 0.5);
+	cameraPos = float3(0, 0, 5);
 
 	//Where is pointing to
 	target = float3(0, 0, 0);
@@ -40,7 +41,7 @@ bool ModuleRenderExercise::Init() {
 	camUp = camDirection.Cross(camRight);
 
 
-	math::float3 f(target - camDirection);
+	math::float3 f(target - cameraPos);
 	f.Normalize();
 	math::float3 s(f.Cross(up));
 	s.Normalize();
@@ -52,9 +53,9 @@ bool ModuleRenderExercise::Init() {
 	view[1][0] = u.x; view[1][1] = u.y; view[1][2] = u.z;
 	view[2][0] = -f.x; view[2][1] = -f.y; view[2][2] = -f.z;
 
-	view[0][3] = -s.Dot(camDirection);
-	view[1][3] = -u.Dot(camDirection);
-	view[2][3] = f.Dot(camDirection);
+	view[0][3] = -s.Dot(cameraPos);
+	view[1][3] = -u.Dot(cameraPos);
+	view[2][3] = f.Dot(cameraPos);
 
 	view[3][0] = 0.0f;
 	view[3][1] = 0.0f;
@@ -70,14 +71,14 @@ bool ModuleRenderExercise::Init() {
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * SCREEN_WIDTH / SCREEN_HEIGHT); //aspect ratio 
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * 1); //aspect ratio 
 	proj = frustum.ProjectionMatrix();
 
 
 	//Model Matrix
-	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateY(math::pi / 4), float3(1, 1, 1));
+	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateZ(math::pi / -10), float3(1, 1, 1));
 
-	float4x4 transform = proj * view * float4x4(model);
+	float4x4 transform = proj* view * model;
 
 	float4 asd1(-1.f, -1.f, 0.0f, 1);
 	float4 asd2(1.0f, -1.f, 0.0f, 1);
@@ -88,9 +89,9 @@ bool ModuleRenderExercise::Init() {
 	asd3 = asd3 * transform;
 
 	//I MUST CHANGE THE COMPONENT Z'S SIGN, ELSE IT GETS PRINTED BEHIND THE CAMERA
-	float3 v1 = float3(asd1.x / asd1.w, asd1.y / asd1.w, -asd1.z / asd1.z);
-	float3 v2 = float3(asd2.x / asd2.w, asd2.y / asd2.w, -asd2.z / asd2.z);
-	float3 v3 = float3(asd3.x / asd3.w, asd3.y / asd3.w, -asd3.z / asd3.z);
+	float3 v1 = float3(asd1.x / asd1.w, asd1.y / asd1.w, asd1.z / asd1.w);
+	float3 v2 = float3(asd2.x / asd2.w, asd2.y / asd2.w, asd2.z / asd2.w);
+	float3 v3 = float3(asd3.x / asd3.w, asd3.y / asd3.w, asd3.z / asd3.w);
 
 	static const GLfloat tri4[] = { v1.x, v1.y, v1.z,
 								  v2.x, v2.y, v2.z,
@@ -118,7 +119,11 @@ bool ModuleRenderExercise::Init() {
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	
+	//Without "useProgram" we can't get the uniform's information...
+	//glUseProgram(App->program->program);
+	//glUniformMatrix4fv(glGetUniformLocation(App->program->program, "model"), 1, GL_TRUE, &model[0][0]);
+	//glUniformMatrix4fv(glGetUniformLocation(App->program->program, "view"), 1, GL_TRUE, &view[0][0]);
+	//glUniformMatrix4fv(glGetUniformLocation(App->program->program, "proj"), 1, GL_TRUE, &proj[0][0]);
 
 
 	
@@ -141,7 +146,7 @@ update_status ModuleRenderExercise::Update() {
 						  0,                  // stride                    
 						  (void*)0);            // array buffer offset   
 
-	glColor3f(204, 204, 0);
+	//glColor3f(204, 204, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris            
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
