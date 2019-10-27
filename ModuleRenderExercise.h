@@ -25,6 +25,6 @@ public:
 
 	math::float3  up, target;
 	math::float3 cameraPos, camDirection, camUp, camRight;
-	math::float4x4 view, proj, model;
+	math::float4x4 view, proj, model, transform;
 
 };

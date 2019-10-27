@@ -2,6 +2,8 @@
 #include "ModuleRenderExercise.h"
 #include "ModuleProgram.h"
 
+using namespace std;
+
 ModuleRenderExercise::ModuleRenderExercise() {}
 ModuleRenderExercise::~ModuleRenderExercise() {}
 
@@ -72,16 +74,17 @@ bool ModuleRenderExercise::Init() {
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(60)); //aspect ratio 
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(90)); //aspect ratio 
 	proj = frustum.ProjectionMatrix();
 
 
 	//Model Matrix
 	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateY(math::pi /4 ), float3(1, 1, 1));
 
-	float4x4 transform = proj *view* float4x4(model);
+	transform = proj *view* float4x4(model);
 
-	float4 asd1(-1.f, -1.f, 0.0f, 1);
+	//Multiplying vertexs in the Application stage
+	/*float4 asd1(-1.f, -1.f, 0.0f, 1);
 	float4 asd2(1.0f, -1.f, 0.0f, 1);
 	float4 asd3(0.0f, 1.f, 0.0f, 1);
 
@@ -101,7 +104,7 @@ bool ModuleRenderExercise::Init() {
 	for (int i = 0; i < 9; ++i) {
 		std::cout << tri4[i] << std::endl;
 
-	}
+	}*/
 
 	//Creates a new vbo
 	glGenBuffers(1, &vbo); 
@@ -110,16 +113,12 @@ bool ModuleRenderExercise::Init() {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); 
 
 	//Assigns data to buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(tri4), tri4, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(tri3), tri3, GL_STATIC_DRAW);
 
-	//Without "useProgram" we can't get the uniform's information...
+	int location = glGetUniformLocation(App->program->program, "transform"); 
+	cout << location << endl;
+	glUniformMatrix4fv(location, 1, GL_TRUE, &transform[0][0]); //Calculating vertexs in the vertex shader
 
-	glUniformMatrix4fv(glGetUniformLocation(App->program->program, "transform"), 1, GL_TRUE, &transform[0][0]);
-	
-	glUseProgram(App->program->program);
-
-
-	
 
 	return true;
 }
