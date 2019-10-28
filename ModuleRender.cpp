@@ -5,6 +5,13 @@
 #include "SDL.h"
 #include "ModuleRenderExercise.h"
 
+#include <GL/glew.h>
+
+#include "IMGUI/imgui.h"
+#include"IMGUI/imgui_impl_opengl3.h"
+#include "IMGUI/imgui_impl_glfw.h"
+#include "IMGUI/imgui_impl_sdl.h"
+
 
 
 //#include "glew-2.1.0/include/GL/glew.h"
@@ -23,6 +30,7 @@ ModuleRender::~ModuleRender()
 // Called before render is available
 bool ModuleRender::Init()
 {
+
 	LOG("Creating Renderer context");
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
@@ -33,9 +41,10 @@ bool ModuleRender::Init()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
 	SDL_GLContext glcontext = SDL_GL_CreateContext(App->window->window);
-
+	SDL_GL_MakeCurrent(App->window->window, glcontext);
 	//glClearColor(0.225f, 0, 0.225f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	SDL_GL_SwapWindow(App->window->window);
 
 	GLenum err = glewInit();// ... check for errors
@@ -55,7 +64,10 @@ bool ModuleRender::Init()
 	glEnable(GL_CULL_FACE); 
 	glEnable(GL_TEXTURE_2D); 
 
-	
+	clear_color.x = 0.225f;
+	clear_color.y = 0;
+	clear_color.z = 0.225;
+	clear_color.w = 1;
 
 
 	return true;
@@ -83,6 +95,12 @@ update_status ModuleRender::Update()
 update_status ModuleRender::PostUpdate()
 {
 
+	//ImGuiIO &io = ImGui::GetIO();
+	//(void)io;
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;

@@ -32,6 +32,7 @@ update_status ModuleInput::Update()
 	SDL_PumpEvents();
 
 	keyboard = SDL_GetKeyboardState(NULL);
+	//ImGui_ImplSdlGL3_ProcessEvent(&event);
 
 	return UPDATE_CONTINUE;
 }

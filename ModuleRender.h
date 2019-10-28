@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "IMGUI/imgui.h"
 
 
 struct SDL_Texture;
@@ -19,10 +20,12 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void WindowResized(unsigned width, unsigned height);
+	void* context;
 
+	ImVec4 clear_color;
 	
 
 private:
-	void* context;
+	
 	
 };

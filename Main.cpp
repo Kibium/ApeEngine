@@ -7,6 +7,13 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+#include "IMGUI/imgui.h"
+#include"IMGUI/imgui_impl_opengl3.h"
+#include "IMGUI/imgui_impl_glfw.h"
+#include "IMGUI/imgui_impl_sdl.h"
+
+
+
 enum main_states
 {
 	MAIN_CREATION,
@@ -23,6 +30,8 @@ int main(int argc, char ** argv)
 	SDL_Init(SDL_INIT_EVERYTHING);
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
+
+	
 
 	while (state != MAIN_EXIT)
 	{

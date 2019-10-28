@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleProgram.h"
+#include "ModuleUI.h"
 
 using namespace std;
 
@@ -16,6 +17,8 @@ Application::Application()
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(exercise = new ModuleRenderExercise());
+	modules.push_back(ui = new ModuleUI());
+	
 
 }
 

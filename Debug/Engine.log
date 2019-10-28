@@ -1,3 +1,4 @@
-﻿  ModuleProgram.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\moduleprogram.cpp(104): warning C4244: '=': conversión de 'Uint32' a 'float'; posible pérdida de datos
-  Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe
+﻿  Application.cpp
+  ModuleUI.cpp
+  Generating Code...
+  Engine.vcxproj -> C:\Users\tonifj\source\repos\Engine2\Debug\EngineMaster.exe
