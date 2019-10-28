@@ -95,12 +95,8 @@ update_status ModuleRender::Update()
 update_status ModuleRender::PostUpdate()
 {
 
-	//ImGuiIO &io = ImGui::GetIO();
-	//(void)io;
-	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	
+	
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;

@@ -1,11 +1,9 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-
 #include "IMGUI/imgui.h"
-#include"IMGUI/imgui_impl_opengl3.h"
-#include "IMGUI/imgui_impl_glfw.h"
-#include "IMGUI/imgui_impl_sdl.h"
+
+
 
 class ModuleUI : public Module {
 
@@ -22,5 +20,5 @@ public:
 
 	bool showWindow = true;
 
-	ImGuiIO& io = ImGui::GetIO();
+	ImGuiIO io;
 };
