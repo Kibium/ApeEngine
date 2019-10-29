@@ -20,6 +20,9 @@ public:
 
 	bool CleanUp();
 
-	bool showWindow = true;
+	bool showtext= false;
 	ImGuiIO io;
+	char* buf;
+	float f;
+
 };

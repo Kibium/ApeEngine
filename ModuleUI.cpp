@@ -8,8 +8,8 @@
 #include "IMGUI/imgui_impl_sdl.h"
 
 
-ModuleUI::ModuleUI(){}
-ModuleUI::~ModuleUI(){}
+ModuleUI::ModuleUI() {}
+ModuleUI::~ModuleUI() {}
 
 bool ModuleUI::Init() {
 
@@ -22,36 +22,28 @@ bool ModuleUI::Init() {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO(); (void)io;
+	io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.FontAllowUserScaling = true;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
 
-
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 330");
+	io.WantCaptureKeyboard = true;
+	io.WantTextInput = true;
 
-	
+
 
 	return true;
 }
 
 update_status ModuleUI::PreUpdate() {
 
-
-
-	SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		ImGui_ImplSDL2_ProcessEvent(&event);
-		if (event.type == SDL_QUIT)
-			return UPDATE_STOP;
-		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(App->window->window))
-			return UPDATE_STOP;
-	}
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -62,9 +54,19 @@ update_status ModuleUI::PreUpdate() {
 
 update_status ModuleUI::Update() {
 
-	
-	io.WantCaptureKeyboard = true;
 	ImGui::ShowDemoWindow();
+
+	/*ImGui::Text("Hi bitches %d", 69);
+	if(ImGui::Button("PRESS ME")) {
+		showtext = true;
+	}
+	if (showtext) {
+		ImGui::SameLine();
+		ImGui::Text("Hah, you fool");
+
+	}
+
+	ImGui::InputText("<-- write here", "", 256);*/
 
 	return UPDATE_CONTINUE;
 }

@@ -1,3 +1,2 @@
-﻿  ModuleUI.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\moduleui.cpp(19): warning C4305: 'return': truncamiento de 'int' a 'bool'
+﻿  ModuleInput.cpp
   Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe
