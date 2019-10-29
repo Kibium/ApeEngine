@@ -13,10 +13,17 @@ ModuleUI::~ModuleUI(){}
 
 bool ModuleUI::Init() {
 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
+	{
+		printf("Error: %s\n", SDL_GetError());
+		return -1;
+	}
+
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -34,6 +41,18 @@ bool ModuleUI::Init() {
 
 update_status ModuleUI::PreUpdate() {
 
+
+
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+		if (event.type == SDL_QUIT)
+			return UPDATE_STOP;
+		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(App->window->window))
+			return UPDATE_STOP;
+	}
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -44,17 +63,20 @@ update_status ModuleUI::PreUpdate() {
 update_status ModuleUI::Update() {
 
 	
+	io.WantCaptureKeyboard = true;
+	ImGui::ShowDemoWindow();
 
-	ImGui::ShowDemoWindow(&showWindow);
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleUI::PostUpdate() {
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	//glClearColor(App->renderer->clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	//glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	//Must be here in order to the UI window appear
+	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -63,5 +85,9 @@ bool ModuleUI::CleanUp() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+
+	SDL_GL_DeleteContext(App->renderer->context);
+	SDL_DestroyWindow(App->window->window);
+	SDL_Quit();
 	return true;
 }

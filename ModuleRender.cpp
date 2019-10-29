@@ -5,12 +5,6 @@
 #include "SDL.h"
 #include "ModuleRenderExercise.h"
 
-#include <GL/glew.h>
-
-#include "IMGUI/imgui.h"
-#include"IMGUI/imgui_impl_opengl3.h"
-#include "IMGUI/imgui_impl_glfw.h"
-#include "IMGUI/imgui_impl_sdl.h"
 
 
 
@@ -97,7 +91,7 @@ update_status ModuleRender::PostUpdate()
 
 	
 	
-	SDL_GL_SwapWindow(App->window->window);
+	//SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
 }

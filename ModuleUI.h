@@ -1,6 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "SDL.h"
+
 #include "IMGUI/imgui.h"
 
 
@@ -19,6 +21,5 @@ public:
 	bool CleanUp();
 
 	bool showWindow = true;
-
 	ImGuiIO io;
 };
