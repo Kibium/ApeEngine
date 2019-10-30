@@ -11,6 +11,13 @@
 ModuleUI::ModuleUI() {}
 ModuleUI::~ModuleUI() {}
 
+void ModuleUI::MyConsole() {
+
+	ImGui::Begin("Konsole");
+	
+
+}
+
 bool ModuleUI::Init() {
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
@@ -24,8 +31,7 @@ bool ModuleUI::Init() {
 	ImGui::CreateContext();
 	io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.FontAllowUserScaling = true;
-	io.ConfigWindowsMoveFromTitleBarOnly = true;
+
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -34,16 +40,14 @@ bool ModuleUI::Init() {
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 330");
-	io.WantCaptureKeyboard = true;
-	io.WantTextInput = true;
-
+	
 
 
 	return true;
 }
 
 update_status ModuleUI::PreUpdate() {
-
+	
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -53,20 +57,10 @@ update_status ModuleUI::PreUpdate() {
 }
 
 update_status ModuleUI::Update() {
+	
 
 	ImGui::ShowDemoWindow();
 
-	/*ImGui::Text("Hi bitches %d", 69);
-	if(ImGui::Button("PRESS ME")) {
-		showtext = true;
-	}
-	if (showtext) {
-		ImGui::SameLine();
-		ImGui::Text("Hah, you fool");
-
-	}
-
-	ImGui::InputText("<-- write here", "", 256);*/
 
 	return UPDATE_CONTINUE;
 }

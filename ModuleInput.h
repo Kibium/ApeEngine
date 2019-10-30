@@ -18,6 +18,5 @@ public:
 
 private:
 	const Uint8 *keyboard = NULL;
-	SDL_Event e;
 
 };

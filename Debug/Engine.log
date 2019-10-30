@@ -1,2 +1,9 @@
-﻿  ModuleInput.cpp
+﻿  Application.cpp
+c:\users\gt73evr\source\repos\kibium\engine_master\moduleui.h(187): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(132): note: vea la declaración de 'strcpy'
+  ModuleUI.cpp
+c:\users\gt73evr\source\repos\kibium\engine_master\moduleui.h(187): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(132): note: vea la declaración de 'strcpy'
+c:\users\gt73evr\source\repos\kibium\engine_master\moduleui.cpp(26): warning C4305: 'return': truncamiento de 'int' a 'bool'
+  Generando código...
   Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe
