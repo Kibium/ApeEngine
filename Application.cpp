@@ -6,6 +6,7 @@
 #include "ModuleRenderExercise.h"
 #include "ModuleProgram.h"
 #include "ModuleUI.h"
+#include "ModuleTextures.h"
 
 using namespace std;
 
@@ -18,7 +19,8 @@ Application::Application()
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(exercise = new ModuleRenderExercise());
 	modules.push_back(ui = new ModuleUI());
-	
+	modules.push_back(textures = new ModuleTextures());
+
 
 }
 

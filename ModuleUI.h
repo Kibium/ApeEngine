@@ -18,6 +18,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	void MyConsole();
+	void Separate();
 
 	bool CleanUp();
 
@@ -25,6 +26,13 @@ public:
 	ImGuiIO io;
 	char* buf;
 	float f;
+
+private:
+		char* title = "Mateus";
+		bool fullscreen = false;
+		bool borderless = false;
+		bool resizable = false;
+		bool fulldesktop = false;
 
 };
 

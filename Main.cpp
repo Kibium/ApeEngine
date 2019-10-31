@@ -9,7 +9,6 @@
 
 #include "IMGUI/imgui.h"
 #include"IMGUI/imgui_impl_opengl3.h"
-#include "IMGUI/imgui_impl_glfw.h"
 #include "IMGUI/imgui_impl_sdl.h"
 
 

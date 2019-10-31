@@ -27,12 +27,9 @@ bool ModuleWindow::Init()
 		//Create window
 		int width = SCREEN_WIDTH;
 		int height = SCREEN_HEIGHT;
-		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+		flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
 
-		if(FULLSCREEN == true)
-		{
-			flags |= SDL_WINDOW_FULLSCREEN;
-		}
+		
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
@@ -50,6 +47,49 @@ bool ModuleWindow::Init()
 	}
 
 	return ret;
+}
+
+void ModuleWindow::SetFullscreen(bool b) {
+	fullscreen = b;
+}
+void ModuleWindow::SetFulldesktop(bool b) {
+	fulldesktop = b;
+}
+void ModuleWindow::SetBorderless(bool b) {
+	borderless = b;
+}
+void ModuleWindow::SetResizable(bool b) {
+	resizable = b;
+}
+
+bool ModuleWindow::GetFullscreen() {
+	return fullscreen;
+}
+
+bool ModuleWindow::GetFulldesktop() {
+	return fulldesktop;
+}
+
+bool ModuleWindow::GetBorderless() {
+	return borderless;
+}
+bool ModuleWindow::GetResizable() {
+	return resizable;
+}
+
+update_status ModuleWindow::Update() {
+	if (fullscreen)
+		flags |= SDL_WINDOW_FULLSCREEN;
+
+	if (resizable)
+		flags |= SDL_WINDOW_RESIZABLE;
+
+	if (borderless)
+		flags |= SDL_WINDOW_BORDERLESS;
+	if (fulldesktop)
+		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+	return UPDATE_CONTINUE;
 }
 
 // Called before quitting

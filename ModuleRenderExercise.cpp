@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleProgram.h"
+#include "ModuleTextures.h"
 
 using namespace std;
 
@@ -9,7 +10,8 @@ ModuleRenderExercise::~ModuleRenderExercise() {}
 
 bool ModuleRenderExercise::Init() {
 
-	static const GLfloat tri1 []= {-1.f, -1.f, 0.0f,
+
+	static const GLfloat tri1[] = { -1.f, -1.f, 0.0f,
 									-0.5f, -1.f, 0.0f,
 									-0.75f, -0.50f, 0.0f };
 
@@ -23,12 +25,15 @@ bool ModuleRenderExercise::Init() {
 									1.0f, -1.f, 0.0f,
 									0.0f, 1.f, 0.0f };
 
-	static const GLfloat vertices[] = {
-		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+	float vertices[] = {
+		// positions           // texture coords
+		 0.5f,  0.5f, 0.0f,     1.0f, 1.0f,   // top right
+		 0.5f, -0.5f, 0.0f,     1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,     0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,     0.0f, 1.0f    // top left 
 	};
+
+
 
 	//Cam position
 	cameraPos = float3(0, 0, 1);
@@ -45,15 +50,15 @@ bool ModuleRenderExercise::Init() {
 
 	//View Matrix
 	view[0][0] = s.x;
-	view[0][1] = s.y; 
+	view[0][1] = s.y;
 	view[0][2] = s.z;
 
-	view[1][0] = u.x; 
-	view[1][1] = u.y; 
+	view[1][0] = u.x;
+	view[1][1] = u.y;
 	view[1][2] = u.z;
 
-	view[2][0] = -f.x; 
-	view[2][1] = -f.y; 
+	view[2][0] = -f.x;
+	view[2][1] = -f.y;
 	view[2][2] = -f.z;
 
 	view[0][3] = -s.Dot(cameraPos);
@@ -79,9 +84,9 @@ bool ModuleRenderExercise::Init() {
 
 
 	//Model Matrix
-	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateY(math::pi /4 ), float3(1, 1, 1));
+	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateY(math::pi / 4), float3(1, 1, 1));
 
-	transform = proj *view* float4x4(model);
+	transform = proj * view* float4x4(model);
 
 	//Multiplying vertexs in the Application stage
 	/*float4 asd1(-1.f, -1.f, 0.0f, 1);
@@ -106,17 +111,20 @@ bool ModuleRenderExercise::Init() {
 
 	}*/
 
+
 	//Creates a new vbo
-	glGenBuffers(1, &vbo); 
+	glGenBuffers(1, &vbo);
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 
 	//Setting buffer to be used
-	glBindBuffer(GL_ARRAY_BUFFER, vbo); 
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	//Assigns data to buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(tri3), tri3, GL_STATIC_DRAW);
 
-	int location = glGetUniformLocation(App->program->program, "transform"); 
-	cout << location << endl;
+	int location = glGetUniformLocation(App->program->program, "transform");
 	glUniformMatrix4fv(location, 1, GL_TRUE, &transform[0][0]); //Calculating vertexs in the vertex shader
 
 
@@ -125,32 +133,37 @@ bool ModuleRenderExercise::Init() {
 
 
 update_status ModuleRenderExercise::Update() {
-	
-	//Set the format of the vertex's data.
-	//We gonna tell opengl, what we wanna draw
 
+
+	//Triangle
 	glEnableVertexAttribArray(0); // attribute 0            
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);            
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(0,                  // attribute 0                    
-						  3,                  // number of componentes (3 floats)                    
-						  GL_FLOAT,           // data type                    
-						  GL_FALSE,           // should be normalized?                    
-						  0,                  // stride                    
-						  (void*)0);            // array buffer offset   
+		3,                  // number of componentes (3 floats)                    
+		GL_FLOAT,           // data type                    
+		GL_FALSE,           // should be normalized?                    
+		0,                  // stride                    
+		(void*)0);            // array buffer offset   
 
-	//glColor3f(204, 204, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris            
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris    
+	//glBindTexture(GL_TEXTURE_2D, App->textures->texture);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	
-	
+
+
+
+
 	return UPDATE_CONTINUE;
 }
 
 bool ModuleRenderExercise::CleanUp() {
 
-	
+
 	return true;
 }

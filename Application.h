@@ -31,6 +31,7 @@ public:
 	ModuleRenderExercise* exercise = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleUI* ui = nullptr;
+	ModuleTextures* textures = nullptr;
 
 private:
 
