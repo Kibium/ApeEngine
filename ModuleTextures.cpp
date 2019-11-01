@@ -1,4 +1,6 @@
+#include "Application.h"
 #include "ModuleTextures.h"
+#include "ModuleUI.h"
 
 
 //Always after glew.h
@@ -15,6 +17,8 @@ ModuleTextures::~ModuleTextures() {}
 
 
 bool ModuleTextures::Init() {
+	App->ui->my_log.AddLog("Init DevIL texture system \n");
+
 	ilInit();
 	ILuint imageName;
 	ilGenImages(1, &imageName);

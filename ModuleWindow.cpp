@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleUI.h"
 #include <iostream>
 
 using namespace std;
@@ -17,7 +18,9 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init()
 {
-	LOG("Init SDL window & surface");
+	//LOG("Init SDL window & surface");
+	App->ui->my_log.AddLog("Init SDL window & surface \n");
+
 	bool ret = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)

@@ -33,6 +33,8 @@ public:
 	ModuleUI* ui = nullptr;
 	ModuleTextures* textures = nullptr;
 
+	void RequestBrowser(char*);
+
 private:
 
 	std::list<Module*> modules;

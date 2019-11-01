@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
 #include "ModuleTextures.h"
+#include "ModuleUI.h"
 #include "SDL.h"
 
 using namespace std;
@@ -24,6 +25,7 @@ bool ModuleRender::Init()
 {
 
 	LOG("Creating Renderer context");
+	App->ui->my_log.AddLog("Creating Renderer context\n");
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -40,12 +42,18 @@ bool ModuleRender::Init()
 	SDL_GL_SwapWindow(App->window->window);
 
 	GLenum err = glewInit();// ... check for errors
-	LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+	//LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+	//LOG("Vendor: %s", glGetString(GL_VENDOR));
+	//LOG("Renderer: %s", glGetString(GL_RENDERER));
+	//LOG("OpenGL version supported %s", glGetString(GL_VERSION));
+	//LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	LOG("Vendor: %s", glGetString(GL_VENDOR));
-	LOG("Renderer: %s", glGetString(GL_RENDERER));
-	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
-	LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	App->ui->my_log.AddLog("Using Glew %s \n", glewGetString(GLEW_VERSION));
+	App->ui->my_log.AddLog("Vendor: %s \n", glGetString(GL_VENDOR));
+	App->ui->my_log.AddLog("Renderer: %s \n", glGetString(GL_RENDERER));
+	App->ui->my_log.AddLog("OpenGL version supported %s \n", glGetString(GL_VERSION));
+	App->ui->my_log.AddLog("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	glClearDepth(1.0f);

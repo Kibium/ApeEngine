@@ -2,6 +2,7 @@
 #include "ModuleProgram.h"
 #include "SDL.h"
 #include "ModuleRender.h"
+#include "ModuleUI.h"
 
 #include<iostream>
 using namespace std;
@@ -42,10 +43,15 @@ void ModuleProgram::checkForErrors(GLuint shader, int success, char* infoLog) {
 		glGetShaderInfoLog(shader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
+	else
+		glGetShaderInfoLog(shader, 512, NULL, infoLog);
 
+	
 }
 
 bool ModuleProgram::Init() {
+
+	App->ui->my_log.AddLog("Initializing Module Program\n");
 
 	//Function that allows to get the content of a shader
 	char* VSdata = getShaderText("../default.vs");
@@ -93,6 +99,9 @@ bool ModuleProgram::Init() {
 		std::cout << "ERROR::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
 
 	}
+	else
+		glGetProgramInfoLog(program, 512, NULL, infoLog);
+
 
 	//Transform matrix to the shader!
 	int location = glGetUniformLocation(program, "transform");

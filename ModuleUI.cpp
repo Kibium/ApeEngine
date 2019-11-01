@@ -26,19 +26,44 @@ void ModuleUI::Separate() {
 	ImGui::Spacing();
 }
 
+void ModuleUI::FPSHistogram() {
+	char title[25];
+	sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+	ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
+	sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
+	ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+}
+
 void ModuleUI::MyConsole() {
+
 
 	ImGui::Begin("Mateus Console");
 	ImGui::Text("Mateus' Console allows you to look at different parameters of your PC");
 	Separate();
 
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::MenuItem("ImGui"))
+			App->RequestBrowser("https://github.com/ocornut/imgui");
+
+		if (ImGui::MenuItem("Mateus Doc."))
+			App->RequestBrowser("https://github.com/Kibium/Engine_Master");
+
+		ImGui::EndMainMenuBar();
+	}
+
 	//Test stuff
-	if (ImGui::CollapsingHeader("Stuff to Test")) {
+	/*if (ImGui::CollapsingHeader("Stuff to Test")) {
 
 		//The bool value changes depending on the checkbox's state
 		if (ImGui::Checkbox("Check me!", &test)) {
 			ImGui::SameLine(); ImGui::Text("Hi!");
 		}
+	}
+	*/
+	if (ImGui::CollapsingHeader("Engine")) {
+		ImGui::InputText("Name", title, 25);
+		SDL_SetWindowTitle(App->window->window, title);
 	}
 
 	if (ImGui::CollapsingHeader("Window")) {
@@ -46,8 +71,16 @@ void ModuleUI::MyConsole() {
 		ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
 		ImGui::SameLine();
 		ImGui::Checkbox("Bordered", &App->window->bordered);
-			
-		
+		Separate();
+		ImGui::SliderFloat("Brightness", &brightness, 0, 1);
+		Separate();
+		if(ImGui::SliderInt("Window width", &screenW, 300, 800))
+			SDL_SetWindowSize(App->window->window, screenW, screenH);
+
+		if(ImGui::SliderInt("Window height", &screenH, 300, 800))
+			SDL_SetWindowSize(App->window->window, screenW, screenH);
+
+
 	}
 
 	if (ImGui::CollapsingHeader("Hardware")) {
@@ -80,11 +113,27 @@ void ModuleUI::MyConsole() {
 		ImGui::BulletText("ImGui");
 		ImGui::BulletText("OpenGL 3.0");
 		ImGui::BulletText("SDL 2.1.0");
-
 	}
+
+	
+
+	if (ImGui::CollapsingHeader("Log"))
+		my_log.Draw("Log");
+
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+	if (SDL_GetTicks() % 1000 == 0) {
+		fps_log.push_back(ImGui::GetIO().Framerate);
+		ms_log.push_back(1000.0f / ImGui::GetIO().Framerate);		
+	}
+	
+	
+	
+	FPSHistogram();
+	SDL_SetWindowBrightness(App->window->window, brightness);
 	ImGui::End();
+
+
 
 	//App->window->SetFullscreen(fullscreen);
 	//App->window->SetResizable(resizable);
@@ -98,7 +147,7 @@ bool ModuleUI::Init() {
 		printf("Error: %s\n", SDL_GetError());
 		return -1;
 	}
-
+	//my_log.AddLog("hola");
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -114,7 +163,9 @@ bool ModuleUI::Init() {
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	
+	fps_log.push_back(0);
+	ms_log.push_back(0);
+
 
 	return true;
 }
