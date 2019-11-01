@@ -32,6 +32,7 @@ void ModuleUI::MyConsole() {
 	if (ImGui::CollapsingHeader("Config")) {
 		ImGui::BulletText("Window");
 		ImGui::Checkbox("Fullscreen", &fullscreen);
+		ImGui::Checkbox("Resizable", &resizable);
 		}
 	
 	
@@ -72,7 +73,7 @@ void ModuleUI::MyConsole() {
 	ImGui::End();
 
 	App->window->SetFullscreen(fullscreen);
-
+	App->window->SetResizable(resizable);
 
 }
 

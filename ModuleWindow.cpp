@@ -65,11 +65,9 @@ void ModuleWindow::SetResizable(bool b) {
 bool ModuleWindow::GetFullscreen() {
 	return fullscreen;
 }
-
 bool ModuleWindow::GetFulldesktop() {
 	return fulldesktop;
 }
-
 bool ModuleWindow::GetBorderless() {
 	return borderless;
 }

@@ -1,6 +1,12 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+
+#include "MathGeoLib/include/MathGeoLib.h"
+
+#include <gl/glew.h>
+#pragma comment (lib, "GLFW/lib-vc2017/glfw3.lib")
+
 #include "IMGUI/imgui.h"
 
 
@@ -23,7 +29,12 @@ public:
 	void* context;
 
 	ImVec4 clear_color;
-	
+
+	GLuint VBO, VAO;
+
+	math::float3  up, target;
+	math::float3 cameraPos, camDirection, camUp, camRight;
+	math::float4x4 view, proj, model, transform;
 
 private:
 	

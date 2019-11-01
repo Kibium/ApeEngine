@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleProgram.h"
 #include "SDL.h"
-#include "ModuleRenderExercise.h"
+#include "ModuleRender.h"
 
 #include<iostream>
 using namespace std;
@@ -41,6 +41,10 @@ void ModuleProgram::checkForErrors(GLuint shader, int success, char* infoLog) {
 	{
 		glGetShaderInfoLog(shader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	else {
+		cout << "Initialized!" << endl;
 	}
 
 }
@@ -93,6 +97,9 @@ bool ModuleProgram::Init() {
 		std::cout << "ERROR::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
 
 	}
+
+	int location = glGetUniformLocation(program, "transform");
+	glUniformMatrix4fv(location, 1, GL_TRUE, &App->renderer->transform[0][0]); //Calculating vertexs in the vertex shader
 
 	return true;
 	
