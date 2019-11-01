@@ -1,7 +1,17 @@
 ﻿  Application.cpp
-c:\users\tonifj\source\repos\engine2\modulerenderexercise.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+c:\users\toni\source\repos\kibium\engine_master\imgui\imgui_impl_glfw.cpp(42): fatal error C1083: No se puede abrir el archivo incluir: 'GLFW/glfw3.h': No such file or directory
+  imgui_impl_opengl3.cpp
+c:\users\toni\source\repos\kibium\engine_master\imgui\imgui_impl_opengl3.h(58): fatal error C1189: #error:  "Cannot detect OpenGL loader!"
+  imgui_impl_sdl.cpp
+  imgui_widgets.cpp
   log.cpp
   Main.cpp
+c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
   LCG.cpp
   AABB.cpp
   Capsule.cpp
@@ -12,6 +22,7 @@ c:\users\tonifj\source\repos\engine2\modulerenderexercise.h(7): fatal error C108
   Line.cpp
   LineSegment.cpp
   OBB.cpp
+  Compilando...
   Plane.cpp
   Polygon.cpp
   Polyhedron.cpp
@@ -19,7 +30,6 @@ c:\users\tonifj\source\repos\engine2\modulerenderexercise.h(7): fatal error C108
   Sphere.cpp
   Triangle.cpp
   TriangleMesh.cpp
-  Compilando...
   BitOps.cpp
   float2.cpp
   float3.cpp
@@ -33,13 +43,20 @@ c:\users\tonifj\source\repos\engine2\modulerenderexercise.h(7): fatal error C108
   Polynomial.cpp
   Quat.cpp
   SSEMath.cpp
+  Compilando...
   TransformOps.cpp
   Clock.cpp
   ModuleInput.cpp
+c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
   ModuleRender.cpp
-c:\users\tonifj\source\repos\engine2\modulerenderexercise.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
   ModuleRenderExercise.cpp
-c:\users\tonifj\source\repos\engine2\modulerenderexercise.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+c:\users\toni\source\repos\kibium\engine_master\moduleprogram.h(4): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+  ModuleTextures.cpp
+c:\users\toni\source\repos\kibium\engine_master\moduletextures.h(5): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
+  ModuleUI.cpp
+c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
   ModuleWindow.cpp
+c:\users\toni\source\repos\kibium\engine_master\modulewindow.cpp(5): fatal error C1083: No se puede abrir el archivo incluir: 'SDL_image.h': No such file or directory
   ModuleProgram.cpp
-c:\users\tonifj\source\repos\engine2\moduleprogram.h(4): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+c:\users\toni\source\repos\kibium\engine_master\moduleprogram.h(4): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleUI.h"
+#include <SDL_image.h>
 #include <iostream>
 
 using namespace std;
@@ -20,7 +21,11 @@ bool ModuleWindow::Init()
 {
 	//LOG("Init SDL window & surface");
 	App->ui->my_log.AddLog("Init SDL window & surface \n");
+	SDL_Surface* surface = IMG_Load("../crown.png");
+	if (surface == nullptr)
+		App->ui->my_log.AddLog("Window image not found \n");
 
+	
 	bool ret = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -43,7 +48,7 @@ bool ModuleWindow::Init()
 
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
+		SDL_SetWindowIcon(window, surface);
 		if (window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());

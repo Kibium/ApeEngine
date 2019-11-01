@@ -1,4 +1,4 @@
-#include "Globals.h"
+﻿#include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
@@ -6,6 +6,13 @@
 #include "ModuleTextures.h"
 #include "ModuleUI.h"
 #include "SDL.h"
+
+#include <GL/glew.h>
+
+//Always after glew.h
+#include <IL/il.h>
+#include <IL/ilu.h>
+#include <IL/ilut.h>
 
 using namespace std;
 
@@ -69,9 +76,23 @@ bool ModuleRender::Init()
 	clear_color.z = 0.225;
 	clear_color.w = 1;
 
-	static const GLfloat tri[] = { -1.f, -1.f, 0.0f,
-									1.0f, -1.f, 0.0f,
-									0.0f, 1.f, 0.0f };
+	float vertices[] = {
+		// positions         
+		 -1.0f,  -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+
+
+		//Texture coords
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.5f, 1.0f
+	};
+
+	unsigned int indices[] = {
+		0, 1, 3, // first triangle
+		1, 2, 3  // second triangle
+	};
 
 	//Cam position
 	cameraPos = float3(0, 0, 1);
@@ -126,18 +147,23 @@ bool ModuleRender::Init()
 
 	transform = proj * view* float4x4(model);
 
-	//Creates a new vbo
+	//Creates a new vbo, vao & ebo
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 
-	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	//Setting buffer to be used
+	//Setting buffer to be used & assign data to it
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	//Assigns data to buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(tri), tri, GL_STATIC_DRAW);
+	//Position coords (0)
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
 
+	//Texture coords attribute (1)
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 3));
+	glEnableVertexAttribArray(1);
 	//Passing transform matrix to the shader from the ModuleProgram.cpp
 
 	return true;
@@ -148,25 +174,15 @@ update_status ModuleRender::PreUpdate()
 	glClearColor(0.225f, 0, 0.225f, 1);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//Position attribute (0)
+	
+	
 
-	//Triangle
-	glEnableVertexAttribArray(0); // attribute 0            
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0,                  // attribute 0                    
-		3,                  // number of componentes (3 floats)                    
-		GL_FLOAT,           // data type                    
-		GL_FALSE,           // should be normalized?                    
-		0,                  // stride                    
-		(void*)0);            // array buffer offset   
+	glDrawArrays(GL_TRIANGLES,0, 3);
 
-	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	//glEnableVertexAttribArray(2);
-
-	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris    
-	//glBindTexture(GL_TEXTURE_2D, App->textures->texture);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glDisableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glDisableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return UPDATE_CONTINUE;
 }

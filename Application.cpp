@@ -74,3 +74,5 @@ void Application::RequestBrowser(char* web) {
 	//Allows to open the web to the browser
 	ShellExecute(0, 0, web, 0, 0, SW_SHOW);
 }
+
+
