@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include <iostream>
+
+using namespace std;
 
 ModuleWindow::ModuleWindow()
 {
@@ -17,7 +20,7 @@ bool ModuleWindow::Init()
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
@@ -27,13 +30,18 @@ bool ModuleWindow::Init()
 		//Create window
 		int width = SCREEN_WIDTH;
 		int height = SCREEN_HEIGHT;
-		flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
+		flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 
+		if (fullscreen)
+			flags |= SDL_WINDOW_FULLSCREEN;
 		
+		if (!bordered)
+			flags |= SDL_WINDOW_BORDERLESS;
+
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
-		if(window == NULL)
+		if (window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
@@ -41,7 +49,7 @@ bool ModuleWindow::Init()
 		else
 		{
 			//Get window surface
-			
+
 			screen_surface = SDL_GetWindowSurface(window);
 		}
 	}
@@ -49,44 +57,23 @@ bool ModuleWindow::Init()
 	return ret;
 }
 
-void ModuleWindow::SetFullscreen(bool b) {
-	fullscreen = b;
-}
-void ModuleWindow::SetFulldesktop(bool b) {
-	fulldesktop = b;
-}
-void ModuleWindow::SetBorderless(bool b) {
-	borderless = b;
-}
-void ModuleWindow::SetResizable(bool b) {
-	resizable = b;
-}
-
-bool ModuleWindow::GetFullscreen() {
-	return fullscreen;
-}
-bool ModuleWindow::GetFulldesktop() {
-	return fulldesktop;
-}
-bool ModuleWindow::GetBorderless() {
-	return borderless;
-}
-bool ModuleWindow::GetResizable() {
-	return resizable;
-}
 
 update_status ModuleWindow::Update() {
-	if (fullscreen)
-		flags |= SDL_WINDOW_FULLSCREEN;
 
-	if (resizable)
-		flags |= SDL_WINDOW_RESIZABLE;
+	if (fullscreen) {
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		fulldesktop = false;
 
-	if (borderless)
-		flags |= SDL_WINDOW_BORDERLESS;
-	if (fulldesktop)
-		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+	}
+	else
+		SDL_SetWindowFullscreen(window, SDL_FALSE);	
 
+	if (bordered)
+		SDL_SetWindowBordered(window, SDL_TRUE);
+	else
+		SDL_SetWindowBordered(window, SDL_FALSE);
+
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -96,7 +83,7 @@ bool ModuleWindow::CleanUp()
 	LOG("Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
-	if(window != NULL)
+	if (window != NULL)
 	{
 		SDL_DestroyWindow(window);
 	}

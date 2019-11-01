@@ -24,8 +24,7 @@ public:
 	bool CleanUp();
 
 	bool fullscreen = false;
-	bool borderless = false;
-	bool resizable = true;
+	bool bordered = true;
 	bool fulldesktop = false;
 
 	Uint32 flags;
@@ -37,15 +36,6 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface = NULL;
 
-	void SetFullscreen(bool);
-	void SetBorderless(bool);
-	void SetResizable(bool);
-	void SetFulldesktop(bool);
-
-	bool GetFullscreen();
-	bool GetBorderless();
-	bool GetResizable();
-	bool GetFulldesktop();
 };
 
 #endif // __ModuleWindow_H__

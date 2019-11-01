@@ -10,10 +10,13 @@
 #include "IMGUI/imgui_impl_glfw.h"
 #include "IMGUI/imgui_impl_sdl.h"
 
+#include <iostream>
+using namespace std;
+
 
 ModuleUI::ModuleUI() {
 
-	
+
 
 }
 ModuleUI::~ModuleUI() {}
@@ -29,21 +32,32 @@ void ModuleUI::MyConsole() {
 	ImGui::Text("Mateus' Console allows you to look at different parameters of your PC");
 	Separate();
 
-	if (ImGui::CollapsingHeader("Config")) {
-		ImGui::BulletText("Window");
-		ImGui::Checkbox("Fullscreen", &fullscreen);
-		ImGui::Checkbox("Resizable", &resizable);
+	//Test stuff
+	if (ImGui::CollapsingHeader("Stuff to Test")) {
+
+		//The bool value changes depending on the checkbox's state
+		if (ImGui::Checkbox("Check me!", &test)) {
+			ImGui::SameLine(); ImGui::Text("Hi!");
 		}
-	
-	
+	}
+
+	if (ImGui::CollapsingHeader("Window")) {
+
+		ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
+		ImGui::SameLine();
+		ImGui::Checkbox("Bordered", &App->window->bordered);
+			
+		
+	}
+
 	if (ImGui::CollapsingHeader("Hardware")) {
-		ImGui::Text ("OS:");
+		ImGui::Text("OS:");
 		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%s", SDL_GetCurrentVideoDriver());
 
 		ImGui::Text("Number of Logical CPU cores:");
 		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%d", SDL_GetCPUCount());
 
-		
+
 		ImGui::Text("System RAM (Mb):");
 		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%d", SDL_GetSystemRAM());
 
@@ -72,8 +86,8 @@ void ModuleUI::MyConsole() {
 
 	ImGui::End();
 
-	App->window->SetFullscreen(fullscreen);
-	App->window->SetResizable(resizable);
+	//App->window->SetFullscreen(fullscreen);
+	//App->window->SetResizable(resizable);
 
 }
 
@@ -100,10 +114,7 @@ bool ModuleUI::Init() {
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	borderless = App->window->GetBorderless();
-	fullscreen = App->window->GetFullscreen();
-	fulldesktop = App->window->GetFulldesktop();
-	resizable = App->window->GetResizable();
+	
 
 	return true;
 }

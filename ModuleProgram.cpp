@@ -43,10 +43,6 @@ void ModuleProgram::checkForErrors(GLuint shader, int success, char* infoLog) {
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	else {
-		cout << "Initialized!" << endl;
-	}
-
 }
 
 bool ModuleProgram::Init() {
@@ -98,6 +94,7 @@ bool ModuleProgram::Init() {
 
 	}
 
+	//Transform matrix to the shader!
 	int location = glGetUniformLocation(program, "transform");
 	glUniformMatrix4fv(location, 1, GL_TRUE, &App->renderer->transform[0][0]); //Calculating vertexs in the vertex shader
 

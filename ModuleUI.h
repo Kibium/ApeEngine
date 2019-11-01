@@ -29,10 +29,8 @@ public:
 
 private:
 		char* title = "Mateus";
-		bool fullscreen = false;
-		bool borderless = false;
-		bool resizable = false;
-		bool fulldesktop = false;
+	
+		bool test = false;
 
 };
 
