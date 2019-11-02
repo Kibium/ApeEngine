@@ -78,15 +78,17 @@ bool ModuleRender::Init()
 
 	float vertices[] = {
 		// positions         
-		 -1.0f,  -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
+		-1.0f,  -1.0f, 0.0f, //bottom left
+		1.0f, -1.0f, 0.0f,   //bottom right
+		1.0f, 1.0f, 0.0f,    //top right
+		-1.0f, 1.0f, 0.0f,   //top left
 
 
 		//Texture coords
 		0.0f, 0.0f,
 		1.0f, 0.0f,
-		0.5f, 1.0f
+		1.0f, 1.0f,
+		0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
@@ -107,7 +109,7 @@ bool ModuleRender::Init()
 	math::float3 u(s.Cross(f));
 
 
-	//View Matrix
+	//View Matrix - Look at computation
 	view[0][0] = s.x;
 	view[0][1] = s.y;
 	view[0][2] = s.z;
@@ -138,18 +140,19 @@ bool ModuleRender::Init()
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(90)); //aspect ratio 
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(60)); //aspect ratio 
 	proj = frustum.ProjectionMatrix();
 
 
 	//Model Matrix
-	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateY(math::pi / 4), float3(1, 1, 1));
+	model = float4x4::FromTRS(float3(0, 0, -4), float3x3::RotateX(math::pi/4), float3(1, 1, 1));
 
 	transform = proj * view* float4x4(model);
 
 	//Creates a new vbo, vao & ebo
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
@@ -157,15 +160,21 @@ bool ModuleRender::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	//Position coords (0)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(0);
 
 	//Texture coords attribute (1)
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 4 * 3));
 	glEnableVertexAttribArray(1);
+	
 	//Passing transform matrix to the shader from the ModuleProgram.cpp
-
+	
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
 	return true;
 }
 
@@ -174,15 +183,13 @@ update_status ModuleRender::PreUpdate()
 	glClearColor(0.225f, 0, 0.225f, 1);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Position attribute (0)
-	
-	
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glDrawArrays(GL_TRIANGLES,0, 3);
+	glBindVertexArray(VAO);
 
-	//glDisableVertexAttribArray(0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//We use draw elements to indicate OpenGL to draw by the indexs stored in the EBO
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindVertexArray(0);
 
 	return UPDATE_CONTINUE;
 }
@@ -210,6 +217,9 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//Destroy window
 

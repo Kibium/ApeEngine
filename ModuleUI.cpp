@@ -5,6 +5,7 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleTextures.h"
 #include <GL/glew.h>
 #include"IMGUI/imgui_impl_opengl3.h"
 #include "IMGUI/imgui_impl_glfw.h"
@@ -64,6 +65,24 @@ void ModuleUI::MyConsole() {
 	if (ImGui::CollapsingHeader("Engine")) {
 		ImGui::InputText("Name", title, 25);
 		SDL_SetWindowTitle(App->window->window, title);
+
+		ImGui::Checkbox("MAG Filtering", &App->textures->MAGfilter);
+		ImGui::SameLine();
+		ImGui::Checkbox("MIN Filtering", &App->textures->MINfilter);
+		Separate();
+
+		ImGui::Checkbox("Enable Wrap_S", &App->textures->WRAPs);
+		ImGui::SameLine();
+		ImGui::Checkbox("Enable Wrap_T", &App->textures->WRAPt);
+		Separate();
+
+		ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
+
+
+
+
+
+
 	}
 
 	if (ImGui::CollapsingHeader("Window")) {
