@@ -16,7 +16,7 @@
 
 using namespace std;
 
-
+//yolo
 ModuleRender::ModuleRender()
 {
 }
@@ -26,6 +26,38 @@ ModuleRender::~ModuleRender()
 {
 
 }
+//yeys
+void ModuleRender::lookAt() {
+
+	f = float3(target - cameraPos);
+	f.Normalize();
+	s = float3(f.Cross(up));
+	s.Normalize();
+	u = float3(s.Cross(f));
+
+	//View Matrix - Look at computation
+	view[0][0] = s.x;
+	view[0][1] = s.y;
+	view[0][2] = s.z;
+
+	view[1][0] = u.x;
+	view[1][1] = u.y;
+	view[1][2] = u.z;
+
+	view[2][0] = -f.x;
+	view[2][1] = -f.y;
+	view[2][2] = -f.z;
+
+	view[0][3] = -s.Dot(cameraPos);
+	view[1][3] = -u.Dot(cameraPos);
+	view[2][3] = f.Dot(cameraPos);
+
+	view[3][0] = 0.0f;
+	view[3][1] = 0.0f;
+	view[3][2] = 0.0f;
+	view[3][3] = 1.0f;
+}
+
 
 // Called before render is available
 bool ModuleRender::Init()
@@ -71,10 +103,10 @@ bool ModuleRender::Init()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
 
-	clear_color.x = 0.225f;
-	clear_color.y = 0;
-	clear_color.z = 0.225;
-	clear_color.w = 1;
+	//clear_color.x = 0.225f;
+	//clear_color.y = 0;
+	//clear_color.z = 0.225;
+	//clear_color.w = 1;
 
 	float vertices[] = {
 		// positions         
@@ -102,34 +134,7 @@ bool ModuleRender::Init()
 	//Where is pointing to
 	target = float3(0, 0, 0);
 
-	math::float3 f(target - cameraPos);
-	f.Normalize();
-	math::float3 s(f.Cross(up));
-	s.Normalize();
-	math::float3 u(s.Cross(f));
-
-
-	//View Matrix - Look at computation
-	view[0][0] = s.x;
-	view[0][1] = s.y;
-	view[0][2] = s.z;
-
-	view[1][0] = u.x;
-	view[1][1] = u.y;
-	view[1][2] = u.z;
-
-	view[2][0] = -f.x;
-	view[2][1] = -f.y;
-	view[2][2] = -f.z;
-
-	view[0][3] = -s.Dot(cameraPos);
-	view[1][3] = -u.Dot(cameraPos);
-	view[2][3] = f.Dot(cameraPos);
-
-	view[3][0] = 0.0f;
-	view[3][1] = 0.0f;
-	view[3][2] = 0.0f;
-	view[3][3] = 1.0f;
+	lookAt();
 
 	//Frustum generates a projection matrix
 	Frustum frustum;
@@ -173,7 +178,7 @@ bool ModuleRender::Init()
 	
 	//Passing transform matrix to the shader from the ModuleProgram.cpp
 	
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//
 	
 	return true;
 }
@@ -186,9 +191,15 @@ update_status ModuleRender::PreUpdate()
 
 	glBindVertexArray(VAO);
 
-	//We use draw elements to indicate OpenGL to draw by the indexs stored in the EBO
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	if (!mode) {
+		//We use draw elements to indicate OpenGL to draw by the indexs stored in the EBO
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+	}
+
+	else
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+	
 	glBindVertexArray(0);
 
 	return UPDATE_CONTINUE;

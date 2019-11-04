@@ -66,19 +66,23 @@ public:
 	bool CleanUp();
 
 	ExampleAppLog my_log;
-	bool showLog = false;
 	ImGuiIO io;
 	char* buf;
 	float brightness = 1;
 	int screenW = 500, screenH = 500;
 	std::vector <float> fps_log;
 	std::vector <float>	ms_log;
-	bool addBar = false;
 	float lastTicks = 0;
-	
+
+	//Checkbox stuff
+	bool showLines = false;
+	bool help = false;
+	bool mode = false;
+
+
 private:
-		char title [25]= "Mateus";	
-		bool test = true;
+	char title[25] = "Mateus";
+	bool test = true;
 
 };
 

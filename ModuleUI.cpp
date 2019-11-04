@@ -53,15 +53,13 @@ void ModuleUI::MyConsole() {
 		ImGui::EndMainMenuBar();
 	}
 
-	//Test stuff
-	/*if (ImGui::CollapsingHeader("Stuff to Test")) {
 
-		//The bool value changes depending on the checkbox's state
-		if (ImGui::Checkbox("Check me!", &test)) {
-			ImGui::SameLine(); ImGui::Text("Hi!");
-		}
-	}
-	*/
+	if (showLines)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	if (ImGui::CollapsingHeader("Engine")) {
 		ImGui::InputText("Name", title, 25);
 		SDL_SetWindowTitle(App->window->window, title);
@@ -79,11 +77,28 @@ void ModuleUI::MyConsole() {
 		ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
 
 
-
-
-
-
 	}
+
+	if (ImGui::CollapsingHeader("Images stuff")) {
+		if (ImGui::TreeNode("Triangle stuff")) {
+			ImGui::Checkbox("Show Lines", &showLines);
+			ImGui::Checkbox("Triangle Mode", &App->renderer->mode);
+			ImGui::TreePop();
+		}
+
+		Separate();
+
+		ImGui::Text("Swap image button ->");
+		ImGui::SameLine();
+		if (ImGui::Button("Click me pls")) {
+			App->textures->imageButtonValue++;
+			App->textures->once = false;
+		}
+
+
+				
+		}
+	
 
 	if (ImGui::CollapsingHeader("Window")) {
 
@@ -93,10 +108,10 @@ void ModuleUI::MyConsole() {
 		Separate();
 		ImGui::SliderFloat("Brightness", &brightness, 0, 1);
 		Separate();
-		if(ImGui::SliderInt("Window width", &screenW, 300, 800))
+		if (ImGui::SliderInt("Window width", &screenW, 300, 800))
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
 
-		if(ImGui::SliderInt("Window height", &screenH, 300, 800))
+		if (ImGui::SliderInt("Window height", &screenH, 300, 800))
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
 
 
@@ -134,20 +149,19 @@ void ModuleUI::MyConsole() {
 		ImGui::BulletText("SDL 2.1.0");
 	}
 
-	
-
 	if (ImGui::CollapsingHeader("Log"))
 		my_log.Draw("Log");
 
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-	if (SDL_GetTicks() % 1000 == 0) {
+	if (SDL_GetTicks() >= lastTicks + 1000) {
 		fps_log.push_back(ImGui::GetIO().Framerate);
-		ms_log.push_back(1000.0f / ImGui::GetIO().Framerate);		
+		ms_log.push_back(1000.0f / ImGui::GetIO().Framerate);
+		lastTicks = SDL_GetTicks();
 	}
-	
-	
-	
+
+
+
 	FPSHistogram();
 	SDL_SetWindowBrightness(App->window->window, brightness);
 	ImGui::End();
@@ -201,10 +215,8 @@ update_status ModuleUI::PreUpdate() {
 
 update_status ModuleUI::Update() {
 
-
-	//ImGui::ShowDemoWindow();
 	MyConsole();
-
+	//ImGui::ShowDemoWindow();
 	return UPDATE_CONTINUE;
 }
 

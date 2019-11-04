@@ -28,15 +28,14 @@ public:
 	void WindowResized(unsigned width, unsigned height);
 	void* context;
 
-	ImVec4 clear_color;
-
 	GLuint VBO, VAO, EBO;
 	//GLuint texture;
-	math::float3  up, target;
+	math::float3  up, target, f, s, u;
 	math::float3 cameraPos, camDirection, camUp, camRight;
 	math::float4x4 view, proj, model, transform;
 
+	bool mode = false;
+
 private:
-	
-	
+	void lookAt();
 };

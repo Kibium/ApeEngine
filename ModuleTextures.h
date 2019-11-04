@@ -20,9 +20,9 @@ public:
 	update_status PostUpdate();
 
 	bool CleanUp();
-	GLuint texture;
+	GLuint texture1, texture2, texture3;
 	ILubyte *data = nullptr;
-	ILuint imageName;
+	ILuint kirbo, lenna, muffin;
 
 	int width;
 	int height;
@@ -32,6 +32,10 @@ public:
 
 	bool WRAPs = true;
 	bool WRAPt = false;
+
+	//Which image to show
+	int imageButtonValue = 0;
+	bool once = true; //so it doesn't execude code all the time
 
 	//Allows to draw the image
 	bool mipmap = true;
