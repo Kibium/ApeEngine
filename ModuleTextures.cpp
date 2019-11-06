@@ -10,42 +10,84 @@
 ModuleTextures::ModuleTextures() {}
 ModuleTextures::~ModuleTextures() {}
 
+const void ModuleTextures::RenderTexture(ImageData &d) {
+
+	glBindTexture(GL_TEXTURE_2D, d.texture);
+	if (d.data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, d.width, d.height, 0, GL_RGB, GL_UNSIGNED_BYTE, d.data);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	once = true;
+
+}
 
 bool ModuleTextures::Init() {
 	App->ui->my_log.AddLog("Init DevIL texture system \n");
 
 	ilInit();
+	iluInit();
+	ilutInit();
 
-	ilGenImages(1, &kirbo);
-	ilBindImage(kirbo);
+	ilGenImages(1, &kirb.imageName);
+	ilBindImage(kirb.imageName);
 	ilLoadImage("../kirbo.jpg");
 
-	/*ilGenImages(1, &lenna);
-	ilBindImage(lenna);
-	ilLoadImage("../lenna.dds");*/
-
-	ilGenImages(1, &muffin);
-	ilBindImage(muffin);
-	ilLoadImage("../muffin.jpg");
-	
 	ILenum Error;
 	Error = ilGetError();
 
 	//Kirbo dimensions
-	width = ilGetInteger(IL_IMAGE_WIDTH);
-	height = ilGetInteger(IL_IMAGE_HEIGHT);
-	App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", width, height);
+	kirb.width = ilGetInteger(IL_IMAGE_WIDTH);
+	kirb.height = ilGetInteger(IL_IMAGE_HEIGHT);
 
-	int size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-	App->ui->my_log.AddLog("Image size: %d bytes\n", size);
+	kirb.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
 
+	//Set renderer for OpenGL
 	ilutRenderer(ILUT_OPENGL);	
-	texture1 = ilutGLBindTexImage();
 
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
+	kirb.texture = ilutGLBindTexImage();
 
-	data = ilGetData();
+	glGenTextures(1, &kirb.texture);
+	glBindTexture(GL_TEXTURE_2D, kirb.texture);
+
+	kirb.data = ilGetData();
+
+	ilGenImages(1, &muffin.imageName);
+	ilBindImage(muffin.imageName);
+	ilLoadImage("../muffin.jpg");
+
+	muffin.width = ilGetInteger(IL_IMAGE_WIDTH);
+	muffin.height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+	muffin.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+
+	muffin.texture = ilutGLBindTexImage();
+
+	glGenTextures(1, &muffin.texture);
+	glBindTexture(GL_TEXTURE_2D, muffin.texture);
+
+	muffin.data = ilGetData();
+
+	ilGenImages(1, &lenna.imageName);
+	ilBindImage(lenna.imageName);
+	ilLoadImage("../lenna.png");
+
+
+	lenna.width = ilGetInteger(IL_IMAGE_WIDTH);
+	lenna.height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+	lenna.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+
+	lenna.texture = ilutGLBindTexImage();
+
+	glGenTextures(1, &lenna.texture);
+	glBindTexture(GL_TEXTURE_2D, lenna.texture);
+
+	lenna.data = ilGetData();
+
 
 	return true;
 }
@@ -76,16 +118,30 @@ update_status ModuleTextures::Update() {
 
 	if (imageButtonValue == 0 && !once) {
 
+		RenderTexture(kirb);
+		App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", kirb.width, kirb.height);
+		App->ui->my_log.AddLog("Image size: %d bytes\n", kirb.size);
+		once = true;
+
 	}
 
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	if (imageButtonValue == 1 && !once) {
+		RenderTexture(muffin);
+		App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", muffin.width, muffin.height);
+		App->ui->my_log.AddLog("Image size: %d bytes\n", muffin.size);
+		once = true;
 	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
+
+	if (imageButtonValue == 2 && !once) {
+		RenderTexture(lenna);
+		App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", lenna.width, lenna.height);
+		App->ui->my_log.AddLog("Image size: %d bytes\n", lenna.size);
+		once = true;
 	}
+
+
+
+	
 
 	if(mipmap)
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -99,7 +155,7 @@ update_status ModuleTextures::PostUpdate() {
 
 bool ModuleTextures::CleanUp() {
 
-	ilDeleteImages(1, &kirbo);
+	ilDeleteImages(1, &kirb.imageName);
 
 	return true;
 }

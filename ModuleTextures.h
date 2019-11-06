@@ -7,6 +7,15 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+struct ImageData {
+	int width = 0;
+	int height = 0;
+	int size = 0;
+	GLuint texture;
+	ILubyte* data = nullptr;
+	ILuint imageName;
+};
+
 class ModuleTextures : public Module {
 
 public:
@@ -22,7 +31,7 @@ public:
 	bool CleanUp();
 	GLuint texture1, texture2, texture3;
 	ILubyte *data = nullptr;
-	ILuint kirbo, lenna, muffin;
+	//ILuint kirbo, lenna, muffin;
 
 	int width;
 	int height;
@@ -35,12 +44,15 @@ public:
 
 	//Which image to show
 	int imageButtonValue = 0;
-	bool once = true; //so it doesn't execude code all the time
+	bool once = false; //so it doesn't execude code all the time
 
 	//Allows to draw the image
 	bool mipmap = true;
 
 private:
-
-
+	ImageData kirb;
+	ImageData lenna;
+	ImageData muffin;
+	const void RenderTexture(ImageData &d);
+	void SetTextureData();
 };
