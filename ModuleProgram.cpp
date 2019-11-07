@@ -54,8 +54,8 @@ bool ModuleProgram::Init() {
 	App->ui->my_log.AddLog("Initializing Module Program\n");
 
 	//Function that allows to get the content of a shader
-	char* VSdata = getShaderText("../default.vs");
-	char* FSdata = getShaderText("../default.fs");
+	char* VSdata = getShaderText("../quad.vs");
+	char* FSdata = getShaderText("../quad.fs");
 
 	const GLchar *vdata = VSdata;
 	const GLchar * fdata = FSdata;

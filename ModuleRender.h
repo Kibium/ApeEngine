@@ -29,10 +29,11 @@ public:
 	void* context;
 
 	GLuint VBO, VAO, EBO;
+
 	//GLuint texture;
 	math::float3  up, target, f, s, u;
 	math::float3 cameraPos, camDirection, camUp, camRight;
-	math::float4x4 view, proj, model, transform;
+	math::float4x4 view, proj, model, transform, rotateMatrix;
 
 	bool mode = false;
 

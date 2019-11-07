@@ -11,6 +11,7 @@ class ModuleInput;
 class ModuleRenderExercise;
 class ModuleProgram;
 class ModuleUI;
+class ModuleScene;
 
 
 class Application
@@ -32,6 +33,7 @@ public:
 	ModuleProgram* program = nullptr;
 	ModuleUI* ui = nullptr;
 	ModuleTextures* textures = nullptr;
+	ModuleScene* scene = nullptr;
 
 	void RequestBrowser(char*);
 

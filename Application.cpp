@@ -7,6 +7,7 @@
 #include "ModuleProgram.h"
 #include "ModuleUI.h"
 #include "ModuleTextures.h"
+#include "ModuleScene.h"
 
 using namespace std;
 
@@ -22,6 +23,7 @@ Application::Application()
 	//modules.push_back(exercise = new ModuleRenderExercise());
 	modules.push_back(ui = new ModuleUI());
 	modules.push_back(textures = new ModuleTextures());
+	modules.push_back(scene = new ModuleScene());
 
 
 }
