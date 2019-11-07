@@ -82,11 +82,6 @@ bool ModuleRender::Init()
 	SDL_GL_SwapWindow(App->window->window);
 
 	GLenum err = glewInit();// ... check for errors
-	//LOG("Using Glew %s", glewGetString(GLEW_VERSION));
-	//LOG("Vendor: %s", glGetString(GL_VENDOR));
-	//LOG("Renderer: %s", glGetString(GL_RENDERER));
-	//LOG("OpenGL version supported %s", glGetString(GL_VERSION));
-	//LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	App->ui->my_log.AddLog("Using Glew %s \n", glewGetString(GLEW_VERSION));
 	App->ui->my_log.AddLog("Vendor: %s \n", glGetString(GL_VENDOR));
@@ -103,11 +98,7 @@ bool ModuleRender::Init()
 	glFrontFace(GL_CCW);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
-	//clear_color.x = 0.225f;
-	//clear_color.y = 0;
-	//clear_color.z = 0.225;
-	//clear_color.w = 1;
-
+	
 	float vertices[] = {
 		// positions         
 		-1.0f,  -1.0f, 0.0f, //bottom left
@@ -128,33 +119,7 @@ bool ModuleRender::Init()
 		1, 2, 3  // second triangle
 	};
 
-	//Cam position
-	cameraPos = float3(0, 0, 1);
-
-	//Where is pointing to
-	target = float3(0, 0, 0);
-
-	lookAt();
-
-	//Frustum generates a projection matrix
-	Frustum frustum;
-	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3::zero;
-	frustum.front = -float3::unitZ;
-	frustum.up = float3::unitY;
-	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 100.0f;
-	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(60)); //aspect ratio 
-	proj = frustum.ProjectionMatrix();
-
-	//Rotate Matrix
-	rotateMatrix =  float3x3::RotateZ(2.3589) * float3x3::RotateY(0.5f) * float3x3::RotateX(0.5f);
-
-	//Model Matrix
-	model = float4x4::FromTRS(float3(0, 0, -3), rotateMatrix, float3(1, 1, 1));
-
-	transform = proj * view* float4x4(model);
+	
 
 	//Creates a new vbo, vao & ebo
 	glGenVertexArrays(1, &VAO);
@@ -188,45 +153,8 @@ update_status ModuleRender::PreUpdate()
 {
 	glClearColor(0.225f, 0, 0.225f, 1);
 
-	
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-/*
-	glLineWidth(1.0f);
-	float d = 200.0f;
-	glBegin(GL_LINES);
-	for (float i = -d; i <= d; i += 1.0f)
-	{
-		glVertex3f(i, 0.0f, -d);
-		glVertex3f(i, 0.0f, d);
-		glVertex3f(-d, 0.0f, i);
-		glVertex3f(d, 0.0f, i);
-	}
-	glEnd();
 
-	glLineWidth(2.0f);
-	glBegin(GL_LINES);
-	// red X
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
-	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
-	// green Y
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
-
-	// blue Z
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
-	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
-	glEnd();
-	glLineWidth(1.0f);
-*/
 	glBindVertexArray(VAO);
 
 	if (!mode) {

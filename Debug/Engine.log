@@ -1,3 +1,5 @@
-﻿  ModuleProgram.cpp
-c:\users\toni\source\repos\kibium\engine_master\moduleprogram.cpp(117): warning C4244: '=': conversión de 'Uint32' a 'float'; posible pérdida de datos
+﻿  ModuleCamera.cpp
+c:\users\toni\source\repos\kibium\engine_master\modulecamera.h(26): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+  ModuleInput.cpp
+  Generando código...
   Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe

@@ -35,6 +35,7 @@ bool ModuleTextures::Init() {
 	ilGenImages(1, &kirb.imageName);
 	ilBindImage(kirb.imageName);
 	ilLoadImage("../kirbo.jpg");
+	iluFlipImage();
 
 	ILenum Error;
 	Error = ilGetError();
@@ -58,6 +59,7 @@ bool ModuleTextures::Init() {
 	ilGenImages(1, &muffin.imageName);
 	ilBindImage(muffin.imageName);
 	ilLoadImage("../muffin.jpg");
+	iluFlipImage();
 
 	muffin.width = ilGetInteger(IL_IMAGE_WIDTH);
 	muffin.height = ilGetInteger(IL_IMAGE_HEIGHT);
@@ -87,6 +89,8 @@ bool ModuleTextures::Init() {
 	glBindTexture(GL_TEXTURE_2D, lenna.texture);
 
 	lenna.data = ilGetData();
+
+	
 
 
 	return true;

@@ -55,7 +55,11 @@ update_status ModuleInput::Update()
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
 			break;
+
+		case SDL_KEYDOWN:
+			break;
 		}
+		
 		ImGui_ImplSDL2_ProcessEvent(&e);
 	
 	}

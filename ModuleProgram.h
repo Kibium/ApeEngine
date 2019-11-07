@@ -14,7 +14,14 @@ public:
 
 	char* getShaderText(char* source);
 	void checkForErrors(GLuint a, int b, char* c);
+	void InitShader(GLuint& program, GLuint& VS, GLuint& FS, char* Vdata, char* Fdata, bool actve);
 
-	GLuint program, vShader, fShader;
+	//Image
+	GLuint programImage, imageVShader, imageFShader;
+
+	//red Color
+	GLuint programRed, redVShader, redFShader;
+
 	float timeValue = 0;
+
 };

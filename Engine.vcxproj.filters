@@ -129,6 +129,8 @@
     </ClCompile>
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleScene.cpp" />
+    <ClCompile Include="ModuleModelLoader.cpp" />
+    <ClCompile Include="ModuleCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -340,6 +342,8 @@
     </ClInclude>
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleScene.h" />
+    <ClInclude Include="ModuleModelLoader.h" />
+    <ClInclude Include="ModuleCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -368,6 +372,8 @@
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl">
       <Filter>MathGeoLib</Filter>
     </None>
+    <None Include="red.fs" />
+    <None Include="red.vs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="quad.vs" />

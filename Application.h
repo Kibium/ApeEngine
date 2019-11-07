@@ -12,6 +12,8 @@ class ModuleRenderExercise;
 class ModuleProgram;
 class ModuleUI;
 class ModuleScene;
+class ModuleModelLoader;
+class ModuleCamera;
 
 
 class Application
@@ -34,6 +36,8 @@ public:
 	ModuleUI* ui = nullptr;
 	ModuleTextures* textures = nullptr;
 	ModuleScene* scene = nullptr;
+	ModuleModelLoader* modelLoader = nullptr;
+	ModuleCamera* camera = nullptr;
 
 	void RequestBrowser(char*);
 
