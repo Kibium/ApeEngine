@@ -114,7 +114,6 @@ bool ModuleProgram::Init() {
 	InitShader(programImage, imageVShader, imageFShader, imageVSdata, imageFSdata, true);
 	InitShader(programRed, redVShader, redFShader, redVSdata, redFSdata, false);
 
-
 	/*const GLchar *vdata = VSdata;
 	const GLchar *fdata = FSdata;
 
@@ -161,10 +160,16 @@ bool ModuleProgram::Init() {
 		glGetProgramInfoLog(programImage, 512, NULL, infoLog);
 
 */
-	//Transform matrix to the shader!
-	int location = glGetUniformLocation(programImage, "transform");
-	glUniformMatrix4fv(location, 1, GL_TRUE, &App->camera->transform[0][0]); //Calculating vertexs in the vertex shader
+	
+	modelLocation = glGetUniformLocation(programImage, "model");
+	glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
 
+	viewLocation = glGetUniformLocation(programImage, "view");
+	glUniformMatrix4fv(viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+
+	projLocation = glGetUniformLocation(programImage, "proj");
+	glUniformMatrix4fv(projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+	
 	return true;
 	
 }
@@ -172,12 +177,6 @@ bool ModuleProgram::Init() {
 //This updates the the color of the triangle
 update_status ModuleProgram::Update() {
 
-	/*timeValue = SDL_GetTicks();
-	float greenValue = (sin(timeValue/800) / 2.0f) + 0.5f;
-	int vertexColorLocation = glGetUniformLocation(programImage, "myColor");
-
-	glUseProgram(programImage);
-	glUniform4f(vertexColorLocation, greenValue, 0, 0, 1.0f);*/
 	
 
 	return UPDATE_CONTINUE;

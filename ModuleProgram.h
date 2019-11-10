@@ -22,6 +22,9 @@ public:
 	//red Color
 	GLuint programRed, redVShader, redFShader;
 
+	//Transform matrix location
+	int modelLocation, viewLocation, projLocation;
+
 	float timeValue = 0;
 
 };

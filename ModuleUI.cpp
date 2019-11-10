@@ -6,6 +6,8 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
+#include "ModuleProgram.h"
+#include "ModuleCamera.h"
 #include <GL/glew.h>
 #include"IMGUI/imgui_impl_opengl3.h"
 #include "IMGUI/imgui_impl_glfw.h"
@@ -16,9 +18,6 @@ using namespace std;
 
 
 ModuleUI::ModuleUI() {
-
-
-
 }
 ModuleUI::~ModuleUI() {}
 
@@ -79,6 +78,81 @@ void ModuleUI::MyConsole() {
 
 	}
 
+	if (ImGui::CollapsingHeader("Camera")) {
+		if (ImGui::TreeNode("Settings")) {
+			if (ImGui::SliderFloat("Far Plane", &App->camera->farP, 50, 150)) {
+				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
+			if (ImGui::SliderFloat("Near Plane", &App->camera->nearP, 0.1, 40)) {
+				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+			Separate();
+
+			if (ImGui::SliderFloat("FOV", &App->camera->vFov, 1, 90)) {
+				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
+			//if (ImGui::SliderFloat("Aspect Ratio", &App->camera->AR, 0.1, 40))
+			//	glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+
+			ImGui::TreePop();
+
+		}
+
+		if (ImGui::TreeNode("Position")) {
+			if (ImGui::SliderFloat("X", &App->camera->cameraPos.x, -10, 10)) {
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
+			if (ImGui::SliderFloat("Y", &App->camera->cameraPos.y, -10, 10)) {
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
+			if (ImGui::SliderFloat("Z", &App->camera->cameraPos.z, -10, 10)) {
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+			ImGui::TreePop();
+
+		}
+
+		if (ImGui::TreeNode("Rotation")) {
+			if (ImGui::SliderFloat("X", &App->camera->rotX, -10, 10)) {
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+
+			}
+
+			if (ImGui::SliderFloat("Y", &App->camera->rotY, -10, 10)) {
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+
+			}
+
+			if (ImGui::SliderFloat("Z", &App->camera->rotZ, -10, 10)) {
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+
+			}
+			ImGui::TreePop();
+		}
+	}
+
 	if (ImGui::CollapsingHeader("Images stuff")) {
 		if (ImGui::TreeNode("Triangle stuff")) {
 			ImGui::Checkbox("Show Lines", &showLines);
@@ -94,11 +168,7 @@ void ModuleUI::MyConsole() {
 			App->textures->imageButtonValue++;
 			App->textures->once = false;
 		}
-
-
-				
-		}
-	
+	}
 
 	if (ImGui::CollapsingHeader("Window")) {
 
@@ -113,8 +183,6 @@ void ModuleUI::MyConsole() {
 
 		if (ImGui::SliderInt("Window height", &screenH, 300, 800))
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
-
-
 	}
 
 	if (ImGui::CollapsingHeader("Hardware")) {
@@ -160,16 +228,9 @@ void ModuleUI::MyConsole() {
 		lastTicks = SDL_GetTicks();
 	}
 
-
-
 	FPSHistogram();
 	SDL_SetWindowBrightness(App->window->window, brightness);
 	ImGui::End();
-
-
-
-	//App->window->SetFullscreen(fullscreen);
-	//App->window->SetResizable(resizable);
 
 }
 
@@ -204,7 +265,6 @@ bool ModuleUI::Init() {
 }
 
 update_status ModuleUI::PreUpdate() {
-
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);

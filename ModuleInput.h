@@ -18,5 +18,5 @@ public:
 
 private:
 	const Uint8 *keyboard = NULL;
-
+	bool enable_camera_movement = false;
 };

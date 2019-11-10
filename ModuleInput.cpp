@@ -3,6 +3,8 @@
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleCamera.h"
+#include "ModuleProgram.h"
 #include "ModuleUI.h"
 
 #include "IMGUI/imgui.h"
@@ -40,7 +42,7 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::Update()
 {
-	
+
 	static SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
@@ -52,16 +54,54 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_WINDOWEVENT:
-			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
+				App->ui->my_log.AddLog("WIDTH: %d, HEIGHT: %d", e.window.data1, e.window.data2);
+			}
 			break;
 
+		case SDL_MOUSEBUTTONDOWN:
+			if (e.button.button == SDL_BUTTON_RIGHT)
+				enable_camera_movement = true;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if (e.button.button == SDL_BUTTON_RIGHT)
+				enable_camera_movement = false;
+
 		case SDL_KEYDOWN:
+			if (e.key.keysym.scancode == SDL_SCANCODE_W && enable_camera_movement) {
+				App->camera->cameraPos.z -= 0.5;
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+			}
+
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_S && enable_camera_movement) {
+				App->camera->cameraPos.z += 0.5;
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_D && enable_camera_movement) {
+				App->camera->cameraPos.x += 0.5;
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+			}
+
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_A && enable_camera_movement) {
+				App->camera->cameraPos.x -= 0.5;
+				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
 			break;
 		}
-		
+
 		ImGui_ImplSDL2_ProcessEvent(&e);
-	
+
 	}
 
 
