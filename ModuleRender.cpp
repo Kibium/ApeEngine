@@ -16,7 +16,6 @@
 
 using namespace std;
 
-//yolo
 ModuleRender::ModuleRender()
 {
 }
@@ -27,7 +26,6 @@ ModuleRender::~ModuleRender()
 
 }
 
-//yeys
 void ModuleRender::lookAt() {
 
 	f = float3(target - cameraPos);

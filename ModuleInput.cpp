@@ -61,40 +61,117 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (e.button.button == SDL_BUTTON_RIGHT)
+			if (e.button.button == SDL_BUTTON_RIGHT) {
 				enable_camera_movement = true;
+
+				//Reset the condition so offsets are reseted once
+				once = false;
+
+			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			if (e.button.button == SDL_BUTTON_RIGHT)
+			if (e.button.button == SDL_BUTTON_RIGHT) 
 				enable_camera_movement = false;
+				
+			
+				
+			break;
+		case SDL_MOUSEMOTION:
+			if (enable_camera_movement) {
+
+				currentX = e.motion.x;
+				currentY = e.motion.y;
+
+				xOffset = currentX - lastX;
+				yOffset = currentY - lastY;
+
+				lastX = currentX;
+				lastY = currentY;
+
+				//resets offsets when we release the mouse button
+				if (!once) {
+					xOffset = 0;
+					yOffset = 0;
+					once = true;
+				}
+
+				App->camera->rotY += xOffset/100;
+				App->camera->rotZ += yOffset/100;
+
+				App->camera->dirty = true;
+
+				//App->ui->my_log.AddLog("xOffset: %f  yOffset: %f \n", xOffset, yOffset);
+			
+			}
+
+			else {
+				currentX = 0;
+				currentY = 0;
+
+				xOffset = 0;
+				yOffset = 0;
+
+				lastX = 0;
+				lastY = 0;
+			}
+			break;
+
+
 
 		case SDL_KEYDOWN:
-			if (e.key.keysym.scancode == SDL_SCANCODE_W  && enable_camera_movement) {
-				App->camera->cameraPos.z -= 0.5;				
+			if (enable_camera_movement) {
+				if (e.key.keysym.scancode == SDL_SCANCODE_W) {
+					App->camera->camSpeed.z -= 0.1;
+					App->camera->dirty = true;
+				}
+
+				if (e.key.keysym.scancode == SDL_SCANCODE_S) {
+					App->camera->camSpeed.z += 0.1;
+					App->camera->dirty = true;
+				}
+
+				if (e.key.keysym.scancode == SDL_SCANCODE_D) {
+					App->camera->camSpeed.x += 0.1;
+					App->camera->dirty = true;
+				}
+
+				if (e.key.keysym.scancode == SDL_SCANCODE_A) {
+					App->camera->camSpeed.x -= 0.1;
+					App->camera->dirty = true;
+				}
+			}
+			
+			break;
+
+		case SDL_KEYUP:
+			if (e.key.keysym.scancode == SDL_SCANCODE_W) {
+				App->camera->camSpeed.z = 0;
 				App->camera->dirty = true;
 			}
 
 
-			if (e.key.keysym.scancode == SDL_SCANCODE_S && enable_camera_movement) {
-				App->camera->cameraPos.z += 0.5;
-				App->camera->dirty = true;
-
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_D && enable_camera_movement) {
-				App->camera->cameraPos.x += 0.5;
+			if (e.key.keysym.scancode == SDL_SCANCODE_S) {
+				App->camera->camSpeed.z = 0;
 				App->camera->dirty = true;
 			}
 
 
-			if (e.key.keysym.scancode == SDL_SCANCODE_A && enable_camera_movement) {
-				App->camera->cameraPos.x -= 0.5;
+			if (e.key.keysym.scancode == SDL_SCANCODE_D) {
+				App->camera->camSpeed.x = 0;
 				App->camera->dirty = true;
-
 			}
+
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_A) {
+				App->camera->camSpeed.x = 0;
+				App->camera->dirty = true;
+			}
+
 
 			break;
 		}
+
+
 
 		ImGui_ImplSDL2_ProcessEvent(&e);
 

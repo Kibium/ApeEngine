@@ -27,6 +27,9 @@ public:
 
 	float rotX = 2.3589, rotY = 0.5, rotZ = 0.5;
 	float nearP, farP, vFov, hFov, AR;
+	float3 camSpeed;
+
+	
 
 	math::float3  up, camTarget, f, s, u;
 	math::float3 cameraPos, camDirection, camUp, camRight;

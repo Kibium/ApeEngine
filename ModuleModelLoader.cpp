@@ -30,7 +30,7 @@ bool ModuleModelLoader::Init() {
 	}
 
 	else {
-		App->ui->my_log.AddLog("Model Loaded!");
+		App->ui->my_log.AddLog("Model Loaded! \n");
 
 		for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 		{

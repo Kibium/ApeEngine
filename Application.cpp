@@ -10,11 +10,15 @@
 #include "ModuleScene.h"
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
+#include "ModuleMSTimer.h"
 
 using namespace std;
 
 Application::Application()
 {
+	modules.push_back(timer = new ModuleMSTimer());
+	timer->Start();
+	timer->Read();
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(input = new ModuleInput());
@@ -29,6 +33,10 @@ Application::Application()
 	modules.push_back(ui = new ModuleUI());
 	modules.push_back(scene = new ModuleScene());
 	modules.push_back(modelLoader = new ModuleModelLoader());
+	ui->my_log.AddLog("------Engine Init!------\n");
+
+	ui->my_log.AddLog("Time spent loading modules: %0.1f ms\n",timer->Stop());
+	
 
 
 }
@@ -43,10 +51,17 @@ Application::~Application()
 
 bool Application::Init()
 {
+	timer->Start();
+	timer->Read();
+
 	bool ret = true;
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
+
+	ui->my_log.AddLog("Time spent Initializing modules: %0.1f ms\n", timer->Stop());
+	
+
 
 	return ret;
 }

@@ -131,6 +131,8 @@
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleModelLoader.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
+    <ClCompile Include="ModuleMSTimer.cpp" />
+    <ClCompile Include="ModuleμSTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -344,6 +346,8 @@
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleModelLoader.h" />
     <ClInclude Include="ModuleCamera.h" />
+    <ClInclude Include="ModuleMSTimer.h" />
+    <ClInclude Include="ModuleμSTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

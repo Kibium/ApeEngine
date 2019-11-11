@@ -106,6 +106,8 @@ bool ModuleCamera::Init(){
 	//Where is pointing to
 	camTarget = float3(0, 0, 0);
 
+	camSpeed = float3(0, 0, 0);
+
 	rotX = rotY = rotZ = 0;
 	
 
@@ -124,8 +126,10 @@ bool ModuleCamera::Init(){
 
 update_status ModuleCamera::Update() {
 
-	//Means. a change on the camera has been made
+	//Means, if a change on the camera has been made, update it, so it's not made every frame
 	if (dirty) {
+
+		cameraPos += camSpeed;
 
 		glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
 		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader

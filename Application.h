@@ -14,6 +14,7 @@ class ModuleUI;
 class ModuleScene;
 class ModuleModelLoader;
 class ModuleCamera;
+class ModuleMSTimer;
 
 
 class Application
@@ -38,6 +39,7 @@ public:
 	ModuleScene* scene = nullptr;
 	ModuleModelLoader* modelLoader = nullptr;
 	ModuleCamera* camera = nullptr;
+	ModuleMSTimer* timer = nullptr;
 
 	void RequestBrowser(char*);
 
