@@ -99,6 +99,12 @@ void ModuleUI::MyConsole() {
 
 			}
 
+			if (ImGui::SliderFloat("Aspect", &App->camera->AR, 1, 90)) {
+				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+				App->camera->ProcessMatrixs();
+
+			}
+
 			//if (ImGui::SliderFloat("Aspect Ratio", &App->camera->AR, 0.1, 40))
 			//	glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 
@@ -130,21 +136,21 @@ void ModuleUI::MyConsole() {
 
 		if (ImGui::TreeNode("Rotation")) {
 			if (ImGui::SliderFloat("X", &App->camera->rotX, -10, 10)) {
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]);
 				App->camera->ProcessMatrixs();
 
 
 			}
 
 			if (ImGui::SliderFloat("Y", &App->camera->rotY, -10, 10)) {
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]);
 				App->camera->ProcessMatrixs();
 
 
 			}
 
 			if (ImGui::SliderFloat("Z", &App->camera->rotZ, -10, 10)) {
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+				glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]);
 				App->camera->ProcessMatrixs();
 
 

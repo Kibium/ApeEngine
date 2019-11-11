@@ -1,6 +1,7 @@
 #include "ModuleCamera.h"
 #include "ModuleUI.h"
-#include "ModuleUI.h"
+
+#include "ModuleProgram.h"
 
 ModuleCamera::ModuleCamera(){}
 ModuleCamera::~ModuleCamera(){}
@@ -57,7 +58,7 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 	frustum.nearPlaneDistance = farp;
 	frustum.farPlaneDistance = nearp;
 	frustum.verticalFov = vfov;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * hfov) * DegToRad(aspect)); //aspect ratio 
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(aspect)); //aspect ratio 
 	proj = frustum.ProjectionMatrix();
 
 }
@@ -74,6 +75,8 @@ void ModuleCamera::ProcessMatrixs() {
 	model = float4x4::FromTRS(float3(0, 0, 0), rotateMatrix, float3(1, 1, 1));
 
 	transform = proj * view* float4x4(model);
+
+
 }
 
 void ModuleCamera::SetHFOV(float& f) {
@@ -120,7 +123,17 @@ bool ModuleCamera::Init(){
 }
 
 update_status ModuleCamera::Update() {
-	ProcessMatrixs();
+
+	//Means. a change on the camera has been made
+	if (dirty) {
+
+		glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
+		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
+		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
+
+		ProcessMatrixs();
+		dirty = false;
+	}
 
 	return UPDATE_CONTINUE;
 }

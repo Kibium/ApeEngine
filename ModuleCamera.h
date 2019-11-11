@@ -31,6 +31,9 @@ public:
 	math::float3  up, camTarget, f, s, u;
 	math::float3 cameraPos, camDirection, camUp, camRight;
 	math::float4x4 view, proj, model, transform, rotateMatrix;
+
+	bool dirty = false;
+
 	Frustum frustum;
 
 

@@ -69,31 +69,27 @@ update_status ModuleInput::Update()
 				enable_camera_movement = false;
 
 		case SDL_KEYDOWN:
-			if (e.key.keysym.scancode == SDL_SCANCODE_W && enable_camera_movement) {
-				App->camera->cameraPos.z -= 0.5;
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
+			if (e.key.keysym.scancode == SDL_SCANCODE_W  && enable_camera_movement) {
+				App->camera->cameraPos.z -= 0.5;				
+				App->camera->dirty = true;
 			}
 
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_S && enable_camera_movement) {
 				App->camera->cameraPos.z += 0.5;
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
+				App->camera->dirty = true;
 
 			}
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_D && enable_camera_movement) {
 				App->camera->cameraPos.x += 0.5;
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
+				App->camera->dirty = true;
 			}
 
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_A && enable_camera_movement) {
 				App->camera->cameraPos.x -= 0.5;
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
+				App->camera->dirty = true;
 
 			}
 
