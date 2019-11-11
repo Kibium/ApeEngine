@@ -8,7 +8,7 @@ ModuleCamera::~ModuleCamera(){}
 
 void ModuleCamera::LookAt(float3& camPos, float3& target, float3& up) {
 
-	target = camPos + float3(0, 0, -1);//camPos; +float3(1, 0, 1);
+	target = camPos + float3(0, 0, -0.1);// +float3(0, 0, -1);//camPos; +float3(1, 0, 1);
 	camDirection = cameraPos - target;
 	camDirection.Normalize();
 
@@ -63,6 +63,20 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 
 }
 
+void ModuleCamera::ResetCamera() {
+	cameraPos = float3(0, 3, 10);
+	camSpeed = float3(0, 0, 0);
+	rotX = rotY = rotZ = 0;
+	nearP = 0.1;
+	farP = 30;
+	AR = 60;
+	vFov = 5;
+	hFov = 2.f * atanf(tanf(vFov / 2) * DegToRad(AR));
+
+	App->camera->dirty = true;
+
+}
+
 void ModuleCamera::ProcessMatrixs() {
 	
 
@@ -104,7 +118,7 @@ bool ModuleCamera::Init(){
 	cameraPos = float3(0, 3, 10);
 
 	//Where is pointing to
-	camTarget = float3(0, 0, 0);
+	//camTarget = float3(0, 0, 0);
 
 	camSpeed = float3(0, 0, 0);
 

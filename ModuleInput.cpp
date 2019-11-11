@@ -98,6 +98,11 @@ update_status ModuleInput::Update()
 				App->camera->rotY += xOffset/100;
 				App->camera->rotZ += yOffset/100;
 
+				App->camera->camTarget.x = cos(DegToRad(yOffset)) * cos(DegToRad(xOffset));
+				App->camera->camTarget.y = sin(DegToRad(yOffset));
+				App->camera->camTarget.z = cos(DegToRad(yOffset)) * sin(DegToRad(xOffset));
+				App->camera->camTarget.Normalize();
+				
 				App->camera->dirty = true;
 
 				//App->ui->my_log.AddLog("xOffset: %f  yOffset: %f \n", xOffset, yOffset);

@@ -73,7 +73,7 @@ void ModuleUI::MyConsole() {
 		ImGui::Checkbox("Enable Wrap_T", &App->textures->WRAPt);
 		Separate();
 
-		ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
+		//ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
 
 
 	}
@@ -103,6 +103,13 @@ void ModuleUI::MyConsole() {
 				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 				App->camera->ProcessMatrixs();
 
+			}
+
+			Separate();
+
+			if (ImGui::Button("Reset camera")) {
+			
+				App->camera->ResetCamera();
 			}
 
 			//if (ImGui::SliderFloat("Aspect Ratio", &App->camera->AR, 0.1, 40))

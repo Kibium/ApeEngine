@@ -24,6 +24,7 @@ public:
 	void SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect);
 	void GetProjMatrix();
 	void GetViewMatrix();
+	void ResetCamera();
 
 	float rotX = 2.3589, rotY = 0.5, rotZ = 0.5;
 	float nearP, farP, vFov, hFov, AR;

@@ -1,9 +1,6 @@
-﻿  ModuleInput.cpp
-c:\users\tonifj\desktop\engine_master\modulecamera.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\tonifj\desktop\engine_master\moduleinput.cpp(82): warning C4244: '=': conversion from 'Sint32' to 'float', possible loss of data
-c:\users\tonifj\desktop\engine_master\moduleinput.cpp(83): warning C4244: '=': conversion from 'Sint32' to 'float', possible loss of data
-c:\users\tonifj\desktop\engine_master\moduleinput.cpp(124): warning C4305: '-=': truncation from 'double' to 'float'
-c:\users\tonifj\desktop\engine_master\moduleinput.cpp(129): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\tonifj\desktop\engine_master\moduleinput.cpp(134): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\tonifj\desktop\engine_master\moduleinput.cpp(139): warning C4305: '-=': truncation from 'double' to 'float'
+﻿  ModuleCamera.cpp
+c:\users\tonifj\desktop\engine_master\modulecamera.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\tonifj\desktop\engine_master\modulecamera.cpp(11): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\tonifj\desktop\engine_master\modulecamera.cpp(70): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\tonifj\desktop\engine_master\modulecamera.cpp(129): warning C4305: '=': truncation from 'double' to 'float'
   Engine.vcxproj -> C:\Users\tonifj\Desktop\Engine_Master\Debug\EngineMaster.exe
