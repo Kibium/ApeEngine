@@ -6,25 +6,22 @@
 ModuleCamera::ModuleCamera(){}
 ModuleCamera::~ModuleCamera(){}
 
-void ModuleCamera::LookAt(float3& camPos, float3& target, float3& up) {
+void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 
-	target = camPos + float3(0, 0, -1);//camPos; +float3(1, 0, 1);
-	camDirection = cameraPos - target;
-	camDirection.Normalize();
+	//target = camPos + float3(0, 0, -1);//camPos; +float3(1, 0, 1);
+	//camDirection = cameraPos - target;
+	//camDirection.Normalize();
+	//target.Normalize();
+	//camRight = up.Cross(camDirection);
+	//camRight.Normalize();
 
-	up = float3(0, 1, 0);
+	//up = camDirection.Cross(camRight);
 
-	camRight = up.Cross(camDirection);
-	camRight.Normalize();
-
-	camUp = camDirection.Cross(camRight);
-
-
-	f = camDirection;
+	f = target - eye;
 	f.Normalize();
-	s = camRight;
+	s = f.Cross(up);
 	s.Normalize();
-	u = camUp;
+	u = s.Cross(f);
 
 	//View Matrix - Look at computation
 	view[0][0] = s.x;
@@ -35,13 +32,13 @@ void ModuleCamera::LookAt(float3& camPos, float3& target, float3& up) {
 	view[1][1] = u.y;
 	view[1][2] = u.z;
 
-	view[2][0] = f.x;
-	view[2][1] = f.y;
-	view[2][2] = f.z;
+	view[2][0] = -f.x;
+	view[2][1] = -f.y;
+	view[2][2] = -f.z;
 
-	view[0][3] = -s.Dot(camPos);
-	view[1][3] = -u.Dot(camPos);
-	view[2][3] = -f.Dot(camPos);
+	view[0][3] = -s.Dot(eye);
+	view[1][3] = -u.Dot(eye);
+	view[2][3] = -f.Dot(eye);
 
 	view[3][0] = 0.0f;
 	view[3][1] = 0.0f;
@@ -66,13 +63,13 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 void ModuleCamera::ProcessMatrixs() {
 	
 
-	LookAt(cameraPos, camTarget, up);
+	LookAt(cameraPos, cameraPos + camFront, camUp);
 	rotateMatrix = float3x3::RotateZ(rotX) * float3x3::RotateY(rotY) * float3x3::RotateX(rotZ);
 
 	SetProjMatrix(nearP, farP, vFov, hFov, AR);
 
 	//It modifies the original position, rottion and scale of the camera.
-	model = float4x4::FromTRS(float3(2, 0, 0), rotateMatrix, float3(1, 1, 1));
+	model = float4x4::FromTRS(float3(0, 0, 0), rotateMatrix, float3(1, 1, 1));
 
 	transform = proj * view* float4x4(model);
 
@@ -97,31 +94,37 @@ void ModuleCamera::SetPlaneDistances(float& n, float& f) {
 	farP = f;
 }
 
-
-bool ModuleCamera::Init(){
-
+void ModuleCamera::ResetCamera() {
 	//Cam position
-	cameraPos = float3(0, 3, 10);
-	speedValue = 0.1;
-	sensitivity = 0.5;
+	cameraPos = float3(0, 3, -10);
+	camUp = float3(0, 1, 0);
+	speedValue = 0.1f;
+	sensitivity = 0.5f;
 	//Where is pointing to
 	camTarget = float3(0, 0, 0);
 
 	camSpeed = float3(0, 0, 0);
 
+	camFront = float3(0, 0, -1);
+
 	rotX = rotY = rotZ = 0;
-	
+
 	//ORBIT MODE
 	mode = true;
 
 	//Frustum generates a projection matrix
-	nearP = 0.1;
+	nearP = 0.1f;
 	farP = 30;
 	AR = 60;
-	vFov = math::pi/4;
+	vFov = math::pi / 4;
 	hFov = 2.f * atanf(tanf(vFov / 2) * DegToRad(AR)); //aspect ratio 
+}
 
-	LookAt(cameraPos, camTarget, up);
+bool ModuleCamera::Init(){
+
+	
+	ResetCamera();
+	LookAt(cameraPos, cameraPos + camFront, camUp);
 	ProcessMatrixs();
 
 	return true;
@@ -141,6 +144,17 @@ update_status ModuleCamera::Update() {
 
 		ProcessMatrixs();
 		dirty = false;
+	}
+
+	if (!mode) {
+
+		
+		glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
+		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
+		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
+		rotY += 0.01;
+		ProcessMatrixs();
+
 	}
 
 	return UPDATE_CONTINUE;

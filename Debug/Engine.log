@@ -1,5 +1,3 @@
 ﻿  ModuleCamera.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\modulecamera.h(32): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
-c:\users\gt73evr\source\repos\kibium\engine_master\modulecamera.cpp(105): warning C4305: '=': truncamiento de 'double' a 'float'
-c:\users\gt73evr\source\repos\kibium\engine_master\modulecamera.cpp(118): warning C4305: '=': truncamiento de 'double' a 'float'
-  Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe
+c:\users\tonifj\desktop\engine_master\modulecamera.cpp(155): warning C4305: '+=': truncation from 'double' to 'float'
+  Engine.vcxproj -> C:\Users\tonifj\Desktop\Engine_Master\Debug\EngineMaster.exe

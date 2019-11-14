@@ -28,8 +28,9 @@ public:
 	void SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect);
 	void GetProjMatrix();
 	void GetViewMatrix();
+	void ResetCamera();
 
-	float rotX = 2.3589, rotY = 0.5, rotZ = 0.5;
+	float rotX = 2.3589f, rotY = 0.5f, rotZ = 0.5f;
 	float nearP, farP, vFov, hFov, AR, sensitivity;
 	float3 camSpeed;
 	float speedValue;
@@ -37,9 +38,11 @@ public:
 	//TRUE = FREE MOVEMENT // FALSE = ORBIT
 	bool mode;
 
+	//Resets the camera once if the mode is set to ORBIT
+	bool once;
 	
 
-	math::float3  up, camTarget, f, s, u;
+	math::float3  camTarget, f, s, u;
 	math::float3 cameraPos, camDirection, camUp, camRight, camFront;
 	math::float4x4 view, proj, model, transform, rotateMatrix;
 

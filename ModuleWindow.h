@@ -23,9 +23,14 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	float GetWidth();
+	float GetHeight();
+
 	bool fullscreen = false;
 	bool bordered = true;
 	bool fulldesktop = false;
+	int width;
+	int height;
 
 	Uint32 flags;
 

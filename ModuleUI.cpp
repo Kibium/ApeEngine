@@ -93,11 +93,19 @@ void ModuleUI::MyConsole() {
 	if (ImGui::CollapsingHeader("Camera")) {
 
 		ImGui::TextColored(ImVec4(204, 204, 0, 1), "Camera Mode");
-		if (ImGui::Button("Free View"))
+		if (ImGui::Button("Free View")) {
+			App->camera->dirty = false;
+			App->camera->once = false;
 			App->camera->mode = true;
+			
+		}
 		ImGui::SameLine();
-		if (ImGui::Button("Orbit View"))
+		if (ImGui::Button("Orbit View")) {
+			App->camera->ResetCamera();
+			App->camera->dirty = true;
 			App->camera->mode = false;
+
+		}
 
 		if (ImGui::TreeNode("Settings")) {
 
@@ -108,14 +116,14 @@ void ModuleUI::MyConsole() {
 
 			}
 
-			if (ImGui::SliderFloat("Near Plane", &App->camera->nearP, 0.1, 40)) {
+			if (ImGui::SliderFloat("Near Plane", &App->camera->nearP, 0.1f, 40)) {
 				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 				App->camera->ProcessMatrixs();
 
 			}
 			Separate();
 
-			if (ImGui::SliderFloat("FOV", &App->camera->vFov, 0.1, math::pi)) {
+			if (ImGui::SliderFloat("FOV", &App->camera->vFov, 0.1f, math::pi)) {
 				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 				App->camera->ProcessMatrixs();
 
@@ -242,14 +250,10 @@ void ModuleUI::MyConsole() {
 		ImGui::BulletText("SDL 2.1.0");
 	}
 
-
-
-
-
 	if (SDL_GetTicks() >= lastTicks + 1000) {
 		fps_log.push_back(ImGui::GetIO().Framerate);
 		ms_log.push_back(1000.0f / ImGui::GetIO().Framerate);
-		lastTicks = SDL_GetTicks();
+		lastTicks = (float)SDL_GetTicks();
 	}
 
 	FPSHistogram();
@@ -263,7 +267,7 @@ bool ModuleUI::Init() {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		printf("Error: %s\n", SDL_GetError());
-		return -1;
+		return false;
 	}
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -282,7 +286,6 @@ bool ModuleUI::Init() {
 
 	fps_log.push_back(0);
 	ms_log.push_back(0);
-
 
 	return true;
 }

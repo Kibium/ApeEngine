@@ -16,6 +16,18 @@ ModuleWindow::~ModuleWindow()
 {
 }
 
+float ModuleWindow::GetWidth() {
+
+	SDL_GetWindowSize(window, &width, &height);
+	return width;
+}
+float ModuleWindow::GetHeight() {
+
+	SDL_GetWindowSize(window, &width, &height);
+	return height;
+}
+
+
 // Called before render is available
 bool ModuleWindow::Init()
 {
@@ -36,8 +48,8 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH;
-		int height = SCREEN_HEIGHT;
+		width = SCREEN_WIDTH;
+		height = SCREEN_HEIGHT;
 		flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 
 		if (fullscreen)

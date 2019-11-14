@@ -6,6 +6,7 @@
 #include "ModuleCamera.h"
 #include "ModuleProgram.h"
 #include "ModuleUI.h"
+#include "SDL.h"
 
 #include "IMGUI/imgui.h"
 
@@ -54,12 +55,14 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_WINDOWEVENT:
-			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || e.window.event == SDL_WINDOWEVENT_MAXIMIZED) {
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
-				float asp = e.window.data1 / e.window.data2;
+
+				float asp = RadToDeg(App->window->GetWidth() / App->window->GetHeight());
 				
 				App->camera->SetAspectRatio(asp);
-				App->ui->my_log.AddLog("WIDTH: %d, HEIGHT: %d", e.window.data1, e.window.data2);
+				
+				App->camera->dirty = true;
 			}
 			break;
 
@@ -84,8 +87,8 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
 
-				currentX = e.motion.x;
-				currentY = e.motion.y;
+				currentX = (float)e.motion.x;
+				currentY = (float)e.motion.y;
 
 				xOffset = currentX - lastX;
 				yOffset = currentY - lastY;
@@ -110,11 +113,15 @@ update_status ModuleInput::Update()
 				App->camera->rotY += DegToRad(xOffset) * App->camera->sensitivity;
 				App->camera->rotZ += DegToRad(yOffset) * App->camera->sensitivity;
 
-				std::cout << RadToDeg(App->camera->rotZ) << std::endl;
+				//App->camera->camFront.x = cos(DegToRad(xOffset))* cos(DegToRad(yOffset));
+				//App->camera->camFront.y = sin(DegToRad(yOffset));
+				//App->camera->camFront.z = cos(DegToRad(xOffset)) * sin(DegToRad(yOffset));
+				App->camera->camFront.Normalize();
+
+				App->ui->my_log.AddLog("x: %0.1f, y: %0.1f, z: %0.1f\n", App->camera->camFront.x, App->camera->camFront.y, App->camera->camFront.z);
 
 				App->camera->dirty = true;
 
-				//App->ui->my_log.AddLog("xOffset: %f  yOffset: %f \n", xOffset, yOffset);
 
 			}
 
@@ -143,20 +150,20 @@ update_status ModuleInput::Update()
 			if (enable_camera_movement) {
 				if (e.key.keysym.scancode == SDL_SCANCODE_W) {
 					if (speed_boost)
-						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+						App->camera->camSpeed.z = 3 * App->camera->speedValue;
 
 					else
-						App->camera->camSpeed.z = -App->camera->speedValue;
+						App->camera->camSpeed.z = App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_S) {
 					if (speed_boost)
-						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+						App->camera->camSpeed.z = -3 * App->camera->speedValue;
 
 					else
 
-						App->camera->camSpeed.z = App->camera->speedValue;
+						App->camera->camSpeed.z = -App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 
@@ -165,7 +172,7 @@ update_status ModuleInput::Update()
 						App->camera->camSpeed.z = 3 * App->camera->speedValue;
 
 					else
-						App->camera->camSpeed.x = App->camera->speedValue;
+						App->camera->camSpeed.x =App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 
