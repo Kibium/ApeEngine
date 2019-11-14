@@ -4,6 +4,10 @@
 
 #include "MathGeoLib/include/MathGeoLib.h"
 
+enum CameraMode {
+	ORBIT = 0,
+	FREE
+};
 
 class ModuleCamera : public Module {
 public:
@@ -24,16 +28,19 @@ public:
 	void SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect);
 	void GetProjMatrix();
 	void GetViewMatrix();
-	void ResetCamera();
 
 	float rotX = 2.3589, rotY = 0.5, rotZ = 0.5;
-	float nearP, farP, vFov, hFov, AR;
+	float nearP, farP, vFov, hFov, AR, sensitivity;
 	float3 camSpeed;
+	float speedValue;
+
+	//TRUE = FREE MOVEMENT // FALSE = ORBIT
+	bool mode;
 
 	
 
 	math::float3  up, camTarget, f, s, u;
-	math::float3 cameraPos, camDirection, camUp, camRight;
+	math::float3 cameraPos, camDirection, camUp, camRight, camFront;
 	math::float4x4 view, proj, model, transform, rotateMatrix;
 
 	bool dirty = false;

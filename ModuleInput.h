@@ -17,8 +17,9 @@ public:
 	bool CleanUp();
 
 private:
-	const Uint8 *keyboard = NULL;
+	SDL_MouseWheelEvent *wheel = NULL;
 	bool enable_camera_movement = false;
+	bool speed_boost = false;
 
 	float currentX, lastX, currentY, lastY;
 	float xOffset, yOffset;

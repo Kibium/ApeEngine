@@ -59,6 +59,18 @@ void ModuleUI::MyConsole() {
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+
+	if (ImGui::CollapsingHeader("Log")) {
+
+		if (logBool)
+			my_log.Draw("Log", &logBool);
+	}
+	else
+		logBool = true;
+
+
+
+
 	if (ImGui::CollapsingHeader("Engine")) {
 		ImGui::InputText("Name", title, 25);
 		SDL_SetWindowTitle(App->window->window, title);
@@ -73,13 +85,23 @@ void ModuleUI::MyConsole() {
 		ImGui::Checkbox("Enable Wrap_T", &App->textures->WRAPt);
 		Separate();
 
-		//ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
+		ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
 
 
 	}
 
 	if (ImGui::CollapsingHeader("Camera")) {
+
+		ImGui::TextColored(ImVec4(204, 204, 0, 1), "Camera Mode");
+		if (ImGui::Button("Free View"))
+			App->camera->mode = true;
+		ImGui::SameLine();
+		if (ImGui::Button("Orbit View"))
+			App->camera->mode = false;
+
 		if (ImGui::TreeNode("Settings")) {
+
+
 			if (ImGui::SliderFloat("Far Plane", &App->camera->farP, 50, 150)) {
 				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 				App->camera->ProcessMatrixs();
@@ -93,7 +115,7 @@ void ModuleUI::MyConsole() {
 			}
 			Separate();
 
-			if (ImGui::SliderFloat("FOV", &App->camera->vFov, 1, 90)) {
+			if (ImGui::SliderFloat("FOV", &App->camera->vFov, 0.1, math::pi)) {
 				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 				App->camera->ProcessMatrixs();
 
@@ -104,16 +126,6 @@ void ModuleUI::MyConsole() {
 				App->camera->ProcessMatrixs();
 
 			}
-
-			Separate();
-
-			if (ImGui::Button("Reset camera")) {
-			
-				App->camera->ResetCamera();
-			}
-
-			//if (ImGui::SliderFloat("Aspect Ratio", &App->camera->AR, 0.1, 40))
-			//	glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 
 			ImGui::TreePop();
 
@@ -230,10 +242,9 @@ void ModuleUI::MyConsole() {
 		ImGui::BulletText("SDL 2.1.0");
 	}
 
-	if (ImGui::CollapsingHeader("Log"))
-		my_log.Draw("Log");
 
-	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+
 
 	if (SDL_GetTicks() >= lastTicks + 1000) {
 		fps_log.push_back(ImGui::GetIO().Framerate);
@@ -254,7 +265,6 @@ bool ModuleUI::Init() {
 		printf("Error: %s\n", SDL_GetError());
 		return -1;
 	}
-	//my_log.AddLog("hola");
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

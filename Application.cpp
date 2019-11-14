@@ -29,7 +29,6 @@ Application::Application()
 
 	modules.push_back(program = new ModuleProgram());
 
-	//modules.push_back(exercise = new ModuleRenderExercise());
 	modules.push_back(ui = new ModuleUI());
 	modules.push_back(scene = new ModuleScene());
 	modules.push_back(modelLoader = new ModuleModelLoader());

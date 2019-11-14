@@ -54,15 +54,20 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_WINDOWEVENT:
-			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || e.window.event == SDL_WINDOWEVENT_MAXIMIZED) {
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
+				float asp = e.window.data1 / e.window.data2;
+				
+				App->camera->SetAspectRatio(asp);
 				App->ui->my_log.AddLog("WIDTH: %d, HEIGHT: %d", e.window.data1, e.window.data2);
 			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
 			if (e.button.button == SDL_BUTTON_RIGHT) {
-				enable_camera_movement = true;
+				//If the camera mode is not Orbit
+				if (App->camera->mode)
+					enable_camera_movement = true;
 
 				//Reset the condition so offsets are reseted once
 				once = false;
@@ -70,11 +75,11 @@ update_status ModuleInput::Update()
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			if (e.button.button == SDL_BUTTON_RIGHT) 
+			if (e.button.button == SDL_BUTTON_RIGHT)
 				enable_camera_movement = false;
-				
-			
-				
+
+
+
 			break;
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
@@ -95,18 +100,22 @@ update_status ModuleInput::Update()
 					once = true;
 				}
 
-				App->camera->rotY += xOffset/100;
-				App->camera->rotZ += yOffset/100;
+				if (RadToDeg(App->camera->rotZ) >= 89)
+					App->camera->rotZ = DegToRad(89);
 
-				App->camera->camTarget.x = cos(DegToRad(yOffset)) * cos(DegToRad(xOffset));
-				App->camera->camTarget.y = sin(DegToRad(yOffset));
-				App->camera->camTarget.z = cos(DegToRad(yOffset)) * sin(DegToRad(xOffset));
-				App->camera->camTarget.Normalize();
-				
+				if (RadToDeg(App->camera->rotZ) <= -89)
+					App->camera->rotZ = DegToRad(-89);
+
+
+				App->camera->rotY += DegToRad(xOffset) * App->camera->sensitivity;
+				App->camera->rotZ += DegToRad(yOffset) * App->camera->sensitivity;
+
+				std::cout << RadToDeg(App->camera->rotZ) << std::endl;
+
 				App->camera->dirty = true;
 
 				//App->ui->my_log.AddLog("xOffset: %f  yOffset: %f \n", xOffset, yOffset);
-			
+
 			}
 
 			else {
@@ -124,31 +133,77 @@ update_status ModuleInput::Update()
 
 
 		case SDL_KEYDOWN:
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT) {
+				speed_boost = true;
+				App->camera->dirty = true;
+			}
+
+
 			if (enable_camera_movement) {
 				if (e.key.keysym.scancode == SDL_SCANCODE_W) {
-					App->camera->camSpeed.z -= 0.1;
+					if (speed_boost)
+						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+
+					else
+						App->camera->camSpeed.z = -App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-					App->camera->camSpeed.z += 0.1;
+					if (speed_boost)
+						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+
+					else
+
+						App->camera->camSpeed.z = App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_D) {
-					App->camera->camSpeed.x += 0.1;
+					if (speed_boost)
+						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+
+					else
+						App->camera->camSpeed.x = App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_A) {
-					App->camera->camSpeed.x -= 0.1;
+					if (speed_boost)
+						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+
+					else
+						App->camera->camSpeed.x = -App->camera->speedValue;
+					App->camera->dirty = true;
+				}
+
+				if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
+					if (speed_boost)
+						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+
+					else
+						App->camera->camSpeed.y = App->camera->speedValue;
+					App->camera->dirty = true;
+				}
+
+				if (e.key.keysym.scancode == SDL_SCANCODE_E) {
+					if (speed_boost)
+						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+
+					else
+						App->camera->camSpeed.y = -App->camera->speedValue;
 					App->camera->dirty = true;
 				}
 			}
-			
+
 			break;
 
 		case SDL_KEYUP:
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
+				speed_boost = false;
+
 			if (e.key.keysym.scancode == SDL_SCANCODE_W) {
 				App->camera->camSpeed.z = 0;
 				App->camera->dirty = true;
@@ -172,7 +227,31 @@ update_status ModuleInput::Update()
 				App->camera->dirty = true;
 			}
 
+			if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
 
+				App->camera->camSpeed.y = 0;
+				App->camera->dirty = true;
+			}
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_E) {
+
+				App->camera->camSpeed.y = 0;
+				App->camera->dirty = true;
+			}
+
+			break;
+
+		case SDL_MOUSEWHEEL:
+			if (e.wheel.y > 0) // scroll up
+			{
+				App->camera->cameraPos.z -= 1;
+				App->camera->dirty = true;
+			}
+			else if (e.wheel.y < 0) // scroll down
+			{
+				App->camera->cameraPos.z += 1;
+				App->camera->dirty = true;
+			}
 			break;
 		}
 

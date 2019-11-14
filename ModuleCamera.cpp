@@ -8,7 +8,7 @@ ModuleCamera::~ModuleCamera(){}
 
 void ModuleCamera::LookAt(float3& camPos, float3& target, float3& up) {
 
-	target = camPos + float3(0, 0, -0.1);// +float3(0, 0, -1);//camPos; +float3(1, 0, 1);
+	target = camPos + float3(0, 0, -1);//camPos; +float3(1, 0, 1);
 	camDirection = cameraPos - target;
 	camDirection.Normalize();
 
@@ -63,20 +63,6 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 
 }
 
-void ModuleCamera::ResetCamera() {
-	cameraPos = float3(0, 3, 10);
-	camSpeed = float3(0, 0, 0);
-	rotX = rotY = rotZ = 0;
-	nearP = 0.1;
-	farP = 30;
-	AR = 60;
-	vFov = 5;
-	hFov = 2.f * atanf(tanf(vFov / 2) * DegToRad(AR));
-
-	App->camera->dirty = true;
-
-}
-
 void ModuleCamera::ProcessMatrixs() {
 	
 
@@ -86,7 +72,7 @@ void ModuleCamera::ProcessMatrixs() {
 	SetProjMatrix(nearP, farP, vFov, hFov, AR);
 
 	//It modifies the original position, rottion and scale of the camera.
-	model = float4x4::FromTRS(float3(0, 0, 0), rotateMatrix, float3(1, 1, 1));
+	model = float4x4::FromTRS(float3(2, 0, 0), rotateMatrix, float3(1, 1, 1));
 
 	transform = proj * view* float4x4(model);
 
@@ -103,7 +89,7 @@ void ModuleCamera::SetVFOV(float &f) {
 
 void ModuleCamera::SetAspectRatio(float& f) {
 	AR = f;
-	App->ui->my_log.AddLog("AR: %f \n", App->camera->AR);
+	dirty = true;
 }
 
 void ModuleCamera::SetPlaneDistances(float& n, float& f) {
@@ -116,20 +102,23 @@ bool ModuleCamera::Init(){
 
 	//Cam position
 	cameraPos = float3(0, 3, 10);
-
+	speedValue = 0.1;
+	sensitivity = 0.5;
 	//Where is pointing to
-	//camTarget = float3(0, 0, 0);
+	camTarget = float3(0, 0, 0);
 
 	camSpeed = float3(0, 0, 0);
 
 	rotX = rotY = rotZ = 0;
 	
+	//ORBIT MODE
+	mode = true;
 
 	//Frustum generates a projection matrix
 	nearP = 0.1;
 	farP = 30;
 	AR = 60;
-	vFov =5;
+	vFov = math::pi/4;
 	hFov = 2.f * atanf(tanf(vFov / 2) * DegToRad(AR)); //aspect ratio 
 
 	LookAt(cameraPos, camTarget, up);
@@ -142,6 +131,7 @@ update_status ModuleCamera::Update() {
 
 	//Means, if a change on the camera has been made, update it, so it's not made every frame
 	if (dirty) {
+
 
 		cameraPos += camSpeed;
 
