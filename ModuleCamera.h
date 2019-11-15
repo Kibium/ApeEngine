@@ -29,6 +29,7 @@ public:
 	void GetProjMatrix();
 	void GetViewMatrix();
 	void ResetCamera();
+	void Orbit();
 
 	float rotX = 2.3589f, rotY = 0.5f, rotZ = 0.5f;
 	float nearP, farP, vFov, hFov, AR, sensitivity;

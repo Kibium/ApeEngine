@@ -22,6 +22,6 @@ private:
 	bool speed_boost = false;
 
 	float currentX, lastX, currentY, lastY;
-	float xOffset, yOffset;
+	float pitch =0, yaw=-90;
 	bool once = false;
 };

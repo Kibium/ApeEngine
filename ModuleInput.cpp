@@ -86,39 +86,45 @@ update_status ModuleInput::Update()
 			break;
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
-
 				currentX = (float)e.motion.x;
 				currentY = (float)e.motion.y;
 
+				if (!once) {
+					lastX = currentX;
+					lastY = currentY;
+					once = true;
+				}
+				float xOffset, yOffset;
+
 				xOffset = currentX - lastX;
-				yOffset = currentY - lastY;
+				yOffset = lastY - currentY;
 
 				lastX = currentX;
 				lastY = currentY;
 
-				//resets offsets when we release the mouse button
-				if (!once) {
-					xOffset = 0;
-					yOffset = 0;
-					once = true;
-				}
+				xOffset *= App->camera->sensitivity;
+				yOffset *= App->camera->sensitivity;
 
-				if (RadToDeg(App->camera->rotZ) >= 89)
-					App->camera->rotZ = DegToRad(89);
+				yaw += xOffset;
+				pitch += yOffset;
 
-				if (RadToDeg(App->camera->rotZ) <= -89)
-					App->camera->rotZ = DegToRad(-89);
+				if (pitch > 89.0f)
+					pitch = 89.0f;
+				if (pitch < -89.0f)
+					pitch = -89.0f;
 
 
-				App->camera->rotY += DegToRad(xOffset) * App->camera->sensitivity;
-				App->camera->rotZ += DegToRad(yOffset) * App->camera->sensitivity;
+				//App->camera->rotY += DegToRad(xOffset) * App->camera->sensitivity;
+				//App->camera->rotZ += DegToRad(yOffset) * App->camera->sensitivity;
 
-				//App->camera->camFront.x = cos(DegToRad(xOffset))* cos(DegToRad(yOffset));
-				//App->camera->camFront.y = sin(DegToRad(yOffset));
-				//App->camera->camFront.z = cos(DegToRad(xOffset)) * sin(DegToRad(yOffset));
-				App->camera->camFront.Normalize();
+				App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
+				App->camera->frustum.front.y = sin(DegToRad(pitch));
+				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+				App->camera->frustum.front.Normalize();
 
-				App->ui->my_log.AddLog("x: %0.1f, y: %0.1f, z: %0.1f\n", App->camera->camFront.x, App->camera->camFront.y, App->camera->camFront.z);
+				App->ui->my_log.AddLog("yaw: %0.1f, pitch: %0.1f\n", yaw, pitch);
+
+				//App->ui->my_log.AddLog("x: %0.1f, y: %0.1f, z: %0.1f\n", App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z);
 
 				App->camera->dirty = true;
 
@@ -126,11 +132,6 @@ update_status ModuleInput::Update()
 			}
 
 			else {
-				currentX = 0;
-				currentY = 0;
-
-				xOffset = 0;
-				yOffset = 0;
 
 				lastX = 0;
 				lastY = 0;
@@ -146,60 +147,61 @@ update_status ModuleInput::Update()
 				App->camera->dirty = true;
 			}
 
+			//App->ui->my_log.AddLog("Fpos x: %d y: %d z:%d\n", App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
 
 			if (enable_camera_movement) {
 				if (e.key.keysym.scancode == SDL_SCANCODE_W) {
 					if (speed_boost)
-						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+						App->camera->camSpeed = 3 * App->camera->speedValue * App->camera->frustum.front;
 
 					else
-						App->camera->camSpeed.z = App->camera->speedValue;
+						App->camera->camSpeed = App->camera->speedValue * App->camera->frustum.front;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_S) {
 					if (speed_boost)
-						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+						App->camera->camSpeed = -3 * App->camera->speedValue * App->camera->frustum.front;
 
 					else
 
-						App->camera->camSpeed.z = -App->camera->speedValue;
+						App->camera->camSpeed = -App->camera->speedValue  * App->camera->frustum.front;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_D) {
 					if (speed_boost)
-						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+						App->camera->camSpeed = 3 * App->camera->speedValue  * App->camera->camRight;
 
 					else
-						App->camera->camSpeed.x =App->camera->speedValue;
+						App->camera->camSpeed = App->camera->speedValue * App->camera->camRight;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_A) {
 					if (speed_boost)
-						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+						App->camera->camSpeed = -3 * App->camera->speedValue* App->camera->camRight;
 
 					else
-						App->camera->camSpeed.x = -App->camera->speedValue;
+						App->camera->camSpeed = -App->camera->speedValue* App->camera->camRight;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
 					if (speed_boost)
-						App->camera->camSpeed.z = 3 * App->camera->speedValue;
+						App->camera->camSpeed = 3 * App->camera->speedValue * App->camera->frustum.up;
 
 					else
-						App->camera->camSpeed.y = App->camera->speedValue;
+						App->camera->camSpeed = App->camera->speedValue * App->camera->frustum.up;
 					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_E) {
 					if (speed_boost)
-						App->camera->camSpeed.z = -3 * App->camera->speedValue;
+						App->camera->camSpeed = -3 * App->camera->speedValue * App->camera->frustum.up;
 
 					else
-						App->camera->camSpeed.y = -App->camera->speedValue;
+						App->camera->camSpeed = -App->camera->speedValue * App->camera->frustum.up;
 					App->camera->dirty = true;
 				}
 			}
@@ -211,52 +213,26 @@ update_status ModuleInput::Update()
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
 				speed_boost = false;
 
-			if (e.key.keysym.scancode == SDL_SCANCODE_W) {
-				App->camera->camSpeed.z = 0;
+			if (e.key.keysym.scancode == SDL_SCANCODE_W || e.key.keysym.scancode == SDL_SCANCODE_S ||
+				e.key.keysym.scancode == SDL_SCANCODE_D || e.key.keysym.scancode == SDL_SCANCODE_A ||
+				e.key.keysym.scancode == SDL_SCANCODE_Q || e.key.keysym.scancode == SDL_SCANCODE_E) {
+				App->camera->camSpeed = float3::zero;
 				App->camera->dirty = true;
 			}
 
 
-			if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-				App->camera->camSpeed.z = 0;
-				App->camera->dirty = true;
-			}
-
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_D) {
-				App->camera->camSpeed.x = 0;
-				App->camera->dirty = true;
-			}
-
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_A) {
-				App->camera->camSpeed.x = 0;
-				App->camera->dirty = true;
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
-
-				App->camera->camSpeed.y = 0;
-				App->camera->dirty = true;
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_E) {
-
-				App->camera->camSpeed.y = 0;
-				App->camera->dirty = true;
-			}
-
+			
 			break;
 
 		case SDL_MOUSEWHEEL:
 			if (e.wheel.y > 0) // scroll up
 			{
-				App->camera->cameraPos.z -= 1;
+				App->camera->frustum.pos.z -= 1;
 				App->camera->dirty = true;
 			}
 			else if (e.wheel.y < 0) // scroll down
 			{
-				App->camera->cameraPos.z += 1;
+				App->camera->frustum.pos.z += 1;
 				App->camera->dirty = true;
 			}
 			break;
