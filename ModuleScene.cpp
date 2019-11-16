@@ -11,6 +11,7 @@ bool ModuleScene::Init() {
 
 update_status ModuleScene::Update() {
 	//glUseProgram(0);
+
 	glLineWidth(1.0f);
 	float d = 200.0f;
 	glBegin(GL_LINES);

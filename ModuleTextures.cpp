@@ -22,7 +22,7 @@ const void ModuleTextures::RenderTexture(ImageData &d) {
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	once = true;
-
+	glBindTexture(0, 0);
 }
 
 bool ModuleTextures::Init() {
@@ -55,6 +55,7 @@ bool ModuleTextures::Init() {
 	glBindTexture(GL_TEXTURE_2D, kirb.texture);
 
 	kirb.data = ilGetData();
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	ilGenImages(1, &muffin.imageName);
 	ilBindImage(muffin.imageName);
@@ -142,10 +143,6 @@ update_status ModuleTextures::Update() {
 		App->ui->my_log.AddLog("Image size: %d bytes\n", lenna.size);
 		once = true;
 	}
-
-
-
-	
 
 	if(mipmap)
 		glGenerateMipmap(GL_TEXTURE_2D);

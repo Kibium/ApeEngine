@@ -20,7 +20,7 @@ public:
 	GLuint programImage, imageVShader, imageFShader;
 
 	//red Color
-	GLuint programRed, redVShader, redFShader;
+	GLuint programModel, modelVS, modelFS;
 
 	//Transform matrix location
 	int modelLocation, viewLocation, projLocation;

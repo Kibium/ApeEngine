@@ -124,7 +124,8 @@ void ModuleCamera::ResetCamera() {
 
 bool ModuleCamera::Init(){
 
-	
+	glCullFace(GL_BACK);
+
 	ResetCamera();
 	LookAt(frustum.pos, frustum.pos + frustum.front, frustum.up);	
 
@@ -155,7 +156,7 @@ update_status ModuleCamera::Update() {
 		glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
 		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
 		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
-		rotY += 0.01;
+		rotY += 0.001;
 		Orbit();
 		//rotateMatrix = float3x3::RotateZ(rotX) * float3x3::RotateY(rotY) * float3x3::RotateX(rotZ);
 

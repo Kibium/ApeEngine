@@ -78,7 +78,10 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="IMGUI\imgui_impl_sdl.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleModelLoader.h" />
     <ClInclude Include="ModuleScene.h" />
@@ -201,6 +204,7 @@
     <ClCompile Include="MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleModelLoader.cpp" />
@@ -213,12 +217,16 @@
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
     <ClCompile Include="ModuleμSTimer.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="quad.fs" />
     <Text Include="quad.vs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ModelViewer.fs" />
+    <None Include="ModelViewer.vs" />
     <None Include="MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />

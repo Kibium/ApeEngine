@@ -133,6 +133,15 @@
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleMSTimer.cpp" />
     <ClCompile Include="ModuleμSTimer.cpp" />
+    <ClCompile Include="Mesh.cpp">
+      <Filter>ModelLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>ModelLoading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -348,6 +357,15 @@
     <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleMSTimer.h" />
     <ClInclude Include="ModuleμSTimer.h" />
+    <ClInclude Include="Mesh.h">
+      <Filter>ModelLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>ModelLoading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -355,6 +373,12 @@
     </Filter>
     <Filter Include="ImGui">
       <UniqueIdentifier>{b5635947-224a-4120-b84a-6cb975838293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModelLoading">
+      <UniqueIdentifier>{008b05d7-243a-4f86-9bf4-b5005c1979bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b268893e-6434-4ae6-8e1f-34adaf72aa06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -376,11 +400,25 @@
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl">
       <Filter>MathGeoLib</Filter>
     </None>
-    <None Include="red.fs" />
-    <None Include="red.vs" />
+    <None Include="red.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="red.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ModelViewer.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ModelViewer.vs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="quad.vs" />
-    <Text Include="quad.fs" />
+    <Text Include="quad.fs">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="quad.vs">
+      <Filter>Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

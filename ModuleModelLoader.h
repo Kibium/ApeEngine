@@ -1,6 +1,8 @@
 #pragma once
 #include "Application.h"
 #include "Module.h"
+#include "Shader.h"
+#include "Model.h"
 
 #include <vector>
 
@@ -15,5 +17,9 @@ public:
 	void loadModel();
 
 	int numMeshes = 0;
+
+private:
+	Shader modelShader;
+	Model baker;
 
 };

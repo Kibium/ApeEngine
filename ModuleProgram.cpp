@@ -108,11 +108,11 @@ bool ModuleProgram::Init() {
 	char* imageVSdata = getShaderText("../quad.vs");
 	char* imageFSdata = getShaderText("../quad.fs");
 
-	char* redVSdata = getShaderText("../red.vs");
-	char* redFSdata = getShaderText("../red.fs");
+	char* modelVdata = getShaderText("../ModelViewer.vs");
+	char* modelFdata = getShaderText("../ModelViewer.fs");
 
 	InitShader(programImage, imageVShader, imageFShader, imageVSdata, imageFSdata, true);
-	InitShader(programRed, redVShader, redFShader, redVSdata, redFSdata, false);
+	InitShader(programModel, modelVS, modelFS, modelVdata, modelFdata, false);
 
 	/*const GLchar *vdata = VSdata;
 	const GLchar *fdata = FSdata;
@@ -178,7 +178,7 @@ bool ModuleProgram::Init() {
 update_status ModuleProgram::Update() {
 
 	
-
+	glUseProgram(programImage);
 	return UPDATE_CONTINUE;
 }
 
