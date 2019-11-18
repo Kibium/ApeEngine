@@ -23,9 +23,11 @@ public:
 	void Draw(Shader shader);
 	std::string path;
 	const aiScene* scene;
+	unsigned int TextureFromFile(std::string, std::string &directory);
+	std::vector<Texture> textures_loaded;
+
 private:
 	/*  Model Data  */
-	std::vector<Texture> textures_loaded;
 	std::vector<Mesh> meshes;
 	std::string directory;
 	/*  Functions   */
@@ -34,7 +36,7 @@ private:
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 		std::string typeName);
-	unsigned int TextureFromFile(std::string, std::string &directory);
+	
 };
 
 #endif

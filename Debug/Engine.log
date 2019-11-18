@@ -1,4 +1,3 @@
 ﻿  Model.cpp
-c:\users\toni\source\repos\kibium\engine_master\model.cpp(198): warning C4101: 'nrComponents': variable local sin referencia
-c:\users\toni\source\repos\kibium\engine_master\model.cpp(268): warning C4101: 'nrComponents': variable local sin referencia
+c:\users\toni\source\repos\kibium\engine_master\model.cpp(227): warning C4101: 'nrComponents': variable local sin referencia
   Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe

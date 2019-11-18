@@ -15,6 +15,10 @@
 #include "IMGUI/imgui_impl_glfw.h"
 #include "IMGUI/imgui_impl_sdl.h"
 
+#include <IL/il.h>
+#include <IL/ilu.h>
+#include <IL/ilut.h>
+
 ModuleInput::ModuleInput()
 {}
 
@@ -144,9 +148,71 @@ update_status ModuleInput::Update()
 			}
 
 			if (directory.substr(directory.size() - 4, directory.size()) == ".png") {
-				App->ui->my_log.AddLog("PNG Dropped");
-				//Drop texture
-				//aiMaterial* material = App->modelLoader->model->scene->mMaterials[mesh->mMaterialIndex];
+				//App->ui->my_log.AddLog("PNG dropped from: ");
+
+				ILuint textureID;
+
+				ilGenImages(1, &textureID);
+				ilBindImage(textureID);
+				ilLoadImage(directory.c_str());
+
+				glGenTextures(1, &textureID);
+
+				int width, height, nrComponents;
+
+				width = ilGetInteger(IL_IMAGE_WIDTH);
+				height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+				GLuint texture = ilutGLBindTexImage();
+
+				glGenTextures(1, &texture);
+				glBindTexture(GL_TEXTURE_2D, texture);
+
+				ILenum Error;
+				Error = ilGetError();
+
+				//std::cout << Error << std::endl;
+
+				ILubyte* data = ilGetData();
+
+				if (data)
+				{
+					glBindTexture(GL_TEXTURE_2D, textureID);
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+					glGenerateMipmap(GL_TEXTURE_2D);
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+					glBindTexture(GL_TEXTURE_2D, 0);
+					ilDeleteImages(1, &textureID);
+
+					std::string _path = directory.substr(directory.find_last_of('\\')+1);
+					directory = directory.substr(0, directory.find_last_of('\\'));
+					//App->ui->my_log.AddLog(_path.c_str());
+					App->modelLoader->model.TextureFromFile(_path, directory);
+
+					App->modelLoader->model.textures_loaded.clear();
+					Texture texture;
+					texture.id = App->modelLoader->model.TextureFromFile(_path, directory);
+					texture.type = "texture_diffuse";
+					texture.path = _path;
+					App->modelLoader->model.textures_loaded.push_back(texture);
+
+				}
+				else
+				{
+					std::cout << "Texture failed to load at path: " << directory << std::endl;
+					ilDeleteImages(1, &textureID);
+				}
+
+
+
+
+
+
 			}
 
 

@@ -10,10 +10,10 @@
 Model::Model(){}
 
 void Model::Draw(Shader shader) {
-	for (unsigned int i = 0; i < meshes.size(); i++)
+	std::string s;
+	for (unsigned int i = 0; i < meshes.size(); ++i) {
 		meshes[i].Draw(shader);
-
-	
+	}
 }
 
 void Model::loadModel(std::string _path)
@@ -24,23 +24,24 @@ void Model::loadModel(std::string _path)
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		std::string err = "Model with path: " + _path + " could not be loaded \n";
+		std::string err = "[ASSIMP] Model with path: " + _path + " could not be loaded \n";
 		App->ui->my_log.AddLog(err.c_str());
 		return;
 	}
 	else {
-		App->ui->my_log.AddLog("Model loaded from: ");
+		App->ui->my_log.AddLog("[ASSIMP] Model loaded from: ");
 		App->ui->my_log.AddLog(path.c_str());
 	}
 		
 	
 	directory = _path.substr(0, _path.find_last_of('/'));
 
-	App->ui->my_log.AddLog("Directory: ");
-	App->ui->my_log.AddLog(directory.c_str());
-	App->ui->my_log.AddLog("\n");
+	//App->ui->my_log.AddLog("Directory: ");
+	//App->ui->my_log.AddLog(directory.c_str());
+	//App->ui->my_log.AddLog("\n");
 
 	processNode(scene->mRootNode, scene);
+	App->ui->my_log.AddLog("------------------------------\n");
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene)
@@ -57,6 +58,8 @@ void Model::processNode(aiNode *node, const aiScene *scene)
 	{
 		processNode(node->mChildren[i], scene);
 	}
+	
+
 }
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
@@ -179,69 +182,19 @@ unsigned int Model::TextureFromFile(std::string _path , std::string &directory)
 	if (!App->modelLoader->loadFromAbsolutePath) {
 		filename = directory + '/' + filename;
 
-		App->ui->my_log.AddLog("Directory 2: ");
+		App->ui->my_log.AddLog("[ASSIMP] Model's path: ");
+		App->ui->my_log.AddLog(_path.c_str());
+		App->ui->my_log.AddLog("\n");
+
+		App->ui->my_log.AddLog("[ASSIMP] Model's directory: ");
 		App->ui->my_log.AddLog(directory.c_str());
 		App->ui->my_log.AddLog("\n");
 
-		App->ui->my_log.AddLog("Texture path: ");
+		App->ui->my_log.AddLog("[ASSIMP] Model's texture path: ");
 		App->ui->my_log.AddLog(filename.c_str());
 		App->ui->my_log.AddLog("\n");
 
-		ILuint textureID;
-
-		ilGenImages(1, &textureID);
-		ilBindImage(textureID);
-		ilLoadImage(filename.c_str());
-
-		glGenTextures(1, &textureID);
-
-		int width, height, nrComponents;
-
-		width = ilGetInteger(IL_IMAGE_WIDTH);
-		height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-		GLuint texture = ilutGLBindTexImage();
-
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		ILenum Error;
-		Error = ilGetError();
-
-		//std::cout << Error << std::endl;
-
-		ILubyte* data = ilGetData();
-
-		if (data)
-		{
-			//GLenum format;
-			//if (nrComponents == 1)
-			//	format = GL_RED;
-		//	else if (nrComponents == 3)
-		//		format = GL_RGB;
-		//	else if (nrComponents == 4)
-			//	format = GL_RGBA;
-
-			glBindTexture(GL_TEXTURE_2D, textureID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			glBindTexture(GL_TEXTURE_2D, 0);
-			ilDeleteImages(1, &textureID);
-
-		}
-		else
-		{
-			std::cout << "Texture failed to load at path: " << path << std::endl;
-			ilDeleteImages(1, &textureID);
-		}
-		return textureID;
-
+		
 	}
 
 	else {
@@ -249,70 +202,66 @@ unsigned int Model::TextureFromFile(std::string _path , std::string &directory)
 
 		filename = directory + '\\' + filename;
 
-		App->ui->my_log.AddLog("Directory 2: ");
-		App->ui->my_log.AddLog(directory.c_str());
-		App->ui->my_log.AddLog("\n");
+	//	App->ui->my_log.AddLog("[ASSIMP] Model's path: ");
+	//	App->ui->my_log.AddLog(_path.c_str());
+	//	App->ui->my_log.AddLog("\n");
 
-		App->ui->my_log.AddLog("Texture path: ");
+	//	App->ui->my_log.AddLog("[ASSIMP] Model's directory: ");
+	//	App->ui->my_log.AddLog(directory.c_str());
+	//	App->ui->my_log.AddLog("\n");
+
+		App->ui->my_log.AddLog("[ASSIMP] Model's texture path: ");
 		App->ui->my_log.AddLog(filename.c_str());
 		App->ui->my_log.AddLog("\n");
 
-		ILuint textureID;
+	}
 
-		ilGenImages(1, &textureID);
-		ilBindImage(textureID);
-		ilLoadImage(filename.c_str());
+	ILuint textureID;
 
-		glGenTextures(1, &textureID);
+	ilGenImages(1, &textureID);
+	ilBindImage(textureID);
+	ilLoadImage(filename.c_str());
 
-		int width, height, nrComponents;
+	glGenTextures(1, &textureID);
 
-		width = ilGetInteger(IL_IMAGE_WIDTH);
-		height = ilGetInteger(IL_IMAGE_HEIGHT);
+	int width, height, nrComponents;
 
-		GLuint texture = ilutGLBindTexImage();
+	width = ilGetInteger(IL_IMAGE_WIDTH);
+	height = ilGetInteger(IL_IMAGE_HEIGHT);
 
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
+	GLuint texture = ilutGLBindTexImage();
 
-		ILenum Error;
-		Error = ilGetError();
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
-		//std::cout << Error << std::endl;
+	ILenum Error;
+	Error = ilGetError();
 
-		ILubyte* data = ilGetData();
+	//std::cout << Error << std::endl;
 
-		if (data)
-		{
-			//GLenum format;
-			//if (nrComponents == 1)
-			//	format = GL_RED;
-		//	else if (nrComponents == 3)
-		//		format = GL_RGB;
-		//	else if (nrComponents == 4)
-			//	format = GL_RGBA;
+	ILubyte* data = ilGetData();
 
+	if (data)
+	{
 			glBindTexture(GL_TEXTURE_2D, textureID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			glBindTexture(GL_TEXTURE_2D, 0);
-			ilDeleteImages(1, &textureID);
-
-		}
-		else
-		{
-			std::cout << "Texture failed to load at path: " << path << std::endl;
-			ilDeleteImages(1, &textureID);
-		}
-		return textureID;
+		glBindTexture(GL_TEXTURE_2D, 0);
+		ilDeleteImages(1, &textureID);
 
 	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+		ilDeleteImages(1, &textureID);
+	}
+	return textureID;
 	
 
 }
