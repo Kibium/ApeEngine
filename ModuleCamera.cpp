@@ -8,22 +8,14 @@ ModuleCamera::~ModuleCamera(){}
 
 void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 
-	//target = camPos + float3(0, 0, -1);//camPos; +float3(1, 0, 1);
-	camDirection = eye - target;
-	camDirection.Normalize();
-	//target.Normalize();
-	camRight = up.Cross(camDirection);
-	camRight.Normalize();
-
-	//up = camDirection.Cross(camRight);
+	//It is needed to update the frustum.up vector
 
 	f = target - eye;
 	f.Normalize();
 	s = f.Cross(up);
 	s.Normalize();
 	u = s.Cross(f);
-	u.Normalize();
-
+	
 	//View Matrix - Look at computation
 	view[0][0] = s.x;
 	view[0][1] = s.y;
@@ -61,7 +53,7 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 void ModuleCamera::ProcessMatrixs() {
 	
 
-	LookAt(frustum.pos, frustum.pos + frustum.front, frustum.up);
+	LookAt(frustum.pos, frustum.pos + frustum.front, float3(0, 1, 0));
 	SetProjMatrix(nearP, farP, vFov, hFov, AR);
 
 }
@@ -97,6 +89,7 @@ void ModuleCamera::ResetCamera() {
 	
 	speedValue = 0.1f;
 	sensitivity = 0.5f;
+
 	//Where is pointing to
 	camTarget = float3(0, 0, 0);
 
@@ -140,6 +133,8 @@ bool ModuleCamera::Init(){
 update_status ModuleCamera::Update() {
 
 	//Means, if a change on the camera has been made, update it, so it's not made every frame
+
+
 	if (dirty) {
 
 		//glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader

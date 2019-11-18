@@ -16,11 +16,13 @@ class Model
 public:
 	/*  Functions   */
 	Model();
-	Model(char *path)
+	Model(const char *path)
 	{
 		loadModel(path);
 	}
 	void Draw(Shader shader);
+	std::string path;
+	const aiScene* scene;
 private:
 	/*  Model Data  */
 	std::vector<Texture> textures_loaded;

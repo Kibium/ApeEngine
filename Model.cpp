@@ -11,22 +11,26 @@ Model::Model(){}
 void Model::Draw(Shader shader) {
 	for (unsigned int i = 0; i < meshes.size(); i++)
 		meshes[i].Draw(shader);
+
+	//App->ui->my_log.AddLog(path.c_str());
 }
 
-void Model::loadModel(std::string path)
+void Model::loadModel(std::string _path)
 {
 	
-	const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate| aiProcess_GenNormals| aiProcess_GenUVCoords | aiProcessPreset_TargetRealtime_MaxQuality);
+	path = _path + "\n";
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		//Do it with ui
-		//std::cout << "model not noaded..." << std::endl;
+		std::cout << "model not loaded..." << std::endl;
 		return;
 	}
 	else
-		//std::cout << "model noaded." << std::endl;
-	directory = path.substr(0, path.find_last_of('/'));
+		App->ui->my_log.AddLog(path.c_str());
+	
+	directory = _path.substr(0, _path.find_last_of('/'));
 
 	processNode(scene->mRootNode, scene);
 }
@@ -152,6 +156,9 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 			texture.path = str.C_Str();
 			textures.push_back(texture);
 			textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+
+			App->ui->my_log.AddLog(str.C_Str());
+			App->ui->my_log.AddLog("\n");
 		}
 	}
 	return textures;

@@ -1,62 +1,7 @@
-﻿  Application.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_impl_glfw.cpp
-c:\users\toni\source\repos\kibium\engine_master\imgui\imgui_impl_glfw.cpp(42): fatal error C1083: No se puede abrir el archivo incluir: 'GLFW/glfw3.h': No such file or directory
-  imgui_impl_opengl3.cpp
-c:\users\toni\source\repos\kibium\engine_master\imgui\imgui_impl_opengl3.h(58): fatal error C1189: #error:  "Cannot detect OpenGL loader!"
-  imgui_impl_sdl.cpp
-  imgui_widgets.cpp
-  log.cpp
-  Main.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
-  LCG.cpp
-  AABB.cpp
-  Capsule.cpp
-  Circle.cpp
-  Cone.cpp
-  Cylinder.cpp
-  Frustum.cpp
-  Line.cpp
-  LineSegment.cpp
-  OBB.cpp
-  Compilando...
-  Plane.cpp
-  Polygon.cpp
-  Polyhedron.cpp
-  Ray.cpp
-  Sphere.cpp
-  Triangle.cpp
-  TriangleMesh.cpp
-  BitOps.cpp
-  float2.cpp
-  float3.cpp
-  float3x3.cpp
-  float3x4.cpp
-  float4.cpp
-  float4x4.cpp
-  MathFunc.cpp
-  MathLog.cpp
-  MathOps.cpp
-  Polynomial.cpp
-  Quat.cpp
-  SSEMath.cpp
-  Compilando...
-  TransformOps.cpp
-  Clock.cpp
-  ModuleInput.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
-  ModuleRender.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
-  ModuleRenderExercise.cpp
-c:\users\toni\source\repos\kibium\engine_master\moduleprogram.h(4): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
-  ModuleTextures.cpp
-c:\users\toni\source\repos\kibium\engine_master\moduletextures.h(5): fatal error C1083: No se puede abrir el archivo incluir: 'GL/glew.h': No such file or directory
-  ModuleUI.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulerender.h(7): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
-  ModuleWindow.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulewindow.cpp(5): fatal error C1083: No se puede abrir el archivo incluir: 'SDL_image.h': No such file or directory
-  ModuleProgram.cpp
-c:\users\toni\source\repos\kibium\engine_master\moduleprogram.h(4): fatal error C1083: No se puede abrir el archivo incluir: 'gl/glew.h': No such file or directory
+﻿  ModuleRender.cpp
+  Generando código
+  1 of 2296 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  Generación de código finalizada
+  Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe

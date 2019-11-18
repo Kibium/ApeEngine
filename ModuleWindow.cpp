@@ -4,6 +4,7 @@
 #include "ModuleUI.h"
 #include <SDL_image.h>
 #include <iostream>
+#include <GL/glew.h>
 
 using namespace std;
 

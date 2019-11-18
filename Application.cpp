@@ -26,12 +26,12 @@ Application::Application()
 
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(camera = new ModuleCamera());
+	modules.push_back(modelLoader = new ModuleModelLoader());
 
 	modules.push_back(program = new ModuleProgram());
-
 	modules.push_back(ui = new ModuleUI());
 	modules.push_back(scene = new ModuleScene());
-	modules.push_back(modelLoader = new ModuleModelLoader());
+
 	ui->my_log.AddLog("------Engine Init!------\n");
 
 	ui->my_log.AddLog("Time spent loading modules: %0.1f ms\n",timer->Stop());

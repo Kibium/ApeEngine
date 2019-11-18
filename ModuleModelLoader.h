@@ -17,9 +17,13 @@ public:
 	void loadModel();
 
 	int numMeshes = 0;
-
-private:
+	Model model;
 	Shader modelShader;
-	Model baker;
+
+	std::string dir;
+
+	bool hasChanged = true;
+private:
+	
 
 };

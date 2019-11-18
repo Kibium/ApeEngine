@@ -92,9 +92,10 @@ bool ModuleRender::Init()
 	glClearDepth(1.0f);
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glEnable(GL_DEPTH_TEST);
-	glFrontFace(GL_CCW);
-	glEnable(GL_CULL_FACE);
+	glDepthFunc(GL_LESS);
+	
 	glEnable(GL_TEXTURE_2D);
 	
 	float vertices[] = {

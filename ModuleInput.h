@@ -24,4 +24,9 @@ private:
 	float currentX, lastX, currentY, lastY;
 	float pitch =0, yaw=-90;
 	bool once = false;
+	bool modelOnce = false;
+	bool altPressed = false;
+	float xOffset, yOffset;
+
+	std::string directory;
 };

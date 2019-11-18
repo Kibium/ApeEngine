@@ -6,6 +6,7 @@
 #include "ModuleCamera.h"
 #include "ModuleProgram.h"
 #include "ModuleUI.h"
+#include "ModuleModelLoader.h"
 #include "SDL.h"
 
 #include "IMGUI/imgui.h"
@@ -59,9 +60,9 @@ update_status ModuleInput::Update()
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
 
 				float asp = RadToDeg(App->window->GetWidth() / App->window->GetHeight());
-				
+
 				App->camera->SetAspectRatio(asp);
-				
+
 				App->camera->dirty = true;
 			}
 			break;
@@ -80,9 +81,6 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEBUTTONUP:
 			if (e.button.button == SDL_BUTTON_RIGHT)
 				enable_camera_movement = false;
-
-
-
 			break;
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
@@ -94,7 +92,6 @@ update_status ModuleInput::Update()
 					lastY = currentY;
 					once = true;
 				}
-				float xOffset, yOffset;
 
 				xOffset = currentX - lastX;
 				yOffset = lastY - currentY;
@@ -122,13 +119,12 @@ update_status ModuleInput::Update()
 				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
 				App->camera->frustum.front.Normalize();
 
-				App->ui->my_log.AddLog("yaw: %0.1f, pitch: %0.1f\n", yaw, pitch);
-
-				//App->ui->my_log.AddLog("x: %0.1f, y: %0.1f, z: %0.1f\n", App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z);
+				App->camera->frustum.up.x *= cos(DegToRad(yaw))* cos(DegToRad(pitch));
+				App->camera->frustum.up.y *= sin(DegToRad(pitch));
+				App->camera->frustum.up.z *= sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+				App->camera->frustum.up.Normalize();
 
 				App->camera->dirty = true;
-
-
 			}
 
 			else {
@@ -138,7 +134,32 @@ update_status ModuleInput::Update()
 			}
 			break;
 
+		case SDL_DROPFILE:
+			modelOnce = false;
+			directory = e.drop.file;
 
+
+			//App->ui->my_log.AddLog(directory.substr(directory.size() - 4, directory.size()).c_str());
+
+			if (directory.substr(directory.size() - 4, directory.size()) == ".fbx" || directory.substr(directory.size() - 4, directory.size()) == ".obj") {
+				App->ui->my_log.AddLog("Model loded from: ");
+				App->ui->my_log.AddLog(directory.c_str());
+				App->ui->my_log.AddLog("\n");
+				App->modelLoader->dir = directory.c_str();
+				App->modelLoader->hasChanged = true;
+			}
+
+			if (directory.substr(directory.size() - 4, directory.size()) == ".png") {
+				App->ui->my_log.AddLog("PNG Dropped");
+				//Drop texture
+				//aiMaterial* material = App->modelLoader->model->scene->mMaterials[mesh->mMaterialIndex];
+			}
+
+
+
+
+
+			break;
 
 		case SDL_KEYDOWN:
 
@@ -147,7 +168,16 @@ update_status ModuleInput::Update()
 				App->camera->dirty = true;
 			}
 
-			//App->ui->my_log.AddLog("Fpos x: %d y: %d z:%d\n", App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
+			if (e.key.keysym.scancode == SDL_SCANCODE_LALT)
+				altPressed = true;
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_F) {
+
+				yaw = 0;
+				pitch = 0;
+				App->camera->ResetCamera();
+
+			}
 
 			if (enable_camera_movement) {
 				if (e.key.keysym.scancode == SDL_SCANCODE_W) {
@@ -209,9 +239,14 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_KEYUP:
+			if (e.key.keysym.scancode == SDL_SCANCODE_F)
+				App->camera->dirty = true;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
 				speed_boost = false;
+
+			if (e.key.keysym.scancode == SDL_SCANCODE_LALT)
+				altPressed = true;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_W || e.key.keysym.scancode == SDL_SCANCODE_S ||
 				e.key.keysym.scancode == SDL_SCANCODE_D || e.key.keysym.scancode == SDL_SCANCODE_A ||
@@ -221,7 +256,7 @@ update_status ModuleInput::Update()
 			}
 
 
-			
+
 			break;
 
 		case SDL_MOUSEWHEEL:
