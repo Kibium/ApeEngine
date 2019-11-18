@@ -1,5 +1,4 @@
-﻿  ModuleCamera.cpp
-c:\users\toni\source\repos\kibium\engine_master\modulecamera.cpp(162): warning C4305: '+=': truncamiento de 'double' a 'float'
-  ModuleInput.cpp
-  Generando código...
+﻿  Model.cpp
+c:\users\toni\source\repos\kibium\engine_master\model.cpp(198): warning C4101: 'nrComponents': variable local sin referencia
+c:\users\toni\source\repos\kibium\engine_master\model.cpp(268): warning C4101: 'nrComponents': variable local sin referencia
   Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe

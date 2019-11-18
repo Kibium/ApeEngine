@@ -211,11 +211,15 @@ void ModuleUI::MyConsole() {
 		Separate();
 		ImGui::SliderFloat("Brightness", &brightness, 0, 1);
 		Separate();
-		if (ImGui::SliderInt("Window width", &screenW, 300, 800))
+		if (ImGui::SliderInt("Window width", &screenW, 300, 1200)) {
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
 
-		if (ImGui::SliderInt("Window height", &screenH, 300, 800))
+		}
+
+		if (ImGui::SliderInt("Window height", &screenH, 300, 800)) {
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
+
+		}
 	}
 
 	if (ImGui::CollapsingHeader("Hardware")) {
@@ -311,8 +315,7 @@ update_status ModuleUI::PostUpdate() {
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	//Must be here in order to the UI window appear
-	SDL_GL_SwapWindow(App->window->window);
+
 
 	return UPDATE_CONTINUE;
 }

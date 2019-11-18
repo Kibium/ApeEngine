@@ -58,10 +58,10 @@ update_status ModuleInput::Update()
 		case SDL_WINDOWEVENT:
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
-
 				float asp = RadToDeg(App->window->GetWidth() / App->window->GetHeight());
 
 				App->camera->SetAspectRatio(asp);
+				//SDL_SetWindowSize(App->window->window, App->window->GetWidth(), App->window->GetHeight());
 
 				App->camera->dirty = true;
 			}
@@ -110,7 +110,6 @@ update_status ModuleInput::Update()
 				if (pitch < -89.0f)
 					pitch = -89.0f;
 
-
 				//App->camera->rotY += DegToRad(xOffset) * App->camera->sensitivity;
 				//App->camera->rotZ += DegToRad(yOffset) * App->camera->sensitivity;
 
@@ -118,11 +117,6 @@ update_status ModuleInput::Update()
 				App->camera->frustum.front.y = sin(DegToRad(pitch));
 				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
 				App->camera->frustum.front.Normalize();
-
-				//App->camera->frustum.up.x *= cos(DegToRad(yaw))* cos(DegToRad(pitch));
-				//App->camera->frustum.up.y *= sin(DegToRad(pitch));
-				//App->camera->frustum.up.z *= sin(DegToRad(yaw)) * cos(DegToRad(pitch));
-				//App->camera->frustum.up.Normalize();
 
 				App->camera->dirty = true;
 			}
@@ -142,9 +136,9 @@ update_status ModuleInput::Update()
 			//App->ui->my_log.AddLog(directory.substr(directory.size() - 4, directory.size()).c_str());
 
 			if (directory.substr(directory.size() - 4, directory.size()) == ".fbx" || directory.substr(directory.size() - 4, directory.size()) == ".obj") {
-				App->ui->my_log.AddLog("Model loded from: ");
-				App->ui->my_log.AddLog(directory.c_str());
-				App->ui->my_log.AddLog("\n");
+				//App->ui->my_log.AddLog("Model loded from: ");
+				//App->ui->my_log.AddLog(directory.c_str());
+				//App->ui->my_log.AddLog("\n");
 				App->modelLoader->dir = directory.c_str();
 				App->modelLoader->hasChanged = true;
 			}

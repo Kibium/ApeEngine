@@ -37,6 +37,7 @@ public:
 
 	bool mode = false;
 
+
 private:
 	void lookAt();
 };

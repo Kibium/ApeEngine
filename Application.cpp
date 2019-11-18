@@ -3,7 +3,6 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleInput.h"
-//#include "ModuleRenderExercise.h"
 #include "ModuleProgram.h"
 #include "ModuleUI.h"
 #include "ModuleTextures.h"
@@ -20,17 +19,22 @@ Application::Application()
 	timer->Start();
 	timer->Read();
 	// Order matters: they will Init/start/update in this order
+
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(textures = new ModuleTextures());
+	modules.push_back(ui = new ModuleUI());
+
+
+	modules.push_back(camera = new ModuleCamera());
+	modules.push_back(scene = new ModuleScene());
 
 	modules.push_back(renderer = new ModuleRender());
-	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(modelLoader = new ModuleModelLoader());
 
 	modules.push_back(program = new ModuleProgram());
-	modules.push_back(ui = new ModuleUI());
-	modules.push_back(scene = new ModuleScene());
+
+
 
 	ui->my_log.AddLog("------Engine Init!------\n");
 

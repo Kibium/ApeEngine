@@ -23,6 +23,7 @@ public:
 	std::string dir;
 
 	bool hasChanged = true;
+	bool loadFromAbsolutePath = false;
 private:
 	
 

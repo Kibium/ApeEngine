@@ -76,8 +76,8 @@ bool ModuleRender::Init()
 	SDL_GL_MakeCurrent(App->window->window, glcontext);
 	//glClearColor(0.225f, 0, 0.225f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_SCISSOR_TEST);
 
-	SDL_GL_SwapWindow(App->window->window);
 
 	GLenum err = glewInit();// ... check for errors
 
@@ -175,14 +175,14 @@ update_status ModuleRender::Update()
 {
 
 
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleRender::PostUpdate()
 {
 
-
+	//Must be here in order to the UI window appear
+	SDL_GL_SwapWindow(App->window->window);
 
 	//SDL_GL_SwapWindow(App->window->window);
 

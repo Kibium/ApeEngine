@@ -40,7 +40,10 @@ bool ModuleModelLoader::Init() {
 	//glDisable(GL_CULL_FACE);
 	modelShader = Shader("../ModelViewer.vs", "../ModelViewer.fs");
 	dir = "../models/baker/BakerHouse.fbx";
-	
+
+	//This way, models will load from absolute paths from now on,
+	//allowing the engine load models with a different algorythm
+	//See Model.cpp TextureFromFile
 	
 
 	return true;
@@ -52,6 +55,8 @@ update_status ModuleModelLoader::Update() {
 		
 		model = Model(dir.c_str());
 		loadModel();
+		loadFromAbsolutePath = true;
+
 		hasChanged = false;
 	}
 
