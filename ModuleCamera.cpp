@@ -8,13 +8,21 @@ ModuleCamera::~ModuleCamera(){}
 
 void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 
-	//It is needed to update the frustum.up vector
+
+	float3 cameraDirection = eye - target;
+	cameraDirection.Normalize();
+
+	camRight = up.Cross(cameraDirection);
+	camRight.Normalize();
 
 	f = target - eye;
 	f.Normalize();
-	s = f.Cross(up);
+	s = camRight;
 	s.Normalize();
 	u = s.Cross(f);
+
+	frustum.up = s.Cross(f);
+
 	
 	//View Matrix - Look at computation
 	view[0][0] = s.x;

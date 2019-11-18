@@ -1,1 +1,5 @@
-﻿  Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe
+﻿  ModuleCamera.cpp
+c:\users\toni\source\repos\kibium\engine_master\modulecamera.cpp(162): warning C4305: '+=': truncamiento de 'double' a 'float'
+  ModuleInput.cpp
+  Generando código...
+  Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Debug\EngineMaster.exe

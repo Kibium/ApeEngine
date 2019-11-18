@@ -119,10 +119,10 @@ update_status ModuleInput::Update()
 				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
 				App->camera->frustum.front.Normalize();
 
-				App->camera->frustum.up.x *= cos(DegToRad(yaw))* cos(DegToRad(pitch));
-				App->camera->frustum.up.y *= sin(DegToRad(pitch));
-				App->camera->frustum.up.z *= sin(DegToRad(yaw)) * cos(DegToRad(pitch));
-				App->camera->frustum.up.Normalize();
+				//App->camera->frustum.up.x *= cos(DegToRad(yaw))* cos(DegToRad(pitch));
+				//App->camera->frustum.up.y *= sin(DegToRad(pitch));
+				//App->camera->frustum.up.z *= sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+				//App->camera->frustum.up.Normalize();
 
 				App->camera->dirty = true;
 			}

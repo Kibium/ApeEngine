@@ -39,7 +39,7 @@ bool ModuleModelLoader::Init() {
 
 	//glDisable(GL_CULL_FACE);
 	modelShader = Shader("../ModelViewer.vs", "../ModelViewer.fs");
-	dir = "../models/nanosuit/nanosuit.obj";
+	dir = "../models/baker/BakerHouse.fbx";
 	
 	
 
