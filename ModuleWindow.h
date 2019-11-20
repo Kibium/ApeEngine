@@ -18,21 +18,11 @@ public:
 	// Called before quitting
 	bool Init();
 
-	update_status Update();
-
 	// Called before quitting
 	bool CleanUp();
 
 	float GetWidth();
 	float GetHeight();
-
-	bool fullscreen = false;
-	bool bordered = true;
-	bool fulldesktop = false;
-	int width;
-	int height;
-
-	Uint32 flags;
 
 public:
 	//The window we'll be rendering to
@@ -41,6 +31,8 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface = NULL;
 
+	int width;
+	int height;
 };
 
 #endif // __ModuleWindow_H__

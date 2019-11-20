@@ -8,14 +8,12 @@ class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
-class ModuleRenderExercise;
+class ModuleCamera;
 class ModuleProgram;
 class ModuleUI;
-class ModuleScene;
-class ModuleModelLoader;
-class ModuleCamera;
+class ModuleTextures;
+class ModelLoader;
 class ModuleMSTimer;
-
 
 class Application
 {
@@ -32,14 +30,13 @@ public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
-	ModuleRenderExercise* exercise = nullptr;
+	ModuleCamera*camera = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleUI* ui = nullptr;
 	ModuleTextures* textures = nullptr;
-	ModuleScene* scene = nullptr;
-	ModuleModelLoader* modelLoader = nullptr;
-	ModuleCamera* camera = nullptr;
+	ModelLoader* modelLoader = nullptr;
 	ModuleMSTimer* timer = nullptr;
+
 
 	void RequestBrowser(char*);
 

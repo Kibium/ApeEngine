@@ -6,8 +6,8 @@
 #include "ModuleCamera.h"
 #include "ModuleProgram.h"
 #include "ModuleUI.h"
-#include "ModuleModelLoader.h"
-#include "SDL.h"
+#include "ModelLoader.h"
+
 
 #include "IMGUI/imgui.h"
 
@@ -30,7 +30,6 @@ ModuleInput::~ModuleInput()
 bool ModuleInput::Init()
 {
 
-	//LOG("Init SDL input event system");
 	App->ui->my_log.AddLog("Init SDL input event system\n");
 
 	bool ret = true;
@@ -114,13 +113,12 @@ update_status ModuleInput::Update()
 				if (pitch < -89.0f)
 					pitch = -89.0f;
 
-				//App->camera->rotY += DegToRad(xOffset) * App->camera->sensitivity;
-				//App->camera->rotZ += DegToRad(yOffset) * App->camera->sensitivity;
-
 				App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
 				App->camera->frustum.front.y = sin(DegToRad(pitch));
 				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
 				App->camera->frustum.front.Normalize();
+
+				//App->ui->my_log.AddLog("%f, %f, %f \n", App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z);
 
 				App->camera->dirty = true;
 			}
@@ -189,9 +187,9 @@ update_status ModuleInput::Update()
 					glBindTexture(GL_TEXTURE_2D, 0);
 					ilDeleteImages(1, &textureID);
 
-					std::string _path = directory.substr(directory.find_last_of('\\')+1);
+					std::string _path = directory.substr(directory.find_last_of('\\') + 1);
 					directory = directory.substr(0, directory.find_last_of('\\'));
-					//App->ui->my_log.AddLog(_path.c_str());
+					App->ui->my_log.AddLog(_path.c_str());
 					App->modelLoader->model.TextureFromFile(_path, directory);
 
 					App->modelLoader->model.textures_loaded.clear();
@@ -207,12 +205,6 @@ update_status ModuleInput::Update()
 					std::cout << "Texture failed to load at path: " << directory << std::endl;
 					ilDeleteImages(1, &textureID);
 				}
-
-
-
-
-
-
 			}
 
 

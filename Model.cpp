@@ -2,12 +2,12 @@
 #include <assimp/Importer.hpp>
 #include "Application.h"
 #include "ModuleUI.h"
-#include "ModuleModelLoader.h"
+#include "ModelLoader.h"
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-Model::Model(){}
+Model::Model() {}
 
 void Model::Draw(Shader shader) {
 	std::string s;
@@ -18,8 +18,8 @@ void Model::Draw(Shader shader) {
 
 void Model::loadModel(std::string _path)
 {
-	
-	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate| aiProcess_GenNormals| aiProcess_GenUVCoords | aiProcessPreset_TargetRealtime_MaxQuality);
+
+	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcessPreset_TargetRealtime_MaxQuality);
 	path = _path + "\n";
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -32,8 +32,8 @@ void Model::loadModel(std::string _path)
 		App->ui->my_log.AddLog("[ASSIMP] Model loaded from: ");
 		App->ui->my_log.AddLog(path.c_str());
 	}
-		
-	
+
+
 	directory = _path.substr(0, _path.find_last_of('/'));
 
 	//App->ui->my_log.AddLog("Directory: ");
@@ -58,7 +58,7 @@ void Model::processNode(aiNode *node, const aiScene *scene)
 	{
 		processNode(node->mChildren[i], scene);
 	}
-	
+
 
 }
 
@@ -175,26 +175,26 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 	return textures;
 }
 
-unsigned int Model::TextureFromFile(std::string _path , std::string &directory)
+unsigned int Model::TextureFromFile(std::string _path, std::string &directory)
 {
 	std::string filename = std::string(_path);
 
 	if (!App->modelLoader->loadFromAbsolutePath) {
 		filename = directory + '/' + filename;
 
-		App->ui->my_log.AddLog("[ASSIMP] Model's path: ");
-		App->ui->my_log.AddLog(_path.c_str());
-		App->ui->my_log.AddLog("\n");
+		//App->ui->my_log.AddLog("[ASSIMP] Model's path: ");
+		//App->ui->my_log.AddLog(_path.c_str());
+		//App->ui->my_log.AddLog("\n");
 
-		App->ui->my_log.AddLog("[ASSIMP] Model's directory: ");
-		App->ui->my_log.AddLog(directory.c_str());
-		App->ui->my_log.AddLog("\n");
+		//App->ui->my_log.AddLog("[ASSIMP] Model's directory: ");
+		//App->ui->my_log.AddLog(directory.c_str());
+		//App->ui->my_log.AddLog("\n");
 
 		App->ui->my_log.AddLog("[ASSIMP] Model's texture path: ");
 		App->ui->my_log.AddLog(filename.c_str());
 		App->ui->my_log.AddLog("\n");
 
-		
+
 	}
 
 	else {
@@ -202,13 +202,13 @@ unsigned int Model::TextureFromFile(std::string _path , std::string &directory)
 
 		filename = directory + '\\' + filename;
 
-	//	App->ui->my_log.AddLog("[ASSIMP] Model's path: ");
-	//	App->ui->my_log.AddLog(_path.c_str());
-	//	App->ui->my_log.AddLog("\n");
+		//	App->ui->my_log.AddLog("[ASSIMP] Model's path: ");
+		//	App->ui->my_log.AddLog(_path.c_str());
+		//	App->ui->my_log.AddLog("\n");
 
-	//	App->ui->my_log.AddLog("[ASSIMP] Model's directory: ");
-	//	App->ui->my_log.AddLog(directory.c_str());
-	//	App->ui->my_log.AddLog("\n");
+		//	App->ui->my_log.AddLog("[ASSIMP] Model's directory: ");
+		//	App->ui->my_log.AddLog(directory.c_str());
+		//	App->ui->my_log.AddLog("\n");
 
 		App->ui->my_log.AddLog("[ASSIMP] Model's texture path: ");
 		App->ui->my_log.AddLog(filename.c_str());
@@ -243,7 +243,7 @@ unsigned int Model::TextureFromFile(std::string _path , std::string &directory)
 
 	if (data)
 	{
-			glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -262,6 +262,6 @@ unsigned int Model::TextureFromFile(std::string _path , std::string &directory)
 		ilDeleteImages(1, &textureID);
 	}
 	return textureID;
-	
+
 
 }

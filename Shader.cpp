@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include "ModuleProgram.h"
 
-Shader::Shader(){}
+Shader::Shader() {}
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
@@ -28,7 +28,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 		// convert stream into string
 		vertexCode = vShaderStream.str();
 		fragmentCode = fShaderStream.str();
-		
+
 	}
 	catch (std::ifstream::failure e)
 	{

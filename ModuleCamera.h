@@ -17,7 +17,7 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
-	
+
 	void LookAt(float3&, float3&, float3&);
 	void ProcessMatrixs();
 
@@ -35,13 +35,14 @@ public:
 	float nearP, farP, vFov, hFov, AR, sensitivity;
 	float3 camSpeed;
 	float speedValue;
+	float aspectRatio;
 
 	//TRUE = FREE MOVEMENT // FALSE = ORBIT
 	bool mode;
 
 	//Resets the camera once if the mode is set to ORBIT
 	bool once;
-	
+
 
 	math::float3  camTarget, f, s, u;
 	math::float3 cameraPos, camDirection, camUp, camRight, camFront;

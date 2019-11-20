@@ -1,7 +1,10 @@
 #include "ModuleCamera.h"
+#include "ModuleWindow.h"
+#include "ModuleProgram.h"
 #include "ModuleUI.h"
 
-#include "ModuleProgram.h"
+
+#include "GL/glew.h"
 
 ModuleCamera::ModuleCamera(){}
 ModuleCamera::~ModuleCamera(){}
@@ -50,8 +53,8 @@ void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect) {
 
 	frustum.pos += camSpeed;
-	frustum.nearPlaneDistance = farp;
-	frustum.farPlaneDistance = nearp;
+	frustum.nearPlaneDistance = nearp;
+	frustum.farPlaneDistance = farp;
 	frustum.verticalFov = vfov;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * DegToRad(aspect)); //aspect ratio 
 	proj = frustum.ProjectionMatrix();
@@ -59,111 +62,99 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 }
 
 void ModuleCamera::ProcessMatrixs() {
-	
-
 	LookAt(frustum.pos, frustum.pos + frustum.front, float3(0, 1, 0));
-	SetProjMatrix(nearP, farP, vFov, hFov, AR);
+
+	SetProjMatrix(nearP, farP, vFov, hFov, aspectRatio);
 
 }
 
 void ModuleCamera::Orbit() {
 	LookAt(frustum.pos, frustum.pos + frustum.front, frustum.up);
-	SetProjMatrix(nearP, farP, vFov, hFov, AR);
-	rotateMatrix = float3x3::RotateZ(rotX) * float3x3::RotateY(rotY) * float3x3::RotateX(rotZ);
+	SetProjMatrix(nearP, farP, vFov, hFov, aspectRatio);
+	rotateMatrix = float3x3::RotateZ(0) * float3x3::RotateY(rotY) * float3x3::RotateX(0);
 
 	model = float4x4::FromTRS(float3(0, 0, 0), rotateMatrix, float3(1, 1, 1));
 }
 
 void ModuleCamera::SetHFOV(float& f) {
-	hFov = f;
 }
 
 void ModuleCamera::SetVFOV(float &f) {
-	vFov = f;
 }
 
 void ModuleCamera::SetAspectRatio(float& f) {
-	AR = f;
-	dirty = true;
+
+	aspectRatio = f;
 }
 
 void ModuleCamera::SetPlaneDistances(float& n, float& f) {
-	nearP = n;
-	farP = f;
+	
 }
 
 void ModuleCamera::ResetCamera() {
-	//Cam position
 	
-	speedValue = 0.1f;
-	sensitivity = 0.5f;
-
-	//Where is pointing to
-	camTarget = float3(0, 0, 0);
-
-	camSpeed = float3(0, 0, 0);
-
-	camFront = float3(0, 0, -1);
-
-	rotX = rotY = rotZ = 0;
-
-	//ORBIT MODE
-	mode = true;
-
-	//Frustum generates a projection matrix
-	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3(0, 3, 10);
-	frustum.front = -float3::unitZ;
-	frustum.up = float3::unitY;
-
-	nearP = 0.1f;
-	farP = 30;
-	AR = 60;
-	vFov = math::pi / 4;
-	hFov = 2.f * atanf(tanf(vFov / 2) * DegToRad(AR)); //aspect ratio 
 }
 
 bool ModuleCamera::Init(){
 
-	glCullFace(GL_BACK);
+	App->ui->my_log.AddLog("Init Camera\n");
 
-	ResetCamera();
-	LookAt(frustum.pos, frustum.pos + frustum.front, frustum.up);	
 
+	speedValue = 0.1f;
+	sensitivity = 0.5f;
+
+	//ORBIT MODE
+	mode = true;
+
+	frustum.type = FrustumType::PerspectiveFrustum;
+	frustum.pos = float3(0, 4, 10);
+	frustum.front = -float3::unitZ;
+	frustum.up = float3::unitY;
+	frustum.nearPlaneDistance = 0.1f;
+	frustum.farPlaneDistance  = 100.0f;
+	frustum.verticalFov  = math::pi / 4.0f;
+	aspectRatio = 60;
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) *(aspectRatio));
+	proj = frustum.ProjectionMatrix();
+
+	camSpeed = float3(0, 0, 0);
+
+	nearP = frustum.nearPlaneDistance;
+	farP = frustum.farPlaneDistance;
+	vFov = frustum.verticalFov;
+	hFov = frustum.horizontalFov;
+
+	LookAt(frustum.pos, frustum.pos + frustum.front, float3(0, 1, 0));	
+	model = float4x4::FromTRS(frustum.pos, float3x3::RotateY(0), float3(1.0f, 1.0f, 1.0f));
+	
 	ProcessMatrixs();
-
-	rotateMatrix = float3x3::RotateZ(rotX) * float3x3::RotateY(rotY) * float3x3::RotateX(rotZ);
-
-	model = float4x4::FromTRS(float3(0, 0, 0), rotateMatrix, float3(1, 1, 1));
+	
 	return true;
 }
 
 update_status ModuleCamera::Update() {
 
-	//Means, if a change on the camera has been made, update it, so it's not made every frame
-
-
-	if (dirty) {
-
-		//glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
-		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
-		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
+	if (dirty){
+		//App->ui->my_log.AddLog("%f, %f, %f \n", App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
 
 		ProcessMatrixs();
-		dirty = false;
+		App->program->Use(App->program->defaultProgram);
+		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
+		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
+		//glUseProgram(0);
+
 	}
 
 	if (!mode) {
 
-		
+		rotY += 0.001;
+		Orbit();
 		glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
 		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
 		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
-		rotY += 0.001;
-		Orbit();
-		//rotateMatrix = float3x3::RotateZ(rotX) * float3x3::RotateY(rotY) * float3x3::RotateX(rotZ);
-
 	}
+
+	
 
 	return UPDATE_CONTINUE;
 }

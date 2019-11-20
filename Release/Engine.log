@@ -1,7 +1,8 @@
-﻿  ModuleRender.cpp
+﻿  ModuleCamera.cpp
+c:\users\gt73evr\desktop\mateusengine\modulecamera.cpp(145): warning C4305: '+=': truncamiento de 'double' a 'float'
   Generando código
-  1 of 2296 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 2276 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    3 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
-  Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe
+  Engine.vcxproj -> C:\Users\GT73EVR\Desktop\MateusEngine\Release\EngineMaster.exe

@@ -5,7 +5,7 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
-#include "ModuleTextures.h"
+//#include "ModuleTextures.h"
 #include "ModuleProgram.h"
 #include "ModuleCamera.h"
 #include <GL/glew.h>
@@ -71,24 +71,24 @@ void ModuleUI::MyConsole() {
 
 
 
-	if (ImGui::CollapsingHeader("Engine")) {
-		ImGui::InputText("Name", title, 25);
-		SDL_SetWindowTitle(App->window->window, title);
+	//if (ImGui::CollapsingHeader("Engine")) {
+	//	ImGui::InputText("Name", title, 25);
+	//	SDL_SetWindowTitle(App->window->window, title);
 
-		ImGui::Checkbox("MAG Filtering", &App->textures->MAGfilter);
-		ImGui::SameLine();
-		ImGui::Checkbox("MIN Filtering", &App->textures->MINfilter);
-		Separate();
+	//	ImGui::Checkbox("MAG Filtering", &App->textures->MAGfilter);
+	//	ImGui::SameLine();
+	//	ImGui::Checkbox("MIN Filtering", &App->textures->MINfilter);
+	//	Separate();
 
-		ImGui::Checkbox("Enable Wrap_S", &App->textures->WRAPs);
-		ImGui::SameLine();
-		ImGui::Checkbox("Enable Wrap_T", &App->textures->WRAPt);
-		Separate();
+	//	ImGui::Checkbox("Enable Wrap_S", &App->textures->WRAPs);
+	//	ImGui::SameLine();
+	//	ImGui::Checkbox("Enable Wrap_T", &App->textures->WRAPt);
+	//	//Separate();
 
-		ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
+	//	//ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
 
 
-	}
+	//}
 
 	if (ImGui::CollapsingHeader("Camera")) {
 
@@ -97,7 +97,7 @@ void ModuleUI::MyConsole() {
 			App->camera->dirty = false;
 			App->camera->once = false;
 			App->camera->mode = true;
-			
+
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Orbit View")) {
@@ -129,7 +129,7 @@ void ModuleUI::MyConsole() {
 
 			}
 
-			if (ImGui::SliderFloat("Aspect", &App->camera->AR, 1, 90)) {
+			if (ImGui::SliderFloat("Aspect", &App->camera->aspectRatio, 1, 90)) {
 				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
 				App->camera->ProcessMatrixs();
 
@@ -189,7 +189,7 @@ void ModuleUI::MyConsole() {
 	if (ImGui::CollapsingHeader("Images stuff")) {
 		if (ImGui::TreeNode("Triangle stuff")) {
 			ImGui::Checkbox("Show Lines", &showLines);
-			ImGui::Checkbox("Triangle Mode", &App->renderer->mode);
+			//ImGui::Checkbox("Triangle Mode", &App->renderer->mode);
 			ImGui::TreePop();
 		}
 
@@ -198,26 +198,29 @@ void ModuleUI::MyConsole() {
 		ImGui::Text("Swap image button ->");
 		ImGui::SameLine();
 		if (ImGui::Button("Click me pls")) {
-			App->textures->imageButtonValue++;
-			App->textures->once = false;
+			//App->textures->imageButtonValue++;
+			//App->textures->once = false;
 		}
 	}
 
 	if (ImGui::CollapsingHeader("Window")) {
 
-		ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
-		ImGui::SameLine();
-		ImGui::Checkbox("Bordered", &App->window->bordered);
+	//	ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
+	//	ImGui::SameLine();
+	//	ImGui::Checkbox("Bordered", &App->window->bordered);
 		Separate();
 		ImGui::SliderFloat("Brightness", &brightness, 0, 1);
 		Separate();
 		if (ImGui::SliderInt("Window width", &screenW, 300, 1200)) {
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
+			glViewport(0, 0, screenW, screenH);
 
 		}
 
 		if (ImGui::SliderInt("Window height", &screenH, 300, 800)) {
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
+			glViewport(0, 0, screenW, screenH);
+
 
 		}
 	}

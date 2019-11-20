@@ -1,14 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-
-#include "MathGeoLib/include/MathGeoLib.h"
-
-#include <gl/glew.h>
-#pragma comment (lib, "GLFW/lib-vc2017/glfw3.lib")
-
-#include "IMGUI/imgui.h"
-
+#include <GL/glew.h>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -26,18 +19,6 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	void WindowResized(unsigned width, unsigned height);
+	GLuint VAO, VBO, EBO;
 	void* context;
-
-	GLuint VBO, VAO, EBO;
-
-	//GLuint texture;
-	math::float3  up, target, f, s, u;
-	math::float3 cameraPos, camDirection, camUp, camRight;
-	math::float4x4 view, proj, model, transform, rotateMatrix;
-
-	bool mode = false;
-
-
-private:
-	void lookAt();
 };

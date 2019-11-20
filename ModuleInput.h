@@ -1,8 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "SDL/include/SDL.h"
-
+#include "SDL.h"
 typedef unsigned __int8 Uint8;
 
 class ModuleInput : public Module
@@ -22,7 +21,7 @@ private:
 	bool speed_boost = false;
 
 	float currentX, lastX, currentY, lastY;
-	float pitch =0, yaw=-90;
+	float pitch = 0, yaw = -90;
 	bool once = false;
 	bool modelOnce = false;
 	bool altPressed = false;

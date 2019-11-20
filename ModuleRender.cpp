@@ -1,20 +1,12 @@
-﻿#include "Globals.h"
+#include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
-#include "ModuleTextures.h"
 #include "ModuleUI.h"
+
 #include "SDL.h"
 
-#include <GL/glew.h>
-
-//Always after glew.h
-#include <IL/il.h>
-#include <IL/ilu.h>
-#include <IL/ilut.h>
-
-using namespace std;
 
 ModuleRender::ModuleRender()
 {
@@ -23,47 +15,12 @@ ModuleRender::ModuleRender()
 // Destructor
 ModuleRender::~ModuleRender()
 {
-
 }
-
-void ModuleRender::lookAt() {
-
-	f = float3(target - cameraPos);
-	f.Normalize();
-	s = float3(f.Cross(up));
-	s.Normalize();
-	u = float3(s.Cross(f));
-
-	//View Matrix - Look at computation
-	view[0][0] = s.x;
-	view[0][1] = s.y;
-	view[0][2] = s.z;
-
-	view[1][0] = u.x;
-	view[1][1] = u.y;
-	view[1][2] = u.z;
-
-	view[2][0] = -f.x;
-	view[2][1] = -f.y;
-	view[2][2] = -f.z;
-
-	view[0][3] = -s.Dot(cameraPos);
-	view[1][3] = -u.Dot(cameraPos);
-	view[2][3] = f.Dot(cameraPos);
-
-	view[3][0] = 0.0f;
-	view[3][1] = 0.0f;
-	view[3][2] = 0.0f;
-	view[3][3] = 1.0f;
-}
-
 
 // Called before render is available
 bool ModuleRender::Init()
 {
-
-	LOG("Creating Renderer context");
-	App->ui->my_log.AddLog("Creating Renderer context\n");
+	App->ui->my_log.AddLog("Init Render Module\n");
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -72,100 +29,86 @@ bool ModuleRender::Init()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
+	//Create context
 	SDL_GLContext glcontext = SDL_GL_CreateContext(App->window->window);
 	SDL_GL_MakeCurrent(App->window->window, glcontext);
-	//glClearColor(0.225f, 0, 0.225f, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDisable(GL_SCISSOR_TEST);
-
-
-	GLenum err = glewInit();// ... check for errors
-
-	App->ui->my_log.AddLog("Using Glew %s \n", glewGetString(GLEW_VERSION));
-	App->ui->my_log.AddLog("Vendor: %s \n", glGetString(GL_VENDOR));
-	App->ui->my_log.AddLog("Renderer: %s \n", glGetString(GL_RENDERER));
-	App->ui->my_log.AddLog("OpenGL version supported %s \n", glGetString(GL_VERSION));
-	App->ui->my_log.AddLog("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
+	GLenum err = glewInit();
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	glClearDepth(1.0f);
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	
+	glFrontFace(GL_CCW);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
-	
+
+
 	float vertices[] = {
-		// positions         
-		-1.0f,  -1.0f, 0.0f, //bottom left
-		1.0f, -1.0f, 0.0f,   //bottom right
-		1.0f, 1.0f, 0.0f,    //top right
-		-1.0f, 1.0f, 0.0f,   //top left
+-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-		//Texture coords
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f
-	};
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-	unsigned int indices[] = {
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
-	};
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f };
 	
-
-	//Creates a new vbo, vao & ebo
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
-	//Setting buffer to be used & assign data to it
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	//Position coords (0)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
-	//Texture coords attribute (1)
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 4 * 3));
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	
-	//Passing transform matrix to the shader from the ModuleProgram.cpp
 
-	
 	return true;
 }
 
 update_status ModuleRender::PreUpdate()
 {
-	glClearColor(0.225f, 0, 0.225f, 1);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glBindVertexArray(VAO);
-
-	if (!mode) {
-		//We use draw elements to indicate OpenGL to draw by the indexs stored in the EBO
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-	}
-
-	else
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-	
-	glBindVertexArray(0);
+	glClearColor(0.6f, 0.1f, 0.7f, 1.f);
 
 	return UPDATE_CONTINUE;
 }
@@ -173,19 +116,55 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	//App->program->Use(App->program->defaultProgram);
 
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36); // start at 0 and 3 tris
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//App->program->Use(App->program->noTexProgram);
+	glLineWidth(1.0f);
+	float d = 200.0f;
+	glBegin(GL_LINES);
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		glVertex3f(i, 0.0f, -d);
+		glVertex3f(i, 0.0f, d);
+		glVertex3f(-d, 0.0f, i);
+		glVertex3f(d, 0.0f, i);
+	}
+	glEnd();
+
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	// red X
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
+	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
+	// green Y
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
+	// blue Z
+	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
+	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
+	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
+	glEnd();
+	glLineWidth(1.0f);
+
+	
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleRender::PostUpdate()
 {
-
-	//Must be here in order to the UI window appear
 	SDL_GL_SwapWindow(App->window->window);
-
-	//SDL_GL_SwapWindow(App->window->window);
-
 	return UPDATE_CONTINUE;
 }
 
@@ -193,9 +172,6 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
-
-	glDisableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//Destroy window
 

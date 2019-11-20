@@ -47,7 +47,7 @@ bool ModuleTextures::Init() {
 	kirb.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
 
 	//Set renderer for OpenGL
-	ilutRenderer(ILUT_OPENGL);	
+	ilutRenderer(ILUT_OPENGL);
 
 	kirb.texture = ilutGLBindTexImage();
 
@@ -62,7 +62,7 @@ bool ModuleTextures::Init() {
 	ilLoadImage("../muffin.jpg");
 	iluFlipImage();
 
-	muffin.width = ilGetInteger(IL_IMAGE_WIDTH);
+/*	muffin.width = ilGetInteger(IL_IMAGE_WIDTH);
 	muffin.height = ilGetInteger(IL_IMAGE_HEIGHT);
 
 	muffin.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
@@ -91,8 +91,10 @@ bool ModuleTextures::Init() {
 
 	lenna.data = ilGetData();
 
-	
+	*/
 
+	RenderTexture(kirb);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return true;
 }
@@ -100,25 +102,25 @@ bool ModuleTextures::Init() {
 update_status ModuleTextures::PreUpdate() {
 
 	// set the texture wrapping parameters
-	if (WRAPs) 
+	if (WRAPs)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	
-	if (WRAPt) 
+
+	if (WRAPt)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// set texture filtering parameters
-	if (MINfilter) 
+	if (MINfilter)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	
-	if (MAGfilter) 
+
+	if (MAGfilter)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+
 
 	return UPDATE_CONTINUE;
 }
 update_status ModuleTextures::Update() {
 
-	if (imageButtonValue >= 3)
+	/*if (imageButtonValue >= 3)
 		imageButtonValue = 0;
 
 	if (imageButtonValue == 0 && !once) {
@@ -144,10 +146,10 @@ update_status ModuleTextures::Update() {
 		once = true;
 	}
 
-	if(mipmap)
+	if (mipmap)
 		glGenerateMipmap(GL_TEXTURE_2D);
+*/
 
-	
 	return UPDATE_CONTINUE;
 }
 update_status ModuleTextures::PostUpdate() {

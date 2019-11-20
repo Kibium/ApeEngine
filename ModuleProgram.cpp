@@ -4,6 +4,7 @@
 #include "ModuleCamera.h"
 #include "ModuleUI.h"
 
+
 #include<iostream>
 using namespace std;
 
@@ -30,7 +31,7 @@ char* ModuleProgram::getShaderText(char* source) {
 	else
 		cout << "not found" << endl;
 
-	
+
 
 	return data;
 }
@@ -49,7 +50,7 @@ void ModuleProgram::checkForErrors(GLuint shader, int success, char* infoLog) {
 
 }
 
-void ModuleProgram::InitShader(GLuint& program, GLuint& VS, GLuint& FS, char* Vdata, char* Fdata, bool active) {
+void ModuleProgram::InitShader(GLuint& program, GLuint& VS, GLuint& FS, char* Vdata, char* Fdata) {
 
 	const GLchar *vdata = Vdata;
 	const GLchar *fdata = Fdata;
@@ -82,10 +83,6 @@ void ModuleProgram::InitShader(GLuint& program, GLuint& VS, GLuint& FS, char* Vd
 	//Prepare to execute program
 	glLinkProgram(program);
 
-	//Actually use the program
-	if(active)
-		glUseProgram(program);
-
 	//Check for errors during program compilation
 	glGetProgramiv(program, GL_LINK_STATUS, &success);
 	if (!success)
@@ -100,85 +97,72 @@ void ModuleProgram::InitShader(GLuint& program, GLuint& VS, GLuint& FS, char* Vd
 
 }
 
+void ModuleProgram::Use(GLuint& program) {
+	glUseProgram(program);
+}
+
 bool ModuleProgram::Init() {
 
-	App->ui->my_log.AddLog("Initializing Module Program\n");
-
-	//Function that allows to get the content of a shader
-	char* imageVSdata = getShaderText("../quad.vs");
-	char* imageFSdata = getShaderText("../quad.fs");
-
-	char* modelVdata = getShaderText("../ModelViewer.vs");
-	char* modelFdata = getShaderText("../ModelViewer.fs");
-
-	InitShader(programImage, imageVShader, imageFShader, imageVSdata, imageFSdata, true);
-	InitShader(programModel, modelVS, modelFS, modelVdata, modelFdata, false);
-
-	/*const GLchar *vdata = VSdata;
-	const GLchar *fdata = FSdata;
-
-	//Creating Vertex Shader
-	imageVShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(imageVShader, 1, &vdata, NULL);
-	glCompileShader(imageVShader);
-
-	//Creating Fragment Shader
-	imageFShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(imageFShader, 1, &fdata, NULL);
-	glCompileShader(imageFShader);
-
-	//Check that my shaders compile
-	int  success = 0;
-	char infoLog[512];
-
-	checkForErrors(imageVShader, success, infoLog);
-	checkForErrors(imageFShader, success, infoLog);
+	App->ui->my_log.AddLog("Init Program Module\n");
 
 
-	//Create program object
-	programImage = glCreateProgram();
+	char* defVdata = getShaderText("../default.vs");
+	char* defFdata = getShaderText("../default.fs");
 
-	//Attach shaders
-	glAttachShader(programImage, imageVShader);
-	glAttachShader(programImage, imageFShader);
+	char* texVdata = getShaderText("../noTexture.vs");
+	char* texFdata = getShaderText("../noTexture.fs");
 
-	//Prepare to execute program
-	glLinkProgram(programImage);
+	char* modVdata = getShaderText("../model.vs");
+	char* modFdata = getShaderText("../model.fs");
 
-	//Actually use the program
-	glUseProgram(programImage);
+	//Initialize
+	InitShader(defaultProgram, defVS, defFS, defVdata, defFdata);
+	InitShader(noTexProgram, texVS, texFS, texVdata, texFdata);
+	//InitShader(modelProgram, progVS, progFS, modVdata, modFdata);
 
-	//Check for errors during program compilation
-	glGetProgramiv(programImage, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(programImage, 512, NULL, infoLog);
-		std::cout << "ERROR::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
+	Use(defaultProgram);
+	rotx = roty = rotz = 0;
+	rotateM = float3x3::RotateX(rotx) * float3x3::RotateY(roty) * float3x3::RotateZ(rotz);
+	model = float4x4::FromTRS(float3(0, 3, 0), rotateM, float3(1, 1, 1));
 
-	}
-	else
-		glGetProgramInfoLog(programImage, 512, NULL, infoLog);
+	//default shader//
+	modelLocation = glGetUniformLocation(defaultProgram, "model");
+	glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
 
-*/
-	
-	modelLocation = glGetUniformLocation(programImage, "model");
-	glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
-
-	viewLocation = glGetUniformLocation(programImage, "view");
+	viewLocation = glGetUniformLocation(defaultProgram, "view");
 	glUniformMatrix4fv(viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
 
-	projLocation = glGetUniformLocation(programImage, "proj");
+	projLocation = glGetUniformLocation(defaultProgram, "proj");
 	glUniformMatrix4fv(projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-	
+
+	//Use(noTexProgram);
+	//model = float4x4::identity;
+	////grid Shader//
+	//modelLocation = glGetUniformLocation(noTexProgram, "model");
+	//glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
+
+	//viewLocation = glGetUniformLocation(noTexProgram, "view");
+	//glUniformMatrix4fv(viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
+
+	//projLocation = glGetUniformLocation(noTexProgram, "proj");
+	//glUniformMatrix4fv(projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
+	//Use(defaultProgram);
+
+
 	return true;
-	
+
 }
 
 //This updates the the color of the triangle
 update_status ModuleProgram::Update() {
 
-	
-	glUseProgram(programImage);
+	/*roty += 0.005;
+	float3x3 rotateM = float3x3::RotateX(rotx) * float3x3::RotateY(roty) * float3x3::RotateZ(rotz);
+	model = float4x4::FromTRS(float3(0, 2, 0), rotateM, float3(1, 1, 1));*/
+	//Use(defaultProgram);
+	//modelLocation = glGetUniformLocation(defaultProgram, "model");
+	//glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
+	//glUseProgram(0);
 	return UPDATE_CONTINUE;
 }
 

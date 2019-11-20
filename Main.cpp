@@ -7,12 +7,6 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
-#include "IMGUI/imgui.h"
-#include"IMGUI/imgui_impl_opengl3.h"
-#include "IMGUI/imgui_impl_sdl.h"
-
-
-
 enum main_states
 {
 	MAIN_CREATION,
@@ -26,12 +20,8 @@ Application* App = NULL;
 
 int main(int argc, char ** argv)
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
-
-
-	
 
 	while (state != MAIN_EXIT)
 	{
@@ -91,23 +81,7 @@ int main(int argc, char ** argv)
 
 		}
 
-		/*SDL_Event sdlEvent;
-
-		while (SDL_PollEvent(&sdlEvent) != 0)
-		{
-			// Esc button is pressed
-			switch (sdlEvent.type)
-			{
-			case SDL_QUIT:
-				state = MAIN_FINISH;
-				break;
-
-			case SDL_WINDOWEVENT:
-				if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-					App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
-					break;
-			}
-		}*/
+		
 	}
 
 	delete App;
