@@ -64,7 +64,7 @@ update_status ModuleInput::Update()
 				float asp = RadToDeg(App->window->GetWidth() / App->window->GetHeight());
 
 				App->camera->SetAspectRatio(asp);
-				//SDL_SetWindowSize(App->window->window, App->window->GetWidth(), App->window->GetHeight());
+				
 
 				App->camera->dirty = true;
 			}
@@ -113,12 +113,20 @@ update_status ModuleInput::Update()
 				if (pitch < -89.0f)
 					pitch = -89.0f;
 
-				App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
-				App->camera->frustum.front.y = sin(DegToRad(pitch));
-				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
-				App->camera->frustum.front.Normalize();
+				if (!altPressed) {
+					App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
+					App->camera->frustum.front.y = sin(DegToRad(pitch));
+					App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+					App->camera->frustum.front.Normalize();
+				}
 
-				//App->ui->my_log.AddLog("%f, %f, %f \n", App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z);
+				if (altPressed) {
+					App->camera->manualOrbit = true;
+					App->camera->rotY += xOffset;
+
+				}
+
+				
 
 				App->camera->dirty = true;
 			}
@@ -138,78 +146,26 @@ update_status ModuleInput::Update()
 			//App->ui->my_log.AddLog(directory.substr(directory.size() - 4, directory.size()).c_str());
 
 			if (directory.substr(directory.size() - 4, directory.size()) == ".fbx" || directory.substr(directory.size() - 4, directory.size()) == ".obj") {
-				//App->ui->my_log.AddLog("Model loded from: ");
-				//App->ui->my_log.AddLog(directory.c_str());
-				//App->ui->my_log.AddLog("\n");
-				App->modelLoader->dir = directory.c_str();
+				App->ui->my_log.AddLog("[DROP] Model loded from: ");
+				App->ui->my_log.AddLog(directory.c_str());
+				App->ui->my_log.AddLog("\n");
+				App->modelLoader->modelDir = directory.c_str();
 				App->modelLoader->hasChanged = true;
 			}
 
-			if (directory.substr(directory.size() - 4, directory.size()) == ".png") {
-				//App->ui->my_log.AddLog("PNG dropped from: ");
+			else if (directory.substr(directory.size() - 4, directory.size()) == ".png" || directory.substr(directory.size() - 4, directory.size()) == ".jpg") {
+				App->ui->my_log.AddLog("[DROP] Image dropped from: ");
+				App->ui->my_log.AddLog(directory.c_str());
+				App->ui->my_log.AddLog("\n");
 
-				ILuint textureID;
+				App->modelLoader->textureDir = directory.c_str();
+				App->modelLoader->hasChanged = true;
 
-				ilGenImages(1, &textureID);
-				ilBindImage(textureID);
-				ilLoadImage(directory.c_str());
-
-				glGenTextures(1, &textureID);
-
-				int width, height, nrComponents;
-
-				width = ilGetInteger(IL_IMAGE_WIDTH);
-				height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-				GLuint texture = ilutGLBindTexImage();
-
-				glGenTextures(1, &texture);
-				glBindTexture(GL_TEXTURE_2D, texture);
-
-				ILenum Error;
-				Error = ilGetError();
-
-				//std::cout << Error << std::endl;
-
-				ILubyte* data = ilGetData();
-
-				if (data)
-				{
-					glBindTexture(GL_TEXTURE_2D, textureID);
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-					glGenerateMipmap(GL_TEXTURE_2D);
-
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-					glBindTexture(GL_TEXTURE_2D, 0);
-					ilDeleteImages(1, &textureID);
-
-					std::string _path = directory.substr(directory.find_last_of('\\') + 1);
-					directory = directory.substr(0, directory.find_last_of('\\'));
-					App->ui->my_log.AddLog(_path.c_str());
-					App->modelLoader->model.TextureFromFile(_path, directory);
-
-					App->modelLoader->model.textures_loaded.clear();
-					Texture texture;
-					texture.id = App->modelLoader->model.TextureFromFile(_path, directory);
-					texture.type = "texture_diffuse";
-					texture.path = _path;
-					App->modelLoader->model.textures_loaded.push_back(texture);
-
-				}
-				else
-				{
-					std::cout << "Texture failed to load at path: " << directory << std::endl;
-					ilDeleteImages(1, &textureID);
-				}
 			}
 
-
-
-
+			else {
+				App->ui->my_log.AddLog("[DROP] The object dropped has to be a .fbx, .obj, .png or .jpg\n");
+			}
 
 			break;
 
@@ -227,7 +183,9 @@ update_status ModuleInput::Update()
 
 				yaw = 0;
 				pitch = 0;
-				App->camera->ResetCamera();
+				App->camera->ResetCamera(false);
+				App->camera->dirty = true;
+
 
 			}
 
@@ -324,10 +282,7 @@ update_status ModuleInput::Update()
 			}
 			break;
 		}
-
-
-
-		ImGui_ImplSDL2_ProcessEvent(&e);
+	ImGui_ImplSDL2_ProcessEvent(&e);
 
 	}
 

@@ -9,6 +9,8 @@
 #include <assimp/postprocess.h>
 #include <assimp/material.h>
 #include <assimp/mesh.h>
+#include "ModuleTextures.h"
+
 #include <vector>
 
 class Model
@@ -16,15 +18,17 @@ class Model
 public:
 	/*  Functions   */
 	Model();
-	Model(const char *path)
-	{
-		loadModel(path);
-	}
-	void Draw(Shader shader);
+	Model(const char *_filename,const char* _texture, GLuint _program);
+	void Draw();
 	std::string path;
 	const aiScene* scene;
 	unsigned int TextureFromFile(std::string, std::string &directory);
 	std::vector<Texture> textures_loaded;
+
+	ImageData texture;
+	const char* filename;
+	const char* textureFile;
+	GLuint program;
 
 private:
 	/*  Model Data  */
@@ -36,6 +40,10 @@ private:
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 		std::string typeName);
+
+	unsigned int numMeshes;
+	unsigned int  numPolys;
+	unsigned int numVertices;
 
 };
 

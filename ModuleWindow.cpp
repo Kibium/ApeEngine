@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include <SDL_image.h>
 #include "ModuleUI.h"
+#include <GL/glew.h>
 
 ModuleWindow::ModuleWindow()
 {
@@ -41,7 +42,7 @@ bool ModuleWindow::Init()
 		//Create window
 		width = SCREEN_WIDTH;
 		height = SCREEN_HEIGHT;
-		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
+		flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 
 		if(FULLSCREEN == true)
 		{
@@ -57,19 +58,44 @@ bool ModuleWindow::Init()
 		}
 		else
 		{
-			//Get window surface
-			
+
+			//Set window icon
 			screen_surface = SDL_GetWindowSurface(window);
 			SDL_Surface* surface = IMG_Load("../crown.png");
+
+
 			if (surface == nullptr)
 				App->ui->my_log.AddLog("Window image not found \n");
+
 			SDL_SetWindowIcon(window, surface);
-			//SDL_SetWindowIcon(window, icon);
 
 		}
 	}
 
 	return ret;
+}
+
+update_status ModuleWindow::Update() {
+	
+	if (fullscreen) {
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		glViewport(0, 0, GetWidth(), GetHeight());
+		fulldesktop = false;
+
+	}
+	else {
+		SDL_SetWindowFullscreen(window, SDL_FALSE);
+		glViewport(0, 0, GetWidth(), GetHeight());
+	}
+		
+
+	if (bordered)
+		SDL_SetWindowBordered(window, SDL_TRUE);
+	else
+		SDL_SetWindowBordered(window, SDL_FALSE);
+
+
+	return UPDATE_CONTINUE;
 }
 
 // Called before quitting

@@ -20,7 +20,9 @@ public:
 	Model model;
 	Shader modelShader;
 
-	std::string dir;
+	std::string modelDir;
+	std::string textureDir;
+
 
 	bool hasChanged = true;
 	bool loadFromAbsolutePath = false;

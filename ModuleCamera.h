@@ -28,8 +28,8 @@ public:
 	void SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect);
 	void GetProjMatrix();
 	void GetViewMatrix();
-	void ResetCamera();
-	void Orbit();
+	void ResetCamera(bool aspectToo);
+	void AutoOrbit();
 
 	float rotX = 2.3589f, rotY = 0.5f, rotZ = 0.5f;
 	float nearP, farP, vFov, hFov, AR, sensitivity;
@@ -49,6 +49,7 @@ public:
 	math::float4x4 view, proj, model, transform, rotateMatrix;
 
 	bool dirty = false;
+	bool manualOrbit = false;
 
 	Frustum frustum;
 

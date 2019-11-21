@@ -3,11 +3,11 @@
 
 using namespace std;
 
-Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices)
 {
 	this->vertices = vertices;
 	this->indices = indices;
-	this->textures = textures;
+
 
 	setupMesh();
 }
@@ -26,6 +26,8 @@ void Mesh::setupMesh()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
 		&indices[0], GL_STATIC_DRAW);
 
+
+
 	// vertex positions
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
@@ -39,25 +41,25 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader shader)
+void Mesh::Draw()
 {
-	unsigned int diffuseNr = 1;
-	unsigned int specularNr = 1;
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
-		// retrieve texture number (the N in diffuse_textureN)
-		string number;
-		string name = textures[i].type;
-		if (name == "texture_diffuse")
-			number = std::to_string(diffuseNr++);
-		else if (name == "texture_specular")
-			number = std::to_string(specularNr++);
+	//unsigned int diffuseNr = 1;
+	//unsigned int specularNr = 1;
+	//for (unsigned int i = 0; i < textures.size(); i++)
+	//{
+	//	glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
+	//	// retrieve texture number (the N in diffuse_textureN)
+	//	string number;
+	//	string name = textures[i].type;
+	//	if (name == "texture_diffuse")
+	//		number = std::to_string(diffuseNr++);
+	//	else if (name == "texture_specular")
+	//		number = std::to_string(specularNr++);
 
-		shader.setFloat(("material." + name + number).c_str(), i);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-	}
-	glActiveTexture(GL_TEXTURE0);
+	//	shader.setFloat(("material." + name + number).c_str(), i);
+	//	glBindTexture(GL_TEXTURE_2D, textures[i].id);
+	//}
+	//glActiveTexture(GL_TEXTURE0);
 
 	// draw mesh
 	glBindVertexArray(VAO);

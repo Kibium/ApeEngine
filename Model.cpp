@@ -9,17 +9,26 @@
 
 Model::Model() {}
 
-void Model::Draw(Shader shader) {
-	std::string s;
+Model::Model(const char *_filename, const char* _texture, GLuint _program) : filename(_filename), textureFile(_texture), program(_program) {
+	
+	texture = App->textures->CreateTexture(textureFile);
+
+	loadModel(filename);
+}
+
+void Model::Draw() {
+	
+	
 	for (unsigned int i = 0; i < meshes.size(); ++i) {
-		meshes[i].Draw(shader);
+
+		meshes[i].Draw();
 	}
 }
 
 void Model::loadModel(std::string _path)
 {
-
-	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcessPreset_TargetRealtime_MaxQuality);
+	App->ui->my_log.AddLog("[ASSIMP] Trying model loading...\n");
+	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
 	path = _path + "\n";
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -28,38 +37,28 @@ void Model::loadModel(std::string _path)
 		App->ui->my_log.AddLog(err.c_str());
 		return;
 	}
+
 	else {
 		App->ui->my_log.AddLog("[ASSIMP] Model loaded from: ");
 		App->ui->my_log.AddLog(path.c_str());
+
+		directory = _path.substr(0, _path.find_last_of('/'));
+	//	processNode(scene->mRootNode, scene);
+		App->ui->my_log.AddLog("------------------------------\n");
+
+		numMeshes = scene->mNumMeshes;
+		// process all the node's meshes (if any)
+		for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+		{
+
+			aiMesh *mesh = scene->mMeshes[i];
+			meshes.push_back(processMesh(mesh, scene));
+
+
+		}
 	}
 
-
-	directory = _path.substr(0, _path.find_last_of('/'));
-
-	//App->ui->my_log.AddLog("Directory: ");
-	//App->ui->my_log.AddLog(directory.c_str());
-	//App->ui->my_log.AddLog("\n");
-
-	processNode(scene->mRootNode, scene);
-	App->ui->my_log.AddLog("------------------------------\n");
-}
-
-void Model::processNode(aiNode *node, const aiScene *scene)
-{
-	// process all the node's meshes (if any)
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
-	{
-
-		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(processMesh(mesh, scene));
-	}
-	// then do the same for each of its children
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
-	{
-		processNode(node->mChildren[i], scene);
-	}
-
-
+	
 }
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
@@ -67,11 +66,12 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Texture> textures;
 
 	// Walk through each of the mesh's vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
+		numVertices++;
+
 		Vertex vertex;
 		float3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
 		// positions
@@ -111,13 +111,14 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
+		numPolys++;
 		aiFace face = mesh->mFaces[i];
 		// retrieve all indices of the face and store them in the indices vector
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
 	// process materials
-	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+	//aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 	// we assume a convention for sampler names in the shaders. Each diffuse texture should be named
 	// as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
 	// Same applies to other texture as the following list summarizes:
@@ -126,20 +127,20 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	// normal: texture_normalN
 
 	// 1. diffuse maps
-	std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-	textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+	//std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+	//textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 	// 2. specular maps
-	std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-	textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+	//std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+	//textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	// 3. normal maps
-	std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-	textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+	//std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+	//textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 	// 4. height maps
-	std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+	//std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+	//textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 	// return a mesh object created from the extracted mesh data
-	return Mesh(vertices, indices, textures);
+	return Mesh(vertices, indices);
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)

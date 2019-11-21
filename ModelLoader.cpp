@@ -39,8 +39,8 @@ bool ModelLoader::Init() {
 
 	//glDisable(GL_CULL_FACE);
 	//modelShader = Shader("../ModelViewer.vs", "../ModelViewer.fs");
-	dir = "../models/baker/BakerHouse.fbx";
-
+	modelDir = "../models/baker/BakerHouse.fbx";
+	textureDir = "../models/baker/Baker_house.png";
 
 
 
@@ -51,8 +51,7 @@ update_status ModelLoader::Update() {
 
 	if (hasChanged) {
 
-		model = Model(dir.c_str());
-		loadModel();
+		model = Model(modelDir.c_str(), textureDir.c_str(), App->program->defaultProgram);
 
 		//This way, models will load from absolute paths from now on,
 		//allowing the engine load models with a different algorythm
@@ -62,7 +61,7 @@ update_status ModelLoader::Update() {
 		hasChanged = false;
 	}
 
-	model.Draw(modelShader);
+	model.Draw();
 
 	return UPDATE_CONTINUE;
 }

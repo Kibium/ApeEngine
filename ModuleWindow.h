@@ -18,11 +18,16 @@ public:
 	// Called before quitting
 	bool Init();
 
+	update_status Update();
 	// Called before quitting
 	bool CleanUp();
 
 	float GetWidth();
 	float GetHeight();
+
+	bool fullscreen = false;
+	bool bordered = true;
+	bool fulldesktop = false;
 
 public:
 	//The window we'll be rendering to
@@ -33,6 +38,7 @@ public:
 
 	int width;
 	int height;
+	Uint32 flags;
 };
 
 #endif // __ModuleWindow_H__

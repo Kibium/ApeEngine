@@ -16,13 +16,71 @@ const void ModuleTextures::RenderTexture(ImageData &d) {
 	if (d.data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, d.width, d.height, 0, GL_RGB, GL_UNSIGNED_BYTE, d.data);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	once = true;
-	glBindTexture(0, 0);
+}
+
+
+//HE CREAT UNA FUNCION PER CREAR TEXTURES. HE DE FER QUE ARRASTRANT UNA IMATGE SE CREI UNA TEXTURA I FER BIND IMAGE DINS ES MODEL
+
+ImageData ModuleTextures::CreateTexture(const char* path) {
+
+	ImageData textureToBeCreated;
+
+	GLuint image;
+
+	ilGenImages(1, &image);
+	ilBindImage(image);
+	ilLoadImage(path);
+
+	ILenum Error;
+	Error = ilGetError();
+
+	int w, h, s;
+
+	//Image attributes
+	w = ilGetInteger(IL_IMAGE_WIDTH);
+	h = ilGetInteger(IL_IMAGE_HEIGHT);
+	s = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+
+	GLuint texxt;
+
+	texxt = ilutGLBindTexImage();
+
+	GLubyte* data = ilGetData();
+
+	if (data) {
+		App->ui->my_log.AddLog("[TEXTURES] Image created correctly \n");
+		App->ui->my_log.AddLog("Path: ");
+		App->ui->my_log.AddLog(path);
+		App->ui->my_log.AddLog("\n");
+
+		glGenTextures(1, &texxt);
+		glBindTexture(GL_TEXTURE_2D, texxt);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+
+	else
+		App->ui->my_log.AddLog("Could not create texture \n");
+
+	return textureToBeCreated;
 }
 
 bool ModuleTextures::Init() {
@@ -32,69 +90,8 @@ bool ModuleTextures::Init() {
 	iluInit();
 	ilutInit();
 
-	ilGenImages(1, &kirb.imageName);
-	ilBindImage(kirb.imageName);
-	ilLoadImage("../kirbo.jpg");
-	iluFlipImage();
-
-	ILenum Error;
-	Error = ilGetError();
-
-	//Kirbo dimensions
-	kirb.width = ilGetInteger(IL_IMAGE_WIDTH);
-	kirb.height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	kirb.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-
 	//Set renderer for OpenGL
 	ilutRenderer(ILUT_OPENGL);
-
-	kirb.texture = ilutGLBindTexImage();
-
-	glGenTextures(1, &kirb.texture);
-	glBindTexture(GL_TEXTURE_2D, kirb.texture);
-
-	kirb.data = ilGetData();
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	ilGenImages(1, &muffin.imageName);
-	ilBindImage(muffin.imageName);
-	ilLoadImage("../muffin.jpg");
-	iluFlipImage();
-
-/*	muffin.width = ilGetInteger(IL_IMAGE_WIDTH);
-	muffin.height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	muffin.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-
-	muffin.texture = ilutGLBindTexImage();
-
-	glGenTextures(1, &muffin.texture);
-	glBindTexture(GL_TEXTURE_2D, muffin.texture);
-
-	muffin.data = ilGetData();
-
-	ilGenImages(1, &lenna.imageName);
-	ilBindImage(lenna.imageName);
-	ilLoadImage("../lenna.png");
-
-
-	lenna.width = ilGetInteger(IL_IMAGE_WIDTH);
-	lenna.height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	lenna.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-
-	lenna.texture = ilutGLBindTexImage();
-
-	glGenTextures(1, &lenna.texture);
-	glBindTexture(GL_TEXTURE_2D, lenna.texture);
-
-	lenna.data = ilGetData();
-
-	*/
-
-	RenderTexture(kirb);
-	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return true;
 }
@@ -103,52 +100,12 @@ update_status ModuleTextures::PreUpdate() {
 
 	// set the texture wrapping parameters
 	if (WRAPs)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-
-	if (WRAPt)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// set texture filtering parameters
-	if (MINfilter)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	if (MAGfilter)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 
-	return UPDATE_CONTINUE;
+
+		return UPDATE_CONTINUE;
 }
 update_status ModuleTextures::Update() {
-
-	/*if (imageButtonValue >= 3)
-		imageButtonValue = 0;
-
-	if (imageButtonValue == 0 && !once) {
-
-		RenderTexture(kirb);
-		App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", kirb.width, kirb.height);
-		App->ui->my_log.AddLog("Image size: %d bytes\n", kirb.size);
-		once = true;
-
-	}
-
-	if (imageButtonValue == 1 && !once) {
-		RenderTexture(muffin);
-		App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", muffin.width, muffin.height);
-		App->ui->my_log.AddLog("Image size: %d bytes\n", muffin.size);
-		once = true;
-	}
-
-	if (imageButtonValue == 2 && !once) {
-		RenderTexture(lenna);
-		App->ui->my_log.AddLog("Loaded image with %d px width and %d px height \n", lenna.width, lenna.height);
-		App->ui->my_log.AddLog("Image size: %d bytes\n", lenna.size);
-		once = true;
-	}
-
-	if (mipmap)
-		glGenerateMipmap(GL_TEXTURE_2D);
-*/
 
 	return UPDATE_CONTINUE;
 }
@@ -157,8 +114,6 @@ update_status ModuleTextures::PostUpdate() {
 }
 
 bool ModuleTextures::CleanUp() {
-
-	ilDeleteImages(1, &kirb.imageName);
 
 	return true;
 }

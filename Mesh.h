@@ -27,8 +27,8 @@ public:
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 	/*  Functions  */
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-	void Draw(Shader shader);
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+	void Draw();
 private:
 	/*  Render data  */
 	unsigned int VAO, VBO, EBO;

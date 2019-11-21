@@ -5,7 +5,6 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
-//#include "ModuleTextures.h"
 #include "ModuleProgram.h"
 #include "ModuleCamera.h"
 #include <GL/glew.h>
@@ -38,8 +37,14 @@ void ModuleUI::FPSHistogram() {
 void ModuleUI::MyConsole() {
 
 
+	io = ImGui::GetIO();
+	my_log.Draw("Log");
+	
+
+
+
 	ImGui::Begin("Mateus Console");
-	ImGui::Text("Mateus' Console allows you to look at different parameters of your PC");
+	//ImGui::Text("Mateus' Console allows you to look at different parameters of your PC");
 	Separate();
 
 	if (ImGui::BeginMainMenuBar()) {
@@ -60,36 +65,6 @@ void ModuleUI::MyConsole() {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
-	if (ImGui::CollapsingHeader("Log")) {
-
-		if (logBool)
-			my_log.Draw("Log", &logBool);
-	}
-	else
-		logBool = true;
-
-
-
-
-	//if (ImGui::CollapsingHeader("Engine")) {
-	//	ImGui::InputText("Name", title, 25);
-	//	SDL_SetWindowTitle(App->window->window, title);
-
-	//	ImGui::Checkbox("MAG Filtering", &App->textures->MAGfilter);
-	//	ImGui::SameLine();
-	//	ImGui::Checkbox("MIN Filtering", &App->textures->MINfilter);
-	//	Separate();
-
-	//	ImGui::Checkbox("Enable Wrap_S", &App->textures->WRAPs);
-	//	ImGui::SameLine();
-	//	ImGui::Checkbox("Enable Wrap_T", &App->textures->WRAPt);
-	//	//Separate();
-
-	//	//ImGui::Checkbox("Enable MipMap", &App->textures->mipmap);
-
-
-	//}
-
 	if (ImGui::CollapsingHeader("Camera")) {
 
 		ImGui::TextColored(ImVec4(204, 204, 0, 1), "Camera Mode");
@@ -100,8 +75,8 @@ void ModuleUI::MyConsole() {
 
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Orbit View")) {
-			App->camera->ResetCamera();
+		if (ImGui::Button("Auto Orbit")) {
+			App->camera->ResetCamera(false);
 			App->camera->dirty = true;
 			App->camera->mode = false;
 
@@ -139,93 +114,66 @@ void ModuleUI::MyConsole() {
 
 		}
 
-		if (ImGui::TreeNode("Position")) {
-			if (ImGui::SliderFloat("X", &App->camera->cameraPos.x, -10, 10)) {
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
-
-			}
-
-			if (ImGui::SliderFloat("Y", &App->camera->cameraPos.y, -10, 10)) {
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
-
-			}
-
-			if (ImGui::SliderFloat("Z", &App->camera->cameraPos.z, -10, 10)) {
-				glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-				App->camera->ProcessMatrixs();
-
-			}
-			ImGui::TreePop();
-
-		}
-
-		if (ImGui::TreeNode("Rotation")) {
-			if (ImGui::SliderFloat("X", &App->camera->rotX, -10, 10)) {
-				glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]);
-				App->camera->ProcessMatrixs();
-
-
-			}
-
-			if (ImGui::SliderFloat("Y", &App->camera->rotY, -10, 10)) {
-				glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]);
-				App->camera->ProcessMatrixs();
-
-
-			}
-
-			if (ImGui::SliderFloat("Z", &App->camera->rotZ, -10, 10)) {
-				glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]);
-				App->camera->ProcessMatrixs();
-
-
-			}
-			ImGui::TreePop();
-		}
+		
 	}
 
-	if (ImGui::CollapsingHeader("Images stuff")) {
-		if (ImGui::TreeNode("Triangle stuff")) {
-			ImGui::Checkbox("Show Lines", &showLines);
-			//ImGui::Checkbox("Triangle Mode", &App->renderer->mode);
-			ImGui::TreePop();
-		}
+	if (ImGui::CollapsingHeader("Renderer")) {
+		
+		ImGui::Checkbox("Wireframes", &showLines);
 
-		Separate();
 
-		ImGui::Text("Swap image button ->");
+		//Separate();
+
+		/*ImGui::Text("Swap image button ->");
 		ImGui::SameLine();
 		if (ImGui::Button("Click me pls")) {
 			//App->textures->imageButtonValue++;
 			//App->textures->once = false;
-		}
+		}*/
 	}
-
 	if (ImGui::CollapsingHeader("Window")) {
 
-	//	ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
-	//	ImGui::SameLine();
-	//	ImGui::Checkbox("Bordered", &App->window->bordered);
+		ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
+		ImGui::SameLine();
+		ImGui::Checkbox("Bordered", &App->window->bordered);
+
 		Separate();
+
 		ImGui::SliderFloat("Brightness", &brightness, 0, 1);
+
 		Separate();
+
 		if (ImGui::SliderInt("Window width", &screenW, 300, 1200)) {
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
 			glViewport(0, 0, screenW, screenH);
-
 		}
 
-		if (ImGui::SliderInt("Window height", &screenH, 300, 800)) {
+		if (ImGui::SliderInt("Window height", &screenH, 300, 1200)) {
 			SDL_SetWindowSize(App->window->window, screenW, screenH);
 			glViewport(0, 0, screenW, screenH);
-
-
 		}
 	}
 
-	if (ImGui::CollapsingHeader("Hardware")) {
+	if (ImGui::CollapsingHeader("Input")) {
+
+		ImGui::Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
+		ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
+		ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+		ImGui::Text("Mouse dbl-clicked:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseDoubleClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+		ImGui::Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseReleased(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+
+		ImGui::Text("Keys down:");      for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (io.KeysDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("%d (0x%X) (%.02f secs)", i, i, io.KeysDownDuration[i]); }
+		ImGui::Text("Keys pressed:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyPressed(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
+		ImGui::Text("Keys release:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyReleased(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
+	}
+
+	if (ImGui::CollapsingHeader("Textures")) {
+
+	}
+
+	
+
+	if (ImGui::CollapsingHeader("Hardware Info")) {
 		ImGui::Text("OS:");
 		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%s", SDL_GetCurrentVideoDriver());
 
@@ -279,9 +227,7 @@ bool ModuleUI::Init() {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();

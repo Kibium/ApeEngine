@@ -28,6 +28,10 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
+	ImageData CreateTexture(const char* path);
+	const void RenderTexture(ImageData &d);
+
+
 	bool CleanUp();
 	GLuint texture1, texture2, texture3;
 	ILubyte *data = nullptr;
@@ -53,6 +57,6 @@ private:
 	ImageData kirb;
 	ImageData lenna;
 	ImageData muffin;
-	const void RenderTexture(ImageData &d);
+	
 	void SetTextureData();
 };
