@@ -7,6 +7,11 @@
 #include "IMGUI/imgui.h"
 
 #define YELLOW ImVec4(204, 204, 0, 1)
+#define TURQ ImVec4(0,225,225, 1)
+#define RED ImVec4(255,0,0, 1)
+#define GREEN ImVec4(0,255,0, 1)
+#define BLUE ImVec4(0,0,255, 1)
+
 
 static void HelpMarker(const char* desc)
 {
@@ -148,8 +153,9 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
-	void MyConsole();
-	void Separate();
+	void ShowConfig();
+	void ShowProperties();
+	inline void Separate();
 	void FPSHistogram();
 
 	bool CleanUp();

@@ -32,6 +32,7 @@ public:
 
 	void CreateTexture(ILenum type, const char* path);
 	const void RenderTextures();
+	const std::vector<ImageData> getTextures();
 
 
 	bool CleanUp();
@@ -52,6 +53,7 @@ public:
 
 private:
 	std::vector<ImageData> images;
+	std::vector<ILinfo*> Iinfo;
 	ImageData kirb;
 	ImageData lenna;
 	ImageData muffin;

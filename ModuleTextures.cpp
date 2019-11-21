@@ -21,6 +21,9 @@ const void ModuleTextures::RenderTextures() {
 		glGenerateMipmap(GL_TEXTURE_2D);
 }
 
+const std::vector<ImageData> ModuleTextures::getTextures() {
+	return images;
+}
 
 void ModuleTextures::CreateTexture(ILenum type, const char* path) {
 
@@ -41,6 +44,10 @@ void ModuleTextures::CreateTexture(ILenum type, const char* path) {
 	id.width = ilGetInteger(IL_IMAGE_WIDTH);
 	id.height = ilGetInteger(IL_IMAGE_HEIGHT);
 	id.size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+
+	//So DDS images work!
+	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+
 
 	id.texture = ilutGLBindTexImage();
 

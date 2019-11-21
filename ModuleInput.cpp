@@ -64,7 +64,7 @@ update_status ModuleInput::Update()
 
 				float asp = RadToDeg(App->window->GetWidth() / App->window->GetHeight());
 				App->camera->SetAspectRatio(asp);
-		
+
 				App->camera->dirty = true;
 			}
 			break;
@@ -125,7 +125,7 @@ update_status ModuleInput::Update()
 
 				}
 
-				
+
 
 				App->camera->dirty = true;
 			}
@@ -141,7 +141,9 @@ update_status ModuleInput::Update()
 			modelOnce = false;
 			directory = e.drop.file;
 
-			if (directory.substr(directory.size() - 4, directory.size()) == ".fbx" || directory.substr(directory.size() - 4, directory.size()) == ".obj") {
+			extension = directory.substr(directory.size() - 4, directory.size());
+
+			if (extension == ".fbx" || extension == ".obj") {
 
 				App->ui->my_log.AddLog("[DROP] Model loded from: ");
 				App->ui->my_log.AddLog(directory.c_str());
@@ -151,7 +153,7 @@ update_status ModuleInput::Update()
 				App->modelLoader->hasChanged = true;
 			}
 
-			else if (directory.substr(directory.size() - 4, directory.size()) == ".png" || directory.substr(directory.size() - 4, directory.size()) == ".jpg" || directory.substr(directory.size() - 4, directory.size()) == ".dds") {
+			else if (extension == ".png" || extension == ".jpg" || extension == ".dds") {
 
 				App->ui->my_log.AddLog("[DROP] Image dropped from: ");
 				App->ui->my_log.AddLog(directory.c_str());
@@ -159,6 +161,17 @@ update_status ModuleInput::Update()
 
 				App->modelLoader->previousTexture = directory.c_str();
 				App->modelLoader->textureDir = directory.c_str();
+
+				if (extension == ".png")
+					App->textures->CreateTexture(IL_PNG, directory.c_str());
+
+				if (extension == ".jpg")
+					App->textures->CreateTexture(IL_JPG, directory.c_str());
+
+				if (extension == ".dds")
+					App->textures->CreateTexture(IL_DDS, directory.c_str());
+
+
 
 				App->modelLoader->hasChanged = true;
 

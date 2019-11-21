@@ -26,6 +26,6 @@ private:
 	bool modelOnce = false;
 	bool altPressed = false;
 	float xOffset, yOffset;
-
+	std::string extension;
 	std::string directory;
 };

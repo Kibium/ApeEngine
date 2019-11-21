@@ -18,7 +18,7 @@ class Model
 public:
 	/*  Functions   */
 	Model();
-	Model(const char *_filename,const char* _texture, GLuint _program);
+	Model(const char *_filename, const char* _texture, GLuint _program);
 	void Draw();
 	std::string path;
 	const aiScene* scene;
@@ -29,6 +29,10 @@ public:
 	const char* filename;
 	const char* textureFile;
 	GLuint program;
+
+	int getMeshes();
+	int getPolys();
+	int getVertices();
 
 private:
 	/*  Model Data  */
@@ -41,9 +45,9 @@ private:
 	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 		std::string typeName);
 
-	unsigned int numMeshes;
-	unsigned int  numPolys;
-	unsigned int numVertices;
+	int numMeshes = 0;
+	int numPolys = 0;
+	int numVertices = 0;
 
 };
 

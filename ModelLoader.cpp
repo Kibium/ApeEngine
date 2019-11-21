@@ -56,7 +56,7 @@ update_status ModelLoader::Update() {
 	if (hasChanged) {
 
 		model = Model(modelDir.c_str(), textureDir.c_str(), App->program->defaultProgram);
-
+		
 		//This way, models will load from absolute paths from now on,
 		//allowing the engine load models with a different algorythm
 		//See Model.cpp TextureFromFile

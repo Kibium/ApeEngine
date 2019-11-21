@@ -36,8 +36,62 @@ void ModuleUI::FPSHistogram() {
 	ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 }
 
-void ModuleUI::MyConsole() {
+void ModuleUI::ShowProperties() {
+	ImGui::Begin("Properties");
+	Separate();
+	if (ImGui::CollapsingHeader("Transform")) {
 
+		if(ImGui::TreeNode("Position")) {
+			ImGui::TextColored(RED, "X: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.a4);
+			ImGui::TextColored(GREEN, "Y: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.b4);
+			ImGui::TextColored(BLUE, "Z: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.c4);
+			ImGui::TreePop();
+		}
+		
+		if (ImGui::TreeNode("Rotation")) {
+			ImGui::TextColored(RED, "X: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.a4);
+			ImGui::TextColored(GREEN, "Y: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.b4);
+			ImGui::TextColored(BLUE, "Z: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.c4);
+			ImGui::TreePop();
+
+		}
+		if (ImGui::TreeNode("Scale")) {
+			ImGui::TextColored(RED, "X: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.a1);
+			ImGui::TextColored(GREEN, "Y: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.b2);
+			ImGui::TextColored(BLUE, "Z: "); ImGui::SameLine();
+			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.c3);
+			ImGui::TreePop();
+
+		}
+		
+	}
+	if (ImGui::CollapsingHeader("Geometry")) {
+		ImGui::TextColored(TURQ, "Meshes:"); ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", App->modelLoader->model.getMeshes());
+
+		ImGui::TextColored(TURQ, "Polygons:"); ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", App->modelLoader->model.getPolys());
+
+		ImGui::TextColored(TURQ, "Vertices:"); ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", App->modelLoader->model.getVertices());
+	}
+	if (ImGui::CollapsingHeader("Texture")) {
+		//for(int i = 0; i< App->textures->getTextures().size(); ++i)
+		ImGui::Image((void*)(intptr_t)App->textures->getTextures()[0].imageName, ImVec2(128, 128));
+	}
+
+	ImGui::End();
+}
+
+void ModuleUI::ShowConfig() {
 
 	io = ImGui::GetIO();
 	
@@ -255,6 +309,7 @@ void ModuleUI::MyConsole() {
 	SDL_SetWindowBrightness(App->window->window, brightness);
 	ImGui::End();
 
+
 	my_log.Draw("Log");
 
 
@@ -300,7 +355,8 @@ update_status ModuleUI::PreUpdate() {
 
 update_status ModuleUI::Update() {
 
-	MyConsole();
+	ShowConfig();
+	ShowProperties();
 	//ImGui::ShowDemoWindow();
 	return UPDATE_CONTINUE;
 }

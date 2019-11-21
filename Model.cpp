@@ -74,6 +74,18 @@ void Model::loadModel(std::string _path)
 	
 }
 
+int Model::getMeshes() {
+	return numMeshes;
+}
+int Model::getPolys() {
+	return numPolys;
+}
+
+int Model::getVertices() {
+	return numVertices;
+}
+
+
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
 
@@ -84,7 +96,6 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		numVertices++;
-
 		Vertex vertex;
 		float3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
 		// positions
