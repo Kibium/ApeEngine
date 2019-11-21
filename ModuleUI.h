@@ -6,6 +6,21 @@
 
 #include "IMGUI/imgui.h"
 
+#define YELLOW ImVec4(204, 204, 0, 1)
+
+static void HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
 struct ExampleAppLog
 {
 	ImGuiTextBuffer     Buf;
@@ -153,9 +168,17 @@ public:
 	bool help = false;
 	bool logBool = true;
 
+	bool alpha_preview = true;
+	bool alpha_half_preview = false;
+	bool drag_and_drop = true;
+	bool options_menu = true;
+	bool hdr = false;
+
+	ImGuiColorEditFlags misc_flags;
+
 
 private:
-	char title[25] = "Mateus";
+	char title[25] = "Mateus Engine";
 	bool test = true;
 
 };

@@ -44,14 +44,14 @@ bool ModuleInput::Init()
 	return ret;
 }
 
-// Called every draw update
 update_status ModuleInput::Update()
 {
 
 	static SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
-		// Esc button is pressed
+		ImGui_ImplSDL2_ProcessEvent(&e);
+
 		switch (e.type)
 		{
 		case SDL_QUIT:
@@ -61,11 +61,10 @@ update_status ModuleInput::Update()
 		case SDL_WINDOWEVENT:
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
+
 				float asp = RadToDeg(App->window->GetWidth() / App->window->GetHeight());
-
 				App->camera->SetAspectRatio(asp);
-				
-
+		
 				App->camera->dirty = true;
 			}
 			break;
@@ -142,23 +141,25 @@ update_status ModuleInput::Update()
 			modelOnce = false;
 			directory = e.drop.file;
 
-
-			//App->ui->my_log.AddLog(directory.substr(directory.size() - 4, directory.size()).c_str());
-
 			if (directory.substr(directory.size() - 4, directory.size()) == ".fbx" || directory.substr(directory.size() - 4, directory.size()) == ".obj") {
+
 				App->ui->my_log.AddLog("[DROP] Model loded from: ");
 				App->ui->my_log.AddLog(directory.c_str());
 				App->ui->my_log.AddLog("\n");
+
 				App->modelLoader->modelDir = directory.c_str();
 				App->modelLoader->hasChanged = true;
 			}
 
-			else if (directory.substr(directory.size() - 4, directory.size()) == ".png" || directory.substr(directory.size() - 4, directory.size()) == ".jpg") {
+			else if (directory.substr(directory.size() - 4, directory.size()) == ".png" || directory.substr(directory.size() - 4, directory.size()) == ".jpg" || directory.substr(directory.size() - 4, directory.size()) == ".dds") {
+
 				App->ui->my_log.AddLog("[DROP] Image dropped from: ");
 				App->ui->my_log.AddLog(directory.c_str());
 				App->ui->my_log.AddLog("\n");
 
+				App->modelLoader->previousTexture = directory.c_str();
 				App->modelLoader->textureDir = directory.c_str();
+
 				App->modelLoader->hasChanged = true;
 
 			}
@@ -282,7 +283,7 @@ update_status ModuleInput::Update()
 			}
 			break;
 		}
-	ImGui_ImplSDL2_ProcessEvent(&e);
+
 
 	}
 

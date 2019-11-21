@@ -37,15 +37,19 @@ void ModelLoader::loadModel() {
 
 bool ModelLoader::Init() {
 
-	//glDisable(GL_CULL_FACE);
-	//modelShader = Shader("../ModelViewer.vs", "../ModelViewer.fs");
+	
 	modelDir = "../models/baker/BakerHouse.fbx";
-	textureDir = "../models/baker/Baker_house.png";
 
+	textureDir = "../models/baker/Baker_house.png";
+	previousTexture = textureDir;
+
+	checkerDir = "../models/checker.jpg";
 
 
 	return true;
 }
+
+
 
 update_status ModelLoader::Update() {
 
@@ -59,6 +63,21 @@ update_status ModelLoader::Update() {
 		loadFromAbsolutePath = true;
 
 		hasChanged = false;
+	}
+
+	if (activate_checker) {
+		if (!iterated) {
+			model = Model(modelDir.c_str(), checkerDir.c_str(), App->program->defaultProgram);
+			iterated = true;
+		}
+	}
+
+	else {
+		if (iterated) {
+			model = Model(modelDir.c_str(), previousTexture.c_str(), App->program->defaultProgram);
+			iterated = false;
+		}
+			
 	}
 
 	model.Draw();

@@ -7,6 +7,8 @@
 #include "ModuleRender.h"
 #include "ModuleProgram.h"
 #include "ModuleCamera.h"
+#include "ModelLoader.h"
+
 #include <GL/glew.h>
 #include"IMGUI/imgui_impl_opengl3.h"
 #include "IMGUI/imgui_impl_glfw.h"
@@ -38,15 +40,10 @@ void ModuleUI::MyConsole() {
 
 
 	io = ImGui::GetIO();
-	my_log.Draw("Log");
 	
-
-
-
 	ImGui::Begin("Mateus Console");
-	//ImGui::Text("Mateus' Console allows you to look at different parameters of your PC");
 	Separate();
-
+	
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::MenuItem("ImGui"))
 			App->RequestBrowser("https://github.com/ocornut/imgui");
@@ -112,26 +109,39 @@ void ModuleUI::MyConsole() {
 
 			ImGui::TreePop();
 
-		}
-
-		
+		}	
 	}
 
 	if (ImGui::CollapsingHeader("Renderer")) {
+
 		
+		if(ImGui::TreeNode("Background Color")) {
+			ImGui::ColorPicker4("##picker", (float*)&App->renderer->bgColor.x, misc_flags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+			ImGui::TreePop();
+		}
+	
 		ImGui::Checkbox("Wireframes", &showLines);
-
-
-		//Separate();
-
-		/*ImGui::Text("Swap image button ->");
 		ImGui::SameLine();
-		if (ImGui::Button("Click me pls")) {
-			//App->textures->imageButtonValue++;
-			//App->textures->once = false;
-		}*/
+		ImGui::Checkbox("Cull Face", &App->renderer->enable_cull_face);
+
+		ImGui::Checkbox("Depth test", &App->renderer->enable_depth_test);
+		ImGui::SameLine(); 
+		/*ImGui::Checkbox("Render Front Faces", &App->renderer->front_face); 
+		ImGui::SameLine();
+		HelpMarker("This checkbox will be marked by default if you deactivate all of them!");
+
+		ImGui::Checkbox("Render Back Faces", &App->renderer->back_face);
+		ImGui::SameLine();
+		ImGui::Checkbox("Render Front and Back Faces", &App->renderer->front_and_back);*/
+
+		ImGui::Checkbox("Render Counter Clock Wise Mode", &App->renderer->counter_clock_orientation);
+
+
 	}
 	if (ImGui::CollapsingHeader("Window")) {
+
+		ImGui::InputText("Mateus Engine", title, 25);
+		SDL_SetWindowTitle(App->window->window, title);
 
 		ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
 		ImGui::SameLine();
@@ -169,29 +179,59 @@ void ModuleUI::MyConsole() {
 
 	if (ImGui::CollapsingHeader("Textures")) {
 
-	}
+		ImGui::Checkbox("Checker", &App->modelLoader->activate_checker);
 
-	
+		if (ImGui::TreeNode("Texture Parameters"))
+		{
+			ImGui::Selectable("Toggle Repeat", &App->textures->repeat);
+			ImGui::Selectable("Toggle Mirrored Repeat", &App->textures->mirrored);
+			ImGui::Selectable("Toggle Clamp to the Edge", &App->textures->edge);
+			ImGui::Selectable("Toggle Clamp to Border", &App->textures->border);
+			ImGui::Selectable("Toggle Nearest Clamp", &App->textures->nearest);
+			ImGui::Selectable("Toggle Mipmap", &App->textures->mipmap);
+
+				
+			ImGui::TreePop();
+		}
+
+	}
 
 	if (ImGui::CollapsingHeader("Hardware Info")) {
 		ImGui::Text("OS:");
-		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%s", SDL_GetCurrentVideoDriver());
+		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", SDL_GetCurrentVideoDriver());
 
 		ImGui::Text("Number of Logical CPU cores:");
-		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%d", SDL_GetCPUCount());
+		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%d", SDL_GetCPUCount());
 
 
 		ImGui::Text("System RAM (Mb):");
-		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%d", SDL_GetSystemRAM());
+		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%d", SDL_GetSystemRAM());
 
 		ImGui::Text("GPU Name:");
-		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%s", glGetString(GL_RENDERER));
+		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_RENDERER));
 
 		ImGui::Text("GPU Version:");
-		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%s", glGetString(GL_VERSION));
+		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_VERSION));
 
 		ImGui::Text("Manufacturer:");
-		ImGui::SameLine(); ImGui::TextColored(ImVec4(204, 204, 0, 1), "%s", glGetString(GL_VENDOR));
+		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_VENDOR));
+
+		static GLint totalMemoryKb = 0;
+		static GLint currentMemoryKb = 0;
+		glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalMemoryKb);
+		glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &currentMemoryKb);
+		ImGui::Text("VRAM Budget:");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%.1f Mb", (float)totalMemoryKb / 1000);
+		ImGui::Text("VRAM Usage:");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%.1f Mb", ((float)totalMemoryKb / 1000) - ((float)currentMemoryKb / 1000));
+		ImGui::Text("VRAM Available:");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%.1f Mb", (float)currentMemoryKb / 1000);
+		ImGui::Text("VRAM Reserved:");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%.1f Mb", 0.0F);
 
 	}
 
@@ -215,6 +255,9 @@ void ModuleUI::MyConsole() {
 	SDL_SetWindowBrightness(App->window->window, brightness);
 	ImGui::End();
 
+	my_log.Draw("Log");
+
+
 }
 
 bool ModuleUI::Init() {
@@ -224,6 +267,7 @@ bool ModuleUI::Init() {
 		printf("Error: %s\n", SDL_GetError());
 		return false;
 	}
+
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -232,10 +276,12 @@ bool ModuleUI::Init() {
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
-
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 330");
+
+	//Flags for the bgColor
+	misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 
 	fps_log.push_back(0);
 	ms_log.push_back(0);
@@ -260,11 +306,12 @@ update_status ModuleUI::Update() {
 }
 
 update_status ModuleUI::PostUpdate() {
+
 	ImGui::Render();
+
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-
 
 	return UPDATE_CONTINUE;
 }

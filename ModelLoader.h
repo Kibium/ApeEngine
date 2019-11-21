@@ -22,8 +22,11 @@ public:
 
 	std::string modelDir;
 	std::string textureDir;
+	std::string previousTexture;
+	std::string checkerDir;
 
-
+	bool activate_checker = false;
+	bool iterated = false;
 	bool hasChanged = true;
 	bool loadFromAbsolutePath = false;
 private:

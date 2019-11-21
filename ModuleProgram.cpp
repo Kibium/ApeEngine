@@ -97,8 +97,23 @@ void ModuleProgram::InitShader(GLuint& program, GLuint& VS, GLuint& FS, char* Vd
 
 }
 
-void ModuleProgram::Use(GLuint& program) {
+void ModuleProgram::Use(const GLuint& program) {
 	glUseProgram(program);
+}
+
+//ORBIT
+void ModuleProgram::updateProgram(const GLuint& program, float4x4& m, float4x4& v, float4x4& p) {
+	Use(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &m[0][0]); //Calculating vertexs in the vertex shader
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &v[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &p[0][0]);
+}
+
+//NO ORBIT
+void ModuleProgram::updateProgram(const GLuint& program, float4x4& v, float4x4& p) {
+	Use(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &v[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &p[0][0]);
 }
 
 bool ModuleProgram::Init() {
@@ -109,60 +124,41 @@ bool ModuleProgram::Init() {
 	char* defVdata = getShaderText("../default.vs");
 	char* defFdata = getShaderText("../default.fs");
 
-	char* texVdata = getShaderText("../noTexture.vs");
-	char* texFdata = getShaderText("../noTexture.fs");
+	char* linesVdata = getShaderText("../lines.vs");
+	char* linesFdata = getShaderText("../lines.fs");
 
 	char* modVdata = getShaderText("../model.vs");
 	char* modFdata = getShaderText("../model.fs");
 
 	//Initialize
 	InitShader(defaultProgram, defVS, defFS, defVdata, defFdata);
-	InitShader(noTexProgram, texVS, texFS, texVdata, texFdata);
-	//InitShader(modelProgram, progVS, progFS, modVdata, modFdata);
-
-	Use(defaultProgram);
+	InitShader(linesProgram, linesVS, linesFS, linesVdata, linesFdata);
+	
 	rotx = roty = rotz = 0;
 	rotateM = float3x3::RotateX(rotx) * float3x3::RotateY(roty) * float3x3::RotateZ(rotz);
 	model = float4x4::FromTRS(float3(0, 3, 0), rotateM, float3(1, 1, 1));
 
 	//default shader//
-	modelLocation = glGetUniformLocation(defaultProgram, "model");
-	glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
+	Use(defaultProgram);
+	glUniformMatrix4fv(glGetUniformLocation(defaultProgram, "model"), 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
+	glUniformMatrix4fv(glGetUniformLocation(defaultProgram, "view"), 1, GL_TRUE, &App->camera->view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(defaultProgram, "proj"), 1, GL_TRUE, &App->camera->proj[0][0]);
 
-	viewLocation = glGetUniformLocation(defaultProgram, "view");
-	glUniformMatrix4fv(viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-
-	projLocation = glGetUniformLocation(defaultProgram, "proj");
-	glUniformMatrix4fv(projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-
-	//Use(noTexProgram);
-	//model = float4x4::identity;
-	////grid Shader//
-	//modelLocation = glGetUniformLocation(noTexProgram, "model");
-	//glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
-
-	//viewLocation = glGetUniformLocation(noTexProgram, "view");
-	//glUniformMatrix4fv(viewLocation, 1, GL_TRUE, &App->camera->view[0][0]);
-
-	//projLocation = glGetUniformLocation(noTexProgram, "proj");
-	//glUniformMatrix4fv(projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-	//Use(defaultProgram);
-
+	//Lines shader//
+	Use(linesProgram);
+	glUniformMatrix4fv(glGetUniformLocation(linesProgram, "model"), 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
+	glUniformMatrix4fv(glGetUniformLocation(linesProgram, "view"), 1, GL_TRUE, &App->camera->view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(linesProgram, "proj"), 1, GL_TRUE, &App->camera->proj[0][0]);
+	Use(defaultProgram);
 
 	return true;
 
 }
 
+
 //This updates the the color of the triangle
 update_status ModuleProgram::Update() {
 
-	/*roty += 0.005;
-	float3x3 rotateM = float3x3::RotateX(rotx) * float3x3::RotateY(roty) * float3x3::RotateZ(rotz);
-	model = float4x4::FromTRS(float3(0, 2, 0), rotateM, float3(1, 1, 1));*/
-	//Use(defaultProgram);
-	//modelLocation = glGetUniformLocation(defaultProgram, "model");
-	//glUniformMatrix4fv(modelLocation, 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
-	//glUseProgram(0);
 	return UPDATE_CONTINUE;
 }
 

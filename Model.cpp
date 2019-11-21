@@ -11,14 +11,27 @@ Model::Model() {}
 
 Model::Model(const char *_filename, const char* _texture, GLuint _program) : filename(_filename), textureFile(_texture), program(_program) {
 	
-	texture = App->textures->CreateTexture(textureFile);
+	ILenum type;
+	std::string s = textureFile;
+
+	if (s.substr(s.size() - 4, s.size()) == ".png")
+		type = IL_PNG;
+	
+	if (s.substr(s.size() - 4, s.size()) == ".jpg")
+		type = IL_JPG;
+		
+	if (s.substr(s.size() - 4, s.size()) == ".dds")
+		type = IL_DDS;
+	
+	
+	App->textures->CreateTexture(type, textureFile);
 
 	loadModel(filename);
 }
 
 void Model::Draw() {
 	
-	
+
 	for (unsigned int i = 0; i < meshes.size(); ++i) {
 
 		meshes[i].Draw();

@@ -40,7 +40,6 @@ bool ModuleRender::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 	glFrontFace(GL_CCW);
-	//glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
 
 
@@ -102,13 +101,15 @@ bool ModuleRender::Init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	bgColor = float4(0.6f, 0.1f, 0.7f, 1.f);
+
 	return true;
 }
 
 update_status ModuleRender::PreUpdate()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.6f, 0.1f, 0.7f, 1.f);
+	glClearColor(bgColor.x, bgColor.y, bgColor.z, bgColor.z);
 
 	return UPDATE_CONTINUE;
 }
@@ -116,16 +117,51 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-	//App->program->Use(App->program->defaultProgram);
+	if (enable_cull_face)
+		glEnable(GL_CULL_FACE);
+	else
+		glDisable(GL_CULL_FACE);
+
+	if(enable_depth_test)
+		glEnable(GL_DEPTH_TEST);
+	else
+		glDisable(GL_DEPTH_TEST);
+
+	/*if (front_face) {
+		glCullFace(GL_FRONT);
+		back_face = false;
+		front_and_back = false;
+	}
+
+	if (back_face) {
+		glCullFace(GL_BACK);
+		front_face = false;
+		front_and_back = false;
+	}
+
+	if (front_and_back) {
+		glCullFace(GL_BACK);
+		front_face = false;
+		front_and_back = false;
+	}
+
+	if (!front_face && !front_and_back && !back_face)
+		front_face = true;
+
+	if (counter_clock_orientation)
+		 glCullFace(GL_CCW);
+	else
+		glFrontFace(GL_CW);*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36); // start at 0 and 3 tris
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//App->program->Use(App->program->noTexProgram);
+	App->program->Use(App->program->linesProgram);
 	glLineWidth(1.0f);
 	float d = 200.0f;
 	glBegin(GL_LINES);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	for (float i = -d; i <= d; i += 1.0f)
 	{
 		glVertex3f(i, 0.0f, -d);
@@ -156,6 +192,7 @@ update_status ModuleRender::Update()
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 	glEnd();
 	glLineWidth(1.0f);
+	App->program->Use(App->program->defaultProgram);
 
 	
 

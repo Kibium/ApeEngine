@@ -227,8 +227,8 @@
     <None Include="default.vs" />
     <None Include="model.fs" />
     <None Include="model.vs" />
-    <None Include="noTexture.fs" />
-    <None Include="noTexture.vs" />
+    <None Include="lines.fs" />
+    <None Include="lines.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

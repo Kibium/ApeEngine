@@ -75,9 +75,10 @@ void ModuleCamera::AutoOrbit() {
 	rotateMatrix = float3x3::RotateX(0) * float3x3::RotateY(rotY) * float3x3::RotateZ(0);
 	model = float4x4::FromTRS(float3(0, 3, -12), rotateMatrix, float3(1, 1, 1));
 
-	glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
-	glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
-	glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
+	App->program->updateProgram(App->program->defaultProgram, model, view, proj);
+	App->program->updateProgram(App->program->linesProgram, model, view, proj);
+
+
 }
 
 void ModuleCamera::SetHFOV(float& f) {
@@ -141,14 +142,9 @@ bool ModuleCamera::Init(){
 update_status ModuleCamera::Update() {
 
 	if (dirty){
-		//App->ui->my_log.AddLog("%f, %f, %f \n", App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
-
 		ProcessMatrixs();
-		//App->program->Use(App->program->defaultProgram);
-		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
-		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //Calculating vertexs in the vertex shader
-		//glUseProgram(0);
-
+		App->program->updateProgram(App->program->defaultProgram, view, proj);
+		App->program->updateProgram(App->program->linesProgram, view, proj);
 	}
 
 	if (!mode) {
@@ -158,11 +154,9 @@ update_status ModuleCamera::Update() {
 	}
 
 	if (manualOrbit) {
-		//model = float4x4::FromTRS(float3(0, 3, -12), rotateMatrix, float3(1, 1, 1));
-
-		glUniformMatrix4fv(App->program->modelLocation, 1, GL_TRUE, &App->camera->model[0][0]); //Calculating vertexs in the vertex shader
-		glUniformMatrix4fv(App->program->viewLocation, 1, GL_TRUE, &App->camera->view[0][0]); //Calculating vertexs in the vertex shader
-		glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]); //
+		ProcessMatrixs();
+		App->program->updateProgram(App->program->defaultProgram, model, view, proj);
+		App->program->updateProgram(App->program->linesProgram, model, view, proj);
 	}
 
 	

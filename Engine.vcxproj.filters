@@ -450,16 +450,16 @@
     <None Include="default.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="noTexture.fs">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="noTexture.vs">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="model.fs">
       <Filter>Shaders</Filter>
     </None>
     <None Include="model.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lines.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lines.fs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

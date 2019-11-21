@@ -7,6 +7,8 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+#include <vector>
+
 struct ImageData {
 	int width = 0;
 	int height = 0;
@@ -28,23 +30,18 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
-	ImageData CreateTexture(const char* path);
-	const void RenderTexture(ImageData &d);
+	void CreateTexture(ILenum type, const char* path);
+	const void RenderTextures();
 
 
 	bool CleanUp();
 	GLuint texture1, texture2, texture3;
-	ILubyte *data = nullptr;
 	//ILuint kirbo, lenna, muffin;
 
 	int width;
 	int height;
 
-	bool MINfilter = false;
-	bool MAGfilter = true;
-
-	bool WRAPs = true;
-	bool WRAPt = false;
+	bool repeat = false, mirrored = false, edge = false, border = false, nearest = true;
 
 	//Which image to show
 	int imageButtonValue = 0;
@@ -54,9 +51,8 @@ public:
 	bool mipmap = true;
 
 private:
+	std::vector<ImageData> images;
 	ImageData kirb;
 	ImageData lenna;
 	ImageData muffin;
-	
-	void SetTextureData();
-};
+	};
