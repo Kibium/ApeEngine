@@ -1,4 +1,4 @@
-WELCOME TO THE MATEUS ENGINE PAGE!
+WELCOME TO THE APE ENGINE PAGE!
 
 Here, I, Toni Ferrari, am creating a game engine from scratch with C++.
 
@@ -17,5 +17,8 @@ ENGINE FEATURES
 * An ImGui window that allows to play with the renderer and several parameters
 -----------------------------------------------------------------------------------------
 GITHUB LINK
-Visit Mateus Engine's github page!
-https://github.com/Kibium/MateusEngine
+Visit Ape Engine's github page!
+https://github.com/Kibium/ApeEngine
+-----------------------------------------------------------------------------------------
+LICENSE
+This repository and all of its content are under MIT License
