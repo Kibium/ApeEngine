@@ -30,7 +30,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
-	void CreateTexture(ILenum type, const char* path);
+	ImageData CreateTexture(ILenum type, const char* path);
 	const void RenderTextures();
 	const std::vector<ImageData> getTextures();
 

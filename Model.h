@@ -22,13 +22,15 @@ public:
 	void Draw();
 	std::string path;
 	const aiScene* scene;
-	unsigned int TextureFromFile(std::string, std::string &directory);
-	std::vector<Texture> textures_loaded;
+	//unsigned int TextureFromFile(std::string, std::string &directory);
 
+	std::vector<ImageData> GetTextures();
 	ImageData texture;
 	const char* filename;
 	const char* textureFile;
 	GLuint program;
+
+	float GetHeight();
 
 	int getMeshes();
 	int getPolys();
@@ -40,14 +42,18 @@ private:
 	std::string directory;
 	/*  Functions   */
 	void loadModel(std::string path);
-	void processNode(aiNode *node, const aiScene *scene);
+//	void processNode(aiNode *node, const aiScene *scene);
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-		std::string typeName);
+	//std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+		//std::string typeName);
 
 	int numMeshes = 0;
 	int numPolys = 0;
 	int numVertices = 0;
+	float highest_y_value = 0;
+
+	//Here I save all the model's textures
+	std::vector<ImageData> textures;
 
 };
 

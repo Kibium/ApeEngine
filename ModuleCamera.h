@@ -26,9 +26,10 @@ public:
 	void SetAspectRatio(float&);
 	void SetPlaneDistances(float&, float&);
 	void SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect);
-	void GetProjMatrix();
-	void GetViewMatrix();
+
 	void ResetCamera(bool aspectToo);
+	
+	void Focus(float3 target, float target_height);
 	void AutoOrbit();
 
 	float rotX = 2.3589f, rotY = 0.5f, rotZ = 0.5f;
@@ -43,9 +44,11 @@ public:
 	//Resets the camera once if the mode is set to ORBIT
 	bool once;
 
+	//Focus once per camera movement
+	bool focusOnce = false;
 
 	math::float3  camTarget, f, s, u;
-	math::float3 cameraPos, camDirection, camUp, camRight, camFront;
+	math::float3 lastPos, camDirection, camUp, camRight, camFront;
 	math::float4x4 view, proj, model, transform, rotateMatrix;
 
 	bool dirty = false;

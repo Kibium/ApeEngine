@@ -6,8 +6,8 @@
 
 #include "GL/glew.h"
 
-ModuleCamera::ModuleCamera(){}
-ModuleCamera::~ModuleCamera(){}
+ModuleCamera::ModuleCamera() {}
+ModuleCamera::~ModuleCamera() {}
 
 void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 
@@ -26,7 +26,7 @@ void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 
 	frustum.up = s.Cross(f);
 
-	
+
 	//View Matrix - Look at computation
 	view[0][0] = s.x;
 	view[0][1] = s.y;
@@ -66,6 +66,8 @@ void ModuleCamera::ProcessMatrixs() {
 
 	SetProjMatrix(nearP, farP, vFov, hFov, aspectRatio);
 
+	lastPos = frustum.pos;
+
 }
 
 void ModuleCamera::AutoOrbit() {
@@ -94,7 +96,7 @@ void ModuleCamera::SetAspectRatio(float& f) {
 }
 
 void ModuleCamera::SetPlaneDistances(float& n, float& f) {
-	
+
 }
 
 void ModuleCamera::ResetCamera(bool aspectToo) {
@@ -111,7 +113,7 @@ void ModuleCamera::ResetCamera(bool aspectToo) {
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = math::pi / 4.0f;
-	if(aspectToo)
+	if (aspectToo)
 		aspectRatio = 60;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) *(aspectRatio));
 	proj = frustum.ProjectionMatrix();
@@ -127,21 +129,31 @@ void ModuleCamera::ResetCamera(bool aspectToo) {
 	model = float4x4::FromTRS(frustum.pos, float3x3::RotateY(0), float3(1.0f, 1.0f, 1.0f));
 }
 
-bool ModuleCamera::Init(){
+void ModuleCamera::Focus(float3 target, float target_height) {
+
+	//Zoom the camera
+	frustum.pos.z = 2* target_height + 5;
+
+	LookAt(frustum.pos, target - frustum.pos , float3(0, 1, 0));
+
+
+}
+
+bool ModuleCamera::Init() {
 
 	App->ui->my_log.AddLog("Init Camera\n");
 
 
-	
+
 	ResetCamera(true);
 	ProcessMatrixs();
-	
+
 	return true;
 }
 
 update_status ModuleCamera::Update() {
 
-	if (dirty){
+	if (dirty) {
 		ProcessMatrixs();
 		App->program->updateProgram(App->program->defaultProgram, view, proj);
 		App->program->updateProgram(App->program->linesProgram, view, proj);
@@ -150,7 +162,7 @@ update_status ModuleCamera::Update() {
 	if (!mode) {
 
 		AutoOrbit();
-		
+
 	}
 
 	if (manualOrbit) {
@@ -159,7 +171,7 @@ update_status ModuleCamera::Update() {
 		App->program->updateProgram(App->program->linesProgram, model, view, proj);
 	}
 
-	
+
 
 	return UPDATE_CONTINUE;
 }

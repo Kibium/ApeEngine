@@ -23,10 +23,21 @@ Model::Model(const char *_filename, const char* _texture, GLuint _program) : fil
 	if (s.substr(s.size() - 4, s.size()) == ".dds")
 		type = IL_DDS;
 	
-	
-	App->textures->CreateTexture(type, textureFile);
+
+	ImageData newTexture = App->textures->CreateTexture(type, textureFile);
+	//textures.push_back(newTexture);
+
+	texture = newTexture;
 
 	loadModel(filename);
+
+	
+}
+
+//Its not the actual height, just the Y component of the highest vector of the meshes that compose the model.
+float Model::GetHeight() {
+
+	return highest_y_value;
 }
 
 void Model::Draw() {
@@ -85,6 +96,10 @@ int Model::getVertices() {
 	return numVertices;
 }
 
+std::vector <ImageData> Model::GetTextures() {
+	return textures;
+}
+
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
@@ -102,6 +117,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		vector.x = mesh->mVertices[i].x;
 		vector.y = mesh->mVertices[i].y;
 		vector.z = mesh->mVertices[i].z;
+
+		if (vector.y > highest_y_value)
+			highest_y_value = vector.y;
+
 		vertex.Position = vector;
 		// normals
 		vector.x = mesh->mNormals[i].x;
@@ -141,6 +160,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
+
+
+
 	// process materials
 	//aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 	// we assume a convention for sampler names in the shaders. Each diffuse texture should be named
@@ -167,7 +189,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	return Mesh(vertices, indices);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
+/*std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
 {
 	std::vector<Texture> textures;
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -289,4 +311,4 @@ unsigned int Model::TextureFromFile(std::string _path, std::string &directory)
 	return textureID;
 
 
-}
+}*/

@@ -41,6 +41,9 @@ void ModuleUI::ShowProperties() {
 	Separate();
 	if (ImGui::CollapsingHeader("Transform")) {
 
+		ImGui::Text("Height: "); ImGui::SameLine();
+		ImGui::TextColored(TURQ, "%0.1f m", App->modelLoader->model.GetHeight());
+
 		if(ImGui::TreeNode("Position")) {
 			ImGui::TextColored(RED, "X: "); ImGui::SameLine();
 			ImGui::TextColored(TURQ, "%0.3f", (float)App->modelLoader->model.scene->mRootNode->mTransformation.a4);
@@ -84,8 +87,12 @@ void ModuleUI::ShowProperties() {
 		ImGui::TextColored(YELLOW, "%d", App->modelLoader->model.getVertices());
 	}
 	if (ImGui::CollapsingHeader("Texture")) {
-		//for(int i = 0; i< App->textures->getTextures().size(); ++i)
-		ImGui::Image((void*)(intptr_t)App->textures->getTextures()[0].imageName, ImVec2(128, 128));
+		ImGui::TextColored(TURQ, "Size: "); ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%f Mb", (float)App->modelLoader->model.texture.size/1000000);
+
+		ImGui::TextColored(TURQ, "Dimensions: "); ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d x %d", App->modelLoader->model.texture.width, App->modelLoader->model.texture.height);
+		ImGui::Image((void*)(intptr_t)App->modelLoader->model.texture.texture, ImVec2(128, 128));
 	}
 
 	ImGui::End();

@@ -25,7 +25,7 @@ const std::vector<ImageData> ModuleTextures::getTextures() {
 	return images;
 }
 
-void ModuleTextures::CreateTexture(ILenum type, const char* path) {
+ImageData ModuleTextures::CreateTexture(ILenum type, const char* path) {
 
 	//I'll handle a single texture for the moment
 	//TODO Handle more than one texture at the time
@@ -63,7 +63,7 @@ void ModuleTextures::CreateTexture(ILenum type, const char* path) {
 		glBindTexture(GL_TEXTURE_2D, id.texture);
 
 		images.push_back(id);
-
+		return id;
 	}
 
 	else {
@@ -72,8 +72,6 @@ void ModuleTextures::CreateTexture(ILenum type, const char* path) {
 		App->ui->my_log.AddLog("%s \n", Error);
 		
 	}
-		
-
 }
 
 bool ModuleTextures::Init() {

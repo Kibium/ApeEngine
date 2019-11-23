@@ -81,8 +81,18 @@ update_status ModuleInput::Update()
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			if (e.button.button == SDL_BUTTON_RIGHT)
+			if (e.button.button == SDL_BUTTON_RIGHT) {
+
 				enable_camera_movement = false;
+
+				xOffset = 0;
+				yOffset = 0;
+
+				lastX = 0;
+				lastY = 0;
+
+
+			}
 			break;
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
@@ -125,6 +135,7 @@ update_status ModuleInput::Update()
 
 				}
 
+				App->ui->my_log.AddLog("%0.1f, %0.1f\n", yaw, pitch);
 
 
 				App->camera->dirty = true;
@@ -151,6 +162,8 @@ update_status ModuleInput::Update()
 
 				App->modelLoader->modelDir = directory.c_str();
 				App->modelLoader->hasChanged = true;
+
+				App->camera->ResetCamera(false);
 			}
 
 			else if (extension == ".png" || extension == ".jpg" || extension == ".dds") {
@@ -174,6 +187,8 @@ update_status ModuleInput::Update()
 
 
 				App->modelLoader->hasChanged = true;
+				App->camera->ResetCamera(false);
+
 
 			}
 
@@ -185,6 +200,8 @@ update_status ModuleInput::Update()
 
 		case SDL_KEYDOWN:
 
+			//	App->ui->my_log.AddLog("%0.1f, %0.1f, %0.1f\n", App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z);
+
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT) {
 				speed_boost = true;
 				App->camera->dirty = true;
@@ -195,9 +212,36 @@ update_status ModuleInput::Update()
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_F) {
 
-				yaw = 0;
-				pitch = 0;
-				App->camera->ResetCamera(false);
+				//pitch = 0;
+				//yaw = -90;
+
+				float3 target = float3(App->modelLoader->model.scene->mRootNode->mTransformation.a4, App->modelLoader->model.scene->mRootNode->mTransformation.b4, App->modelLoader->model.scene->mRootNode->mTransformation.a4 - 1);
+				
+				App->camera->Focus(target, App->modelLoader->model.GetHeight());
+				//float angleNew= App->camera->frustum.front.AngleBetween(target);
+
+				//pitch = RadToDeg(angleNew);
+				//App->camera->frustum.front.y = sin(DegToRad(pitch));
+
+				//App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
+				/*App->camera->frustum.front.y = sin(DegToRad(pitch));
+				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+				App->camera->frustum.front.Normalize();
+
+				float newYaw = App->camera->frustum.front.AngleBetween(target);
+				yaw = RadToDeg(newYaw);
+
+				App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
+				App->camera->frustum.front.y = sin(DegToRad(pitch));
+				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+				App->camera->frustum.front.Normalize();
+
+		
+
+				//App->camera->Focus(target, App->modelLoader->model.GetHeight());*/
+				//App->ui->my_log.AddLog("Angle: %0.2f\n ", RadToDeg(angleNew));
+
+				//App->camera->ResetCamera(false);
 				App->camera->dirty = true;
 
 
