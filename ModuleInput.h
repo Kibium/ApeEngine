@@ -15,6 +15,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+
 private:
 	SDL_MouseWheelEvent *wheel = NULL;
 	bool enable_camera_movement = false;
@@ -22,6 +23,12 @@ private:
 
 	float currentX, lastX, currentY, lastY;
 	float pitch = 0, yaw = -90;
+
+	float currT = 0, currP = 0;
+	float oldT = 0, oldP = 0;
+	float theta = 0, phi = 0;
+	float radius = 0;
+
 	bool once = false;
 	bool modelOnce = false;
 	bool altPressed = false;

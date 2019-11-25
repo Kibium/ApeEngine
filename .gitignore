@@ -17,3 +17,5 @@
 .vs/Engine/v15/ipch/AutoPCH/9bc16e5fe5f113f8/MODULEUI.ipch
 .vs/Engine/v15/ipch/AutoPCH/b3bdc992cf096860/MODULETEXTURES.ipch
 .vs/Engine/v15/ipch/AutoPCH/f67123415e1a342d/MODULECAMERA.ipch
+*.db
+*.ipch

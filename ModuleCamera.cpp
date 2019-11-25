@@ -25,7 +25,7 @@ void ModuleCamera::LookAt(float3& eye, float3& target, float3& up) {
 	u = s.Cross(f);
 
 	frustum.up = s.Cross(f);
-
+	frustum.front = f;
 
 	//View Matrix - Look at computation
 	view[0][0] = s.x;
@@ -126,15 +126,14 @@ void ModuleCamera::ResetCamera(bool aspectToo) {
 	hFov = frustum.horizontalFov;
 
 	LookAt(frustum.pos, frustum.pos + frustum.front, float3(0, 1, 0));
+	SetProjMatrix(nearP, farP, vFov, hFov, aspectRatio);
 	model = float4x4::FromTRS(frustum.pos, float3x3::RotateY(0), float3(1.0f, 1.0f, 1.0f));
 }
 
 void ModuleCamera::Focus(float3 target, float target_height) {
 
 	//Zoom the camera
-	frustum.pos.z = 2* target_height + 5;
-
-	LookAt(frustum.pos, target - frustum.pos , float3(0, 1, 0));
+	LookAt(frustum.pos, frustum.pos + target , float3(0, 1, 0));
 
 
 }

@@ -31,6 +31,7 @@ public:
 	
 	void Focus(float3 target, float target_height);
 	void AutoOrbit();
+	
 
 	float rotX = 2.3589f, rotY = 0.5f, rotZ = 0.5f;
 	float nearP, farP, vFov, hFov, AR, sensitivity;

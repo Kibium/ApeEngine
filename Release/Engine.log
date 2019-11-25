@@ -1,25 +1,7 @@
-﻿  Application.cpp
-  Model.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\model.cpp(228): warning C4101: 'nrComponents': variable local sin referencia
-  ModelLoader.cpp
-  ModuleCamera.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\modulecamera.cpp(72): warning C4305: '+=': truncamiento de 'double' a 'float'
-c:\users\gt73evr\source\repos\kibium\engine_master\modulecamera.cpp(92): warning C4244: 'argumento': conversión de 'float' a 'GLsizei'; posible pérdida de datos
-  ModuleInput.cpp
-  ModuleMSTimer.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\modulemstimer.cpp(21): warning C4244: '=': conversión de 'Uint32' a 'float'; posible pérdida de datos
-  ModuleProgram.cpp
-  ModuleRender.cpp
-  ModuleTextures.cpp
-  ModuleUI.cpp
-  ModuleWindow.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\modulewindow.cpp(21): warning C4244: 'return': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\gt73evr\source\repos\kibium\engine_master\modulewindow.cpp(26): warning C4244: 'return': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\gt73evr\source\repos\kibium\engine_master\modulewindow.cpp(82): warning C4244: 'argumento': conversión de 'float' a 'GLsizei'; posible pérdida de datos
-c:\users\gt73evr\source\repos\kibium\engine_master\modulewindow.cpp(88): warning C4244: 'argumento': conversión de 'float' a 'GLsizei'; posible pérdida de datos
+﻿  ModuleInput.cpp
   Generando código
-  0 of 2174 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  3 of 2358 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
-  Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe
+  Engine.vcxproj -> C:\Users\Toni\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe

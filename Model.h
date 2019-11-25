@@ -35,6 +35,7 @@ public:
 	int getMeshes();
 	int getPolys();
 	int getVertices();
+	float3 getCenter();
 
 private:
 	/*  Model Data  */
@@ -50,7 +51,17 @@ private:
 	int numMeshes = 0;
 	int numPolys = 0;
 	int numVertices = 0;
+
+	float highest_z_value = 0;
+	float lowest_z_value = 0;
+
 	float highest_y_value = 0;
+	float lowest_y_value = 0;
+
+	float lowest_x_value = 0;
+	float highest_x_value = 0;
+
+	float3 center;
 
 	//Here I save all the model's textures
 	std::vector<ImageData> textures;

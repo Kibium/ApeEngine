@@ -41,8 +41,12 @@ bool ModuleInput::Init()
 		ret = false;
 	}
 
+	radius = 10;
+
 	return ret;
 }
+
+
 
 update_status ModuleInput::Update()
 {
@@ -91,57 +95,112 @@ update_status ModuleInput::Update()
 				lastX = 0;
 				lastY = 0;
 
+				oldP = 0;
+				oldT = 0;
+
+
+
 
 			}
 			break;
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
-				currentX = (float)e.motion.x;
-				currentY = (float)e.motion.y;
 
-				if (!once) {
+				//FREE MOVEMENT
+				if (!altPressed) {
+
+					currentX = (float)e.motion.x;
+					currentY = (float)e.motion.y;
+
+					if (!once) {
+						lastX = currentX;
+						lastY = currentY;
+						once = true;
+					}
+
+					xOffset = currentX - lastX;
+					yOffset = lastY - currentY;
+
 					lastX = currentX;
 					lastY = currentY;
-					once = true;
-				}
 
-				xOffset = currentX - lastX;
-				yOffset = lastY - currentY;
+					xOffset *= App->camera->sensitivity;
+					yOffset *= App->camera->sensitivity;
 
-				lastX = currentX;
-				lastY = currentY;
+					yaw += xOffset;
+					pitch += yOffset;
 
-				xOffset *= App->camera->sensitivity;
-				yOffset *= App->camera->sensitivity;
+					if (pitch > 89.0f)
+						pitch = 89.0f;
+					if (pitch < -89.0f)
+						pitch = -89.0f;
 
-				yaw += xOffset;
-				pitch += yOffset;
-
-				if (pitch > 89.0f)
-					pitch = 89.0f;
-				if (pitch < -89.0f)
-					pitch = -89.0f;
-
-				if (!altPressed) {
 					App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
 					App->camera->frustum.front.y = sin(DegToRad(pitch));
 					App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
 					App->camera->frustum.front.Normalize();
+					App->camera->dirty = true;
+
 				}
 
 				if (altPressed) {
-					App->camera->manualOrbit = true;
-					App->camera->rotY += xOffset;
+
+					currT = (float)e.motion.x;
+					currP = (float)e.motion.y;
+
+					if (!once) {
+						oldT = currT;
+						oldP = currP;
+						once = true;
+					}
+
+					xOffset = currP - oldP;
+					yOffset = currT - oldT;
+
+					oldT = currT;
+					oldP = currP;
+
+					xOffset *= App->camera->sensitivity;
+					yOffset *= App->camera->sensitivity;
+
+
+					//Updting camera Position
+					if (yOffset > 1.5 || yOffset < -1.5) {
+
+						theta += yOffset;
+						phi += xOffset;
+
+						App->camera->frustum.pos.x = App->modelLoader->model.getCenter().x + radius * sin(DegToRad(theta));
+						App->camera->frustum.pos.z = App->modelLoader->model.getCenter().z + radius * cos(DegToRad(theta));
+
+						App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
+					}
+
+					if (xOffset > 1.5 || xOffset < -1.5) {
+
+						theta += yOffset;
+						phi += xOffset;
+
+						App->camera->frustum.pos.y = App->modelLoader->model.getCenter().y + radius * cos(DegToRad(phi));
+						App->camera->frustum.pos.z = App->modelLoader->model.getCenter().z + radius * sin(DegToRad(phi));
+
+						App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
+					}
+					
+					
+					App->ui->my_log.AddLog("%0.1f, %0.1f\n", xOffset, yOffset);
+
 
 				}
 
-				App->ui->my_log.AddLog("%0.1f, %0.1f\n", yaw, pitch);
 
-
-				App->camera->dirty = true;
 			}
 
 			else {
+
+
+			oldT = 0;
+			oldP = 0;
 
 				lastX = 0;
 				lastY = 0;
@@ -212,36 +271,13 @@ update_status ModuleInput::Update()
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_F) {
 
-				//pitch = 0;
-				//yaw = -90;
 
-				float3 target = float3(App->modelLoader->model.scene->mRootNode->mTransformation.a4, App->modelLoader->model.scene->mRootNode->mTransformation.b4, App->modelLoader->model.scene->mRootNode->mTransformation.a4 - 1);
-				
-				App->camera->Focus(target, App->modelLoader->model.GetHeight());
-				//float angleNew= App->camera->frustum.front.AngleBetween(target);
+				App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
 
-				//pitch = RadToDeg(angleNew);
-				//App->camera->frustum.front.y = sin(DegToRad(pitch));
+				//Reset default pitch yaw values
+				pitch = 0;
+				yaw = -90;
 
-				//App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
-				/*App->camera->frustum.front.y = sin(DegToRad(pitch));
-				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
-				App->camera->frustum.front.Normalize();
-
-				float newYaw = App->camera->frustum.front.AngleBetween(target);
-				yaw = RadToDeg(newYaw);
-
-				App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
-				App->camera->frustum.front.y = sin(DegToRad(pitch));
-				App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
-				App->camera->frustum.front.Normalize();
-
-		
-
-				//App->camera->Focus(target, App->modelLoader->model.GetHeight());*/
-				//App->ui->my_log.AddLog("Angle: %0.2f\n ", RadToDeg(angleNew));
-
-				//App->camera->ResetCamera(false);
 				App->camera->dirty = true;
 
 
@@ -314,7 +350,7 @@ update_status ModuleInput::Update()
 				speed_boost = false;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_LALT)
-				altPressed = true;
+				altPressed = false;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_W || e.key.keysym.scancode == SDL_SCANCODE_S ||
 				e.key.keysym.scancode == SDL_SCANCODE_D || e.key.keysym.scancode == SDL_SCANCODE_A ||

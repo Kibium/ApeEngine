@@ -80,9 +80,15 @@ void Model::loadModel(std::string _path)
 
 
 		}
+
+		center = float3(highest_x_value + lowest_x_value / 2, highest_y_value + lowest_y_value / 2, highest_z_value + lowest_z_value / 2);
 	}
 
 	
+}
+
+float3 Model::getCenter() {
+	return center;
 }
 
 int Model::getMeshes() {
@@ -118,8 +124,23 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		vector.y = mesh->mVertices[i].y;
 		vector.z = mesh->mVertices[i].z;
 
+		if (vector.x > highest_x_value)
+			highest_x_value = vector.x;
+
+		if (vector.x < lowest_x_value)
+			lowest_x_value = vector.x;
+		//----------------------------//
 		if (vector.y > highest_y_value)
 			highest_y_value = vector.y;
+
+		if (vector.y < lowest_y_value)
+			lowest_y_value = vector.y;
+		//----------------------------//
+		if (vector.z > highest_z_value)
+			highest_z_value = vector.z;
+
+		if (vector.z < lowest_z_value)
+			lowest_z_value = vector.z;
 
 		vertex.Position = vector;
 		// normals
