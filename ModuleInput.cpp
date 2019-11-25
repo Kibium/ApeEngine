@@ -238,14 +238,40 @@ update_status ModuleInput::Update()
 				App->ui->my_log.AddLog(directory.c_str());
 				App->ui->my_log.AddLog("\n");
 
+				std::string modelTexturePath = directory.substr(0, directory.find_last_of('\\'));
+				std::string folderName = directory.substr(directory.find_last_of('\\')+1);
+				folderName = folderName.substr(0, folderName.find_last_of('.'));
+
+				std::string textureName;
+
+				if (directory.substr(directory.size() - 5, directory.size()) == "e.fbx") {
+					textureName = folderName + ".png";
+					App->ui->my_log.AddLog(modelTexturePath.c_str());
+					App->ui->my_log.AddLog("\n");
+				}
+				if (directory.substr(directory.size() - 5, directory.size()) == "o.fbx") {
+					textureName = folderName + ".dds";
+					App->ui->my_log.AddLog(modelTexturePath.c_str());
+					App->ui->my_log.AddLog("\n");
+				}
+
+				if (directory.substr(directory.size() - 5, directory.size()) == "i.fbx") {
+					textureName = folderName + ".dds";
+					App->ui->my_log.AddLog(modelTexturePath.c_str());
+					App->ui->my_log.AddLog("\n");
+				}
+
+				
+
+				App->modelLoader->textureDir = modelTexturePath + '\\' +  textureName;
 				App->modelLoader->modelDir = directory.c_str();
 				App->modelLoader->hasChanged = true;
 
 				App->camera->ResetCamera(false);
 				
 				float3 offset = App->modelLoader->model.getCenter() - App->camera->frustum.pos;
-				App->camera->frustum.pos -= offset * App->modelLoader->model.GetHeight();
-				//App->camera->Focus(App->modelLoader->model.getCenter(), App->modelLoader->model.GetHeight());
+				App->camera->frustum.pos -= offset / App->modelLoader->model.GetHeight();
+				App->camera->dirty = true;
 
 			}
 
@@ -290,9 +316,10 @@ update_status ModuleInput::Update()
 
 
 				float angle = App->camera->frustum.front.AngleBetween(App->modelLoader->model.getCenter() - App->camera->frustum.pos);
-
-				App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
-
+				pitch = 0;
+				yaw = -90;
+				//App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
+				App->camera->ResetCamera(false);
 				
 				//App->ui->my_log.AddLog("%0.1f\n", RadToDeg(angle));
 

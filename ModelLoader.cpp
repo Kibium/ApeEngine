@@ -38,9 +38,9 @@ void ModelLoader::loadModel() {
 bool ModelLoader::Init() {
 
 	
-	modelDir = "../models/baker/BakerHouse.fbx";
+	modelDir = "../models/BakerHouse/BakerHouse.fbx";
 
-	textureDir = "../models/baker/Baker_house.png";
+	textureDir = "../models/BakerHouse/BakerHouse.png";
 	previousTexture = textureDir;
 
 	checkerDir = "../models/checker.jpg";

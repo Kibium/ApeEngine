@@ -20,3 +20,7 @@ Several bugfixes resolved:
 * Couldn't modify camera variables by UI
 * Focus the camera didn't reset its position
 * Added the Assimp log at the console
+
+v0.13
+
+* Loading one of the 3 models, its textrue loads automatically
