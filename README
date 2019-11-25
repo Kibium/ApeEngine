@@ -22,3 +22,9 @@ https://github.com/Kibium/ApeEngine
 -----------------------------------------------------------------------------------------
 LICENSE
 This repository and all of its content are under the terms of the MIT License
+-----------------------------------------------------------------------------------------
+It would be necessary to install additional files to run the program.
+Those are included in the rlease buils as "vc_redist.x86"
+-----------------------------------------------------------------------------------------
+Author: Toni Ferrari Juan
+
