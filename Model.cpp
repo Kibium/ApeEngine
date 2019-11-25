@@ -69,7 +69,6 @@ void Model::loadModel(std::string _path)
 	const unsigned int severity = Assimp::Logger::Debugging | Assimp::Logger::Info | Assimp::Logger::Err | Assimp::Logger::Warn;
 	Assimp::DefaultLogger::get()->attachStream(new myStream, severity);
 
-	Assimp::DefaultLogger::kill();
 
 	App->ui->my_log.AddLog("[ASSIMP] Trying model loading...\n");
 	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
@@ -103,6 +102,7 @@ void Model::loadModel(std::string _path)
 
 		center = float3(highest_x_value + lowest_x_value / 2, highest_y_value + lowest_y_value / 2, highest_z_value + lowest_z_value / 2);
 	}
+	Assimp::DefaultLogger::kill();
 
 	
 }

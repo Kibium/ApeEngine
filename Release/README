@@ -1,8 +1,8 @@
-WELCOME TO THE APE ENGINE PAGE!
+APE ENGINE
 
-Here, I, Toni Ferrari, am creating a game engine from scratch with C++.
+I, Toni Ferrari, am creating a game engine from scratch with C++.
 
-The libraries I used to make this project possible are:
+The libraries I use to make this project possible are:
 * ImGui, so I have an awesome GUI
 * SDL / SDL_image, so i handle input and handle some image stuff
 * MathGeoLib, that allows to use matrixs and vectors, which are useful in 3D programming
@@ -27,4 +27,5 @@ It would be necessary to install additional files to run the program.
 Those are included in the rlease buils as "vc_redist.x86"
 -----------------------------------------------------------------------------------------
 Author: Toni Ferrari Juan
+Contact: toniferrari87@gmail.com
 

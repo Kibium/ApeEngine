@@ -99,7 +99,7 @@ bool ModuleRender::Init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	bgColor = float4(0.6f, 0.1f, 0.7f, 1.f);
+	bgColor = float4(0.0f, 0.0f, 0.0f, 1.f);
 
 	return true;
 }

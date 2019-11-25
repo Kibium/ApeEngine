@@ -22,6 +22,7 @@ public:
 	void SetAspectRatio(float&);
 	void SetPlaneDistances(float&, float&);
 	void SetProjMatrix(float& nearp, float& farp, float& vfov, float& hfov, float& aspect);
+	void UpdateCamera();
 
 	void ResetCamera(bool aspectToo);
 	

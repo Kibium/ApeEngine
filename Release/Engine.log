@@ -1,9 +1,0 @@
-﻿  ModuleInput.cpp
-c:\users\gt73evr\source\repos\kibium\engine_master\moduleinput.cpp(274): warning C4305: '=': truncamiento de 'double' a 'float'
-c:\users\gt73evr\source\repos\kibium\engine_master\moduleinput.cpp(345): warning C4305: '=': truncamiento de 'double' a 'float'
-  Generando código
-  1 of 2377 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
-  Generación de código finalizada
-  Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe

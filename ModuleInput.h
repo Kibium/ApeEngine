@@ -18,6 +18,9 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
+	void ResetAngles();
+
+
 
 private:
 

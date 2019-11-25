@@ -61,6 +61,13 @@ void ModuleCamera::SetProjMatrix(float& nearp, float& farp, float& vfov, float& 
 
 }
 
+//Base update function
+void  ModuleCamera::UpdateCamera() {
+	ProcessMatrixs();
+	App->program->updateProgram(App->program->defaultProgram, view, proj);
+	App->program->updateProgram(App->program->linesProgram, view, proj);
+}
+
 void ModuleCamera::ProcessMatrixs() {
 	LookAt(frustum.pos, frustum.pos + frustum.front, float3(0, 1, 0));
 
@@ -79,8 +86,6 @@ void ModuleCamera::AutoOrbit() {
 
 	App->program->updateProgram(App->program->defaultProgram, model, view, proj);
 	App->program->updateProgram(App->program->linesProgram, model, view, proj);
-
-
 }
 
 void ModuleCamera::SetHFOV(float& f) {
@@ -133,8 +138,10 @@ void ModuleCamera::ResetCamera(bool aspectToo) {
 void ModuleCamera::Focus(float3& target, float target_height) {
 
 	//Zoom the camera
-	LookAt(frustum.pos, frustum.pos + target , float3(0, 1, 0));
+	//App->camera->frustum.pos.z += 2 * target_height;
 
+	LookAt(frustum.pos, frustum.pos + target , float3(0, 1, 0));
+	App->camera->ResetCamera(false);
 
 }
 
@@ -155,9 +162,7 @@ bool ModuleCamera::Init() {
 update_status ModuleCamera::Update() {
 
 	if (dirty) {
-		ProcessMatrixs();
-		App->program->updateProgram(App->program->defaultProgram, view, proj);
-		App->program->updateProgram(App->program->linesProgram, view, proj);
+		UpdateCamera();
 	}
 
 	if (!mode) {
@@ -167,6 +172,8 @@ update_status ModuleCamera::Update() {
 	}
 
 	if (manualOrbit) {
+
+		//We also change the model
 		ProcessMatrixs();
 		App->program->updateProgram(App->program->defaultProgram, model, view, proj);
 		App->program->updateProgram(App->program->linesProgram, model, view, proj);

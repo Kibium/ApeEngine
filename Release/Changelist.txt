@@ -13,3 +13,10 @@ v0.11
 * Camera orbit
 * Camera focus
 * Improved UI (Model and texture info)
+
+v0.12
+
+Several bugfixes resolved:
+* Couldn't modify camera variables by UI
+* Focus the camera didn't reset its position
+* Added the Assimp log at the console

@@ -8,6 +8,7 @@
 #include "ModuleProgram.h"
 #include "ModuleCamera.h"
 #include "ModelLoader.h"
+#include "ModuleInput.h"
 
 #include <GL/glew.h>
 #include"IMGUI/imgui_impl_opengl3.h"
@@ -244,31 +245,36 @@ void ModuleUI::ShowConfig() {
 
 		}
 
+		if (ImGui::Button("Reset Camera")) {
+			App->input->ResetAngles();
+			App->camera->ResetCamera(false);
+			App->camera->dirty = true;
+		
+
+		}
+
 		if (ImGui::TreeNode("Settings")) {
 
 
 			if (ImGui::SliderFloat("Far Plane", &App->camera->farP, 50, 150)) {
-				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-				App->camera->ProcessMatrixs();
+				
+				App->camera->UpdateCamera();
 
 			}
 
 			if (ImGui::SliderFloat("Near Plane", &App->camera->nearP, 0.1f, 40)) {
-				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-				App->camera->ProcessMatrixs();
+				App->camera->UpdateCamera();
 
 			}
 			Separate();
 
 			if (ImGui::SliderFloat("FOV", &App->camera->vFov, 0.1f, math::pi)) {
-				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-				App->camera->ProcessMatrixs();
+				App->camera->UpdateCamera();
 
 			}
 
 			if (ImGui::SliderFloat("Aspect", &App->camera->aspectRatio, 1, 90)) {
-				glUniformMatrix4fv(App->program->projLocation, 1, GL_TRUE, &App->camera->proj[0][0]);
-				App->camera->ProcessMatrixs();
+				App->camera->UpdateCamera();
 
 			}
 

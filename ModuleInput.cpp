@@ -47,6 +47,11 @@ bool ModuleInput::Init()
 	return ret;
 }
 
+void ModuleInput::ResetAngles() {
+	pitch = 0;
+	yaw = -90;
+}
+
 void ModuleInput::FreeMovement(float&x, float&y, float& _x, float& _y) {
 	xOffset = x - _x;
 	yOffset = _y - y;
@@ -236,6 +241,12 @@ update_status ModuleInput::Update()
 				App->modelLoader->modelDir = directory.c_str();
 				App->modelLoader->hasChanged = true;
 
+				App->camera->ResetCamera(false);
+				
+				float3 offset = App->modelLoader->model.getCenter() - App->camera->frustum.pos;
+				App->camera->frustum.pos -= offset * App->modelLoader->model.GetHeight();
+				//App->camera->Focus(App->modelLoader->model.getCenter(), App->modelLoader->model.GetHeight());
+
 			}
 
 			else if (extension == ".png" || extension == ".jpg" || extension == ".dds") {
@@ -257,9 +268,7 @@ update_status ModuleInput::Update()
 				App->modelLoader->textureDir = directory.c_str();
 
 				App->modelLoader->hasChanged = true;
-				App->camera->ResetCamera(false);
-
-
+		
 			}
 
 			else {
