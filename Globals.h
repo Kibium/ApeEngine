@@ -18,4 +18,4 @@ enum update_status
 #define SCREEN_HEIGHT 780
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Mateus Engine"
+#define TITLE "Ape Engine"

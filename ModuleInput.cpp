@@ -19,6 +19,9 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+#define ORBIT_RADIUS 10
+
+
 ModuleInput::ModuleInput()
 {}
 
@@ -41,12 +44,76 @@ bool ModuleInput::Init()
 		ret = false;
 	}
 
-	radius = 10;
-
 	return ret;
 }
 
+void ModuleInput::FreeMovement(float&x, float&y, float& _x, float& _y) {
+	xOffset = x - _x;
+	yOffset = _y - y;
 
+	_x = x;
+	_y = y;
+
+	xOffset *= App->camera->sensitivity;
+	yOffset *= App->camera->sensitivity;
+
+	yaw += xOffset;
+	pitch += yOffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
+	App->camera->frustum.front.y = sin(DegToRad(pitch));
+	App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
+	App->camera->frustum.front.Normalize();
+	App->camera->dirty = true;
+}
+
+void ModuleInput::Orbit(float& x, float& y, float& _x, float& _y) {
+	yOffset = x - _x;
+	xOffset = y - _y;
+
+	_x = x;
+	_y = y;
+
+	xOffset *= App->camera->sensitivity;
+	yOffset *= App->camera->sensitivity;
+
+
+	//Updting camera Position
+	if (yOffset > 1.5 || yOffset < -1.5) {
+
+		theta += yOffset;
+		phi += xOffset;
+
+		App->camera->frustum.pos.x = App->modelLoader->model.getCenter().x + ORBIT_RADIUS * sin(DegToRad(theta));
+		App->camera->frustum.pos.z = App->modelLoader->model.getCenter().z + ORBIT_RADIUS * cos(DegToRad(theta));
+
+		App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
+	}
+
+	if (xOffset > 1.5 || xOffset < -1.5) {
+
+		theta += yOffset;
+		phi += xOffset;
+
+		App->camera->frustum.pos.y = App->modelLoader->model.getCenter().y + ORBIT_RADIUS * cos(DegToRad(phi));
+		App->camera->frustum.pos.z = App->modelLoader->model.getCenter().z + ORBIT_RADIUS * sin(DegToRad(phi));
+
+		App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
+	}
+}
+
+void ModuleInput::ProcessMovement(const float3& direction) {
+	if (speed_boost)
+		App->camera->camSpeed = 3 * App->camera->speedValue * direction;
+
+	else
+		App->camera->camSpeed = App->camera->speedValue * direction;
+}
 
 update_status ModuleInput::Update()
 {
@@ -63,6 +130,7 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_WINDOWEVENT:
+
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				App->renderer->WindowResized(e.window.data1, e.window.data2);
 
@@ -71,20 +139,24 @@ update_status ModuleInput::Update()
 
 				App->camera->dirty = true;
 			}
+
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
+
 			if (e.button.button == SDL_BUTTON_RIGHT) {
+
 				//If the camera mode is not Orbit
 				if (App->camera->mode)
 					enable_camera_movement = true;
 
 				//Reset the condition so offsets are reseted once
 				once = false;
-
 			}
+
 			break;
 		case SDL_MOUSEBUTTONUP:
+
 			if (e.button.button == SDL_BUTTON_RIGHT) {
 
 				enable_camera_movement = false;
@@ -97,12 +169,10 @@ update_status ModuleInput::Update()
 
 				oldP = 0;
 				oldT = 0;
-
-
-
-
 			}
+
 			break;
+
 		case SDL_MOUSEMOTION:
 			if (enable_camera_movement) {
 
@@ -118,31 +188,11 @@ update_status ModuleInput::Update()
 						once = true;
 					}
 
-					xOffset = currentX - lastX;
-					yOffset = lastY - currentY;
-
-					lastX = currentX;
-					lastY = currentY;
-
-					xOffset *= App->camera->sensitivity;
-					yOffset *= App->camera->sensitivity;
-
-					yaw += xOffset;
-					pitch += yOffset;
-
-					if (pitch > 89.0f)
-						pitch = 89.0f;
-					if (pitch < -89.0f)
-						pitch = -89.0f;
-
-					App->camera->frustum.front.x = cos(DegToRad(yaw))* cos(DegToRad(pitch));
-					App->camera->frustum.front.y = sin(DegToRad(pitch));
-					App->camera->frustum.front.z = sin(DegToRad(yaw)) * cos(DegToRad(pitch));
-					App->camera->frustum.front.Normalize();
-					App->camera->dirty = true;
+					FreeMovement(currentX, currentY, lastX, lastY);
 
 				}
 
+				//Orbit
 				if (altPressed) {
 
 					currT = (float)e.motion.x;
@@ -154,61 +204,25 @@ update_status ModuleInput::Update()
 						once = true;
 					}
 
-					xOffset = currP - oldP;
-					yOffset = currT - oldT;
-
-					oldT = currT;
-					oldP = currP;
-
-					xOffset *= App->camera->sensitivity;
-					yOffset *= App->camera->sensitivity;
-
-
-					//Updting camera Position
-					if (yOffset > 1.5 || yOffset < -1.5) {
-
-						theta += yOffset;
-						phi += xOffset;
-
-						App->camera->frustum.pos.x = App->modelLoader->model.getCenter().x + radius * sin(DegToRad(theta));
-						App->camera->frustum.pos.z = App->modelLoader->model.getCenter().z + radius * cos(DegToRad(theta));
-
-						App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
-					}
-
-					if (xOffset > 1.5 || xOffset < -1.5) {
-
-						theta += yOffset;
-						phi += xOffset;
-
-						App->camera->frustum.pos.y = App->modelLoader->model.getCenter().y + radius * cos(DegToRad(phi));
-						App->camera->frustum.pos.z = App->modelLoader->model.getCenter().z + radius * sin(DegToRad(phi));
-
-						App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
-					}
-					
-					
-					App->ui->my_log.AddLog("%0.1f, %0.1f\n", xOffset, yOffset);
-
+					Orbit(currT, currP, oldT, oldP);
 
 				}
 
-
 			}
-
+				//Reset useful variables from the two movement methods
 			else {
 
-
-			oldT = 0;
-			oldP = 0;
+				oldT = 0;
+				oldP = 0;
 
 				lastX = 0;
 				lastY = 0;
 			}
+
 			break;
 
 		case SDL_DROPFILE:
-			modelOnce = false;
+
 			directory = e.drop.file;
 
 			extension = directory.substr(directory.size() - 4, directory.size());
@@ -222,7 +236,6 @@ update_status ModuleInput::Update()
 				App->modelLoader->modelDir = directory.c_str();
 				App->modelLoader->hasChanged = true;
 
-				App->camera->ResetCamera(false);
 			}
 
 			else if (extension == ".png" || extension == ".jpg" || extension == ".dds") {
@@ -231,8 +244,7 @@ update_status ModuleInput::Update()
 				App->ui->my_log.AddLog(directory.c_str());
 				App->ui->my_log.AddLog("\n");
 
-				App->modelLoader->previousTexture = directory.c_str();
-				App->modelLoader->textureDir = directory.c_str();
+				
 
 				if (extension == ".png")
 					App->textures->CreateTexture(IL_PNG, directory.c_str());
@@ -243,7 +255,8 @@ update_status ModuleInput::Update()
 				if (extension == ".dds")
 					App->textures->CreateTexture(IL_DDS, directory.c_str());
 
-
+				App->modelLoader->previousTexture = directory.c_str();
+				App->modelLoader->textureDir = directory.c_str();
 
 				App->modelLoader->hasChanged = true;
 				App->camera->ResetCamera(false);
@@ -259,8 +272,6 @@ update_status ModuleInput::Update()
 
 		case SDL_KEYDOWN:
 
-			//	App->ui->my_log.AddLog("%0.1f, %0.1f, %0.1f\n", App->camera->frustum.front.x, App->camera->frustum.front.y, App->camera->frustum.front.z);
-
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT) {
 				speed_boost = true;
 				App->camera->dirty = true;
@@ -272,11 +283,26 @@ update_status ModuleInput::Update()
 			if (e.key.keysym.scancode == SDL_SCANCODE_F) {
 
 
+				float angle = App->camera->frustum.front.AngleBetween(App->modelLoader->model.getCenter() - App->camera->frustum.pos);
+
 				App->camera->LookAt(App->camera->frustum.pos, App->modelLoader->model.getCenter(), float3(0, 1, 0));
 
-				//Reset default pitch yaw values
-				pitch = 0;
-				yaw = -90;
+				
+				//App->ui->my_log.AddLog("%0.1f\n", RadToDeg(angle));
+
+
+				//Pitch and yaw angles needs to be recalculated. 
+				//Procediment. 
+				//1. Calculate angle between frustum.front, and direction from frustum.pos to model.pos
+				//2. Extract x component and y component ( sin & cos )
+				//3. angle * sin = new angle to apply to the yaw
+				//4. angle*cos = new angle to apply to pitch
+
+				//float _yaw = angle * sin(angle);
+				//float _pitch = angle * cos(angle);
+
+				//yaw = _yaw;
+				//pitch = _pitch;
 
 				App->camera->dirty = true;
 
@@ -285,66 +311,38 @@ update_status ModuleInput::Update()
 
 			if (enable_camera_movement) {
 				if (e.key.keysym.scancode == SDL_SCANCODE_W) {
-					if (speed_boost)
-						App->camera->camSpeed = 3 * App->camera->speedValue * App->camera->frustum.front;
-
-					else
-						App->camera->camSpeed = App->camera->speedValue * App->camera->frustum.front;
-					App->camera->dirty = true;
+					ProcessMovement(App->camera->frustum.front);
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-					if (speed_boost)
-						App->camera->camSpeed = -3 * App->camera->speedValue * App->camera->frustum.front;
-
-					else
-
-						App->camera->camSpeed = -App->camera->speedValue  * App->camera->frustum.front;
-					App->camera->dirty = true;
+					ProcessMovement(-App->camera->frustum.front);
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_D) {
-					if (speed_boost)
-						App->camera->camSpeed = 3 * App->camera->speedValue  * App->camera->camRight;
-
-					else
-						App->camera->camSpeed = App->camera->speedValue * App->camera->camRight;
-					App->camera->dirty = true;
+					ProcessMovement(App->camera->camRight);
+					
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_A) {
-					if (speed_boost)
-						App->camera->camSpeed = -3 * App->camera->speedValue* App->camera->camRight;
+					ProcessMovement(-App->camera->camRight);
 
-					else
-						App->camera->camSpeed = -App->camera->speedValue* App->camera->camRight;
-					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
-					if (speed_boost)
-						App->camera->camSpeed = 3 * App->camera->speedValue * App->camera->frustum.up;
+					ProcessMovement(App->camera->frustum.up);
 
-					else
-						App->camera->camSpeed = App->camera->speedValue * App->camera->frustum.up;
-					App->camera->dirty = true;
 				}
 
 				if (e.key.keysym.scancode == SDL_SCANCODE_E) {
-					if (speed_boost)
-						App->camera->camSpeed = -3 * App->camera->speedValue * App->camera->frustum.up;
-
-					else
-						App->camera->camSpeed = -App->camera->speedValue * App->camera->frustum.up;
-					App->camera->dirty = true;
+					ProcessMovement(-App->camera->frustum.up);
 				}
 			}
 
 			break;
 
 		case SDL_KEYUP:
-			if (e.key.keysym.scancode == SDL_SCANCODE_F)
-				App->camera->dirty = true;
+			//if (e.key.keysym.scancode == SDL_SCANCODE_F)
+				//App->camera->dirty = true;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
 				speed_boost = false;

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleUI_H__
+#define __ModuleUI_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "SDL.h"
@@ -96,10 +98,6 @@ struct ExampleAppLog
 		const char* buf_end = Buf.end();
 		if (Filter.IsActive())
 		{
-			// In this example we don't use the clipper when Filter is enabled.
-			// This is because we don't have a random access on the result on our filter.
-			// A real application processing logs with ten of thousands of entries may want to store the result of search/filter.
-			// especially if the filtering function is not trivial (e.g. reg-exp).
 			for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
 			{
 				const char* line_start = buf + LineOffsets[line_no];
@@ -110,15 +108,6 @@ struct ExampleAppLog
 		}
 		else
 		{
-			// The simplest and easy way to display the entire buffer:
-			//   ImGui::TextUnformatted(buf_begin, buf_end);
-			// And it'll just work. TextUnformatted() has specialization for large blob of text and will fast-forward to skip non-visible lines.
-			// Here we instead demonstrate using the clipper to only process lines that are within the visible area.
-			// If you have tens of thousands of items and their processing cost is non-negligible, coarse clipping them on your side is recommended.
-			// Using ImGuiListClipper requires A) random access into your data, and B) items all being the  same height,
-			// both of which we can handle since we an array pointing to the beginning of each line of text.
-			// When using the filter (in the block of code above) we don't have random access into the data to display anymore, which is why we don't use the clipper.
-			// Storing or skimming through the search result would make it possible (and would be recommended if you want to search through tens of thousands of entries)
 			ImGuiListClipper clipper;
 			clipper.Begin(LineOffsets.Size);
 			while (clipper.Step())
@@ -149,16 +138,12 @@ public:
 	ModuleUI();
 	~ModuleUI();
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	void ShowConfig();
-	void ShowProperties();
-	inline void Separate();
-	void FPSHistogram();
+	bool Init() override;
+	update_status PreUpdate() override;
+	update_status Update() override;
+	update_status PostUpdate() override;
+	bool CleanUp()override;
 
-	bool CleanUp();
 
 	ExampleAppLog my_log;
 	ImGuiIO io;
@@ -171,8 +156,9 @@ public:
 
 	//Checkbox stuff
 	bool showLines = false;
-	bool help = false;
-	bool logBool = true;
+
+	//Color picker variables
+	ImGuiColorEditFlags misc_flags;
 
 	bool alpha_preview = true;
 	bool alpha_half_preview = false;
@@ -180,13 +166,22 @@ public:
 	bool options_menu = true;
 	bool hdr = false;
 
-	ImGuiColorEditFlags misc_flags;
 
 
 private:
-	char title[25] = "Mateus Engine";
+	char title[25] = "Ape Engine";
 	bool test = true;
 
+	inline void ShowWindow();
+	inline void ShowTextures();
+	inline void ShowRenderer();
+	inline void ShowHardware();
+	inline void ShowInput();
+
+	void ShowConfig();
+	void ShowProperties();
+	inline void Separate();
+	inline void FPSHistogram();
 };
 
-
+#endif // __ModuleUI_H__

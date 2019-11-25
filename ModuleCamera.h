@@ -1,22 +1,18 @@
-#pragma once
+#ifndef __ModuleCamera_H__
+#define __ModuleCamera_H__
 #include "Application.h"
 #include "Module.h"
 
 #include "MathGeoLib/include/MathGeoLib.h"
-
-enum CameraMode {
-	ORBIT = 0,
-	FREE
-};
 
 class ModuleCamera : public Module {
 public:
 	ModuleCamera();
 	~ModuleCamera();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
 	void LookAt(float3&, float3&, float3&);
 	void ProcessMatrixs();
@@ -29,7 +25,7 @@ public:
 
 	void ResetCamera(bool aspectToo);
 	
-	void Focus(float3 target, float target_height);
+	void Focus(float3& target, float target_height);
 	void AutoOrbit();
 	
 
@@ -59,3 +55,5 @@ public:
 
 
 };
+
+#endif

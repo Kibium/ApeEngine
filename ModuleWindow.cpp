@@ -15,12 +15,12 @@ ModuleWindow::~ModuleWindow()
 }
 
 
-float ModuleWindow::GetWidth() {
+const float ModuleWindow::GetWidth() {
 
 	SDL_GetWindowSize(window, &width, &height);
 	return width;
 }
-float ModuleWindow::GetHeight() {
+const float ModuleWindow::GetHeight() {
 
 	SDL_GetWindowSize(window, &width, &height);
 	return height;
@@ -61,7 +61,7 @@ bool ModuleWindow::Init()
 
 			//Set window icon
 			screen_surface = SDL_GetWindowSurface(window);
-			SDL_Surface* surface = IMG_Load("../crown.png");
+			SDL_Surface* surface = IMG_Load("../ape.png");
 
 
 			if (surface == nullptr)
@@ -108,6 +108,8 @@ bool ModuleWindow::CleanUp()
 	{
 		SDL_DestroyWindow(window);
 	}
+
+	SDL_FreeSurface(screen_surface);
 
 	//Quit SDL subsystems
 	SDL_Quit();

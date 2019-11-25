@@ -12,12 +12,10 @@ ModuleRender::ModuleRender()
 {
 }
 
-// Destructor
 ModuleRender::~ModuleRender()
 {
 }
 
-// Called before render is available
 bool ModuleRender::Init()
 {
 	App->ui->my_log.AddLog("Init Render Module\n");
@@ -44,7 +42,7 @@ bool ModuleRender::Init()
 
 
 	float vertices[] = {
--0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -85,7 +83,7 @@ bool ModuleRender::Init()
 		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f };
-	
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 
@@ -122,7 +120,7 @@ update_status ModuleRender::Update()
 	else
 		glDisable(GL_CULL_FACE);
 
-	if(enable_depth_test)
+	if (enable_depth_test)
 		glEnable(GL_DEPTH_TEST);
 	else
 		glDisable(GL_DEPTH_TEST);
@@ -194,8 +192,6 @@ update_status ModuleRender::Update()
 	glLineWidth(1.0f);
 	App->program->Use(App->program->defaultProgram);
 
-	
-
 	return UPDATE_CONTINUE;
 }
 
@@ -210,7 +206,8 @@ bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
 
-	//Destroy window
+	SDL_GL_DeleteContext(App->renderer->context);
+
 
 	return true;
 }

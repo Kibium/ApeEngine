@@ -1,5 +1,5 @@
-#ifndef __MSTIMER__
-#define __MSTIMER__
+#ifndef __MSTIMER_H__
+#define __MSTIMER_H__
 
 #include "Application.h"
 #include "Module.h"

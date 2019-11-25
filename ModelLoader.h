@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleLoader_H__
+#define __ModuleLoader_H__
 #include "Application.h"
 #include "Module.h"
 #include "Shader.h"
@@ -11,9 +12,10 @@ public:
 	ModelLoader();
 	~ModelLoader();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	update_status Update() override;
+	bool CleanUp() override;
+
 	void loadModel();
 
 	int numMeshes = 0;
@@ -33,3 +35,5 @@ private:
 
 
 };
+
+#endif

@@ -1,0 +1,15 @@
+CHANGE LIST
+
+v0.1
+
+* 3D model loading, by drag and drop
+* Texture applied to 3D model, by drag and drop
+* Basic GUI (Window, renderer, input, etc headers)
+* Free movement camera and rotation
+
+
+v0.11
+
+* Camera orbit
+* Camera focus
+* Improved UI (Model and texture info)

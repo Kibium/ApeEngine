@@ -98,18 +98,135 @@ void ModuleUI::ShowProperties() {
 	ImGui::End();
 }
 
+void ModuleUI::ShowInput() {
+
+	ImGui::Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
+	ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
+	ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+	ImGui::Text("Mouse dbl-clicked:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseDoubleClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+	ImGui::Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseReleased(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+
+	ImGui::Text("Keys down:");      for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (io.KeysDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("%d (0x%X) (%.02f secs)", i, i, io.KeysDownDuration[i]); }
+	ImGui::Text("Keys pressed:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyPressed(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
+	ImGui::Text("Keys release:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyReleased(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
+}
+
+void ModuleUI::ShowTextures() {
+	ImGui::Checkbox("Checker", &App->modelLoader->activate_checker);
+
+	if (ImGui::TreeNode("Texture Parameters"))
+	{
+		ImGui::Selectable("Toggle Repeat", &App->textures->repeat);
+		ImGui::Selectable("Toggle Mirrored Repeat", &App->textures->mirrored);
+		ImGui::Selectable("Toggle Clamp to the Edge", &App->textures->edge);
+		ImGui::Selectable("Toggle Clamp to Border", &App->textures->border);
+		ImGui::Selectable("Toggle Nearest Clamp", &App->textures->nearest);
+		ImGui::Selectable("Toggle Mipmap", &App->textures->mipmap);
+
+
+		ImGui::TreePop();
+	}
+}
+
+void ModuleUI::ShowHardware() {
+	ImGui::Text("OS:");
+	ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", SDL_GetCurrentVideoDriver());
+
+	ImGui::Text("Number of Logical CPU cores:");
+	ImGui::SameLine(); ImGui::TextColored(YELLOW, "%d", SDL_GetCPUCount());
+
+
+	ImGui::Text("System RAM (Mb):");
+	ImGui::SameLine(); ImGui::TextColored(YELLOW, "%d", SDL_GetSystemRAM());
+
+	ImGui::Text("GPU Name:");
+	ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_RENDERER));
+
+	ImGui::Text("GPU Version:");
+	ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_VERSION));
+
+	ImGui::Text("Manufacturer:");
+	ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_VENDOR));
+
+	static GLint totalMemoryKb = 0;
+	static GLint currentMemoryKb = 0;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalMemoryKb);
+	glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &currentMemoryKb);
+	ImGui::Text("VRAM Budget:");
+	ImGui::SameLine();
+	ImGui::TextColored(YELLOW, "%.1f Mb", (float)totalMemoryKb / 1000);
+	ImGui::Text("VRAM Usage:");
+	ImGui::SameLine();
+	ImGui::TextColored(YELLOW, "%.1f Mb", ((float)totalMemoryKb / 1000) - ((float)currentMemoryKb / 1000));
+	ImGui::Text("VRAM Available:");
+	ImGui::SameLine();
+	ImGui::TextColored(YELLOW, "%.1f Mb", (float)currentMemoryKb / 1000);
+	ImGui::Text("VRAM Reserved:");
+	ImGui::SameLine();
+	ImGui::TextColored(YELLOW, "%.1f Mb", 0.0F);
+}
+
+void ModuleUI::ShowWindow() {
+	ImGui::InputText("Ape Engine", title, 25);
+	SDL_SetWindowTitle(App->window->window, title);
+
+	ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
+	ImGui::SameLine();
+	ImGui::Checkbox("Bordered", &App->window->bordered);
+
+	Separate();
+
+	ImGui::SliderFloat("Brightness", &brightness, 0, 1);
+
+	Separate();
+
+	if (ImGui::SliderInt("Window width", &screenW, 300, 1200)) {
+		SDL_SetWindowSize(App->window->window, screenW, screenH);
+		glViewport(0, 0, screenW, screenH);
+	}
+
+	if (ImGui::SliderInt("Window height", &screenH, 300, 1200)) {
+		SDL_SetWindowSize(App->window->window, screenW, screenH);
+		glViewport(0, 0, screenW, screenH);
+	}
+}
+
+void ModuleUI::ShowRenderer() {
+	if (ImGui::TreeNode("Background Color")) {
+		ImGui::ColorPicker4("##picker", (float*)&App->renderer->bgColor.x, misc_flags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+		ImGui::TreePop();
+	}
+
+	ImGui::Checkbox("Wireframes", &showLines);
+	ImGui::SameLine();
+	ImGui::Checkbox("Cull Face", &App->renderer->enable_cull_face);
+
+	ImGui::Checkbox("Depth test", &App->renderer->enable_depth_test);
+	ImGui::SameLine();
+	/*ImGui::Checkbox("Render Front Faces", &App->renderer->front_face);
+	ImGui::SameLine();
+	HelpMarker("This checkbox will be marked by default if you deactivate all of them!");
+
+	ImGui::Checkbox("Render Back Faces", &App->renderer->back_face);
+	ImGui::SameLine();
+	ImGui::Checkbox("Render Front and Back Faces", &App->renderer->front_and_back);*/
+
+	ImGui::Checkbox("Render Counter Clock Wise Mode", &App->renderer->counter_clock_orientation);
+
+}
+
 void ModuleUI::ShowConfig() {
 
 	io = ImGui::GetIO();
 	
-	ImGui::Begin("Mateus Console");
+	ImGui::Begin("Ape Console");
 	Separate();
 	
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::MenuItem("ImGui"))
 			App->RequestBrowser("https://github.com/ocornut/imgui");
 
-		if (ImGui::MenuItem("Mateus Doc."))
+		if (ImGui::MenuItem("Ape Doc."))
 			App->RequestBrowser("https://github.com/Kibium/Engine_Master");
 
 		ImGui::EndMainMenuBar();
@@ -173,130 +290,36 @@ void ModuleUI::ShowConfig() {
 		}	
 	}
 
+
+
 	if (ImGui::CollapsingHeader("Renderer")) {
 
-		
-		if(ImGui::TreeNode("Background Color")) {
-			ImGui::ColorPicker4("##picker", (float*)&App->renderer->bgColor.x, misc_flags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
-			ImGui::TreePop();
-		}
-	
-		ImGui::Checkbox("Wireframes", &showLines);
-		ImGui::SameLine();
-		ImGui::Checkbox("Cull Face", &App->renderer->enable_cull_face);
-
-		ImGui::Checkbox("Depth test", &App->renderer->enable_depth_test);
-		ImGui::SameLine(); 
-		/*ImGui::Checkbox("Render Front Faces", &App->renderer->front_face); 
-		ImGui::SameLine();
-		HelpMarker("This checkbox will be marked by default if you deactivate all of them!");
-
-		ImGui::Checkbox("Render Back Faces", &App->renderer->back_face);
-		ImGui::SameLine();
-		ImGui::Checkbox("Render Front and Back Faces", &App->renderer->front_and_back);*/
-
-		ImGui::Checkbox("Render Counter Clock Wise Mode", &App->renderer->counter_clock_orientation);
-
-
+		ShowRenderer();		
 	}
+
 	if (ImGui::CollapsingHeader("Window")) {
 
-		ImGui::InputText("Mateus Engine", title, 25);
-		SDL_SetWindowTitle(App->window->window, title);
-
-		ImGui::Checkbox("Fullscreen", &App->window->fullscreen);
-		ImGui::SameLine();
-		ImGui::Checkbox("Bordered", &App->window->bordered);
-
-		Separate();
-
-		ImGui::SliderFloat("Brightness", &brightness, 0, 1);
-
-		Separate();
-
-		if (ImGui::SliderInt("Window width", &screenW, 300, 1200)) {
-			SDL_SetWindowSize(App->window->window, screenW, screenH);
-			glViewport(0, 0, screenW, screenH);
-		}
-
-		if (ImGui::SliderInt("Window height", &screenH, 300, 1200)) {
-			SDL_SetWindowSize(App->window->window, screenW, screenH);
-			glViewport(0, 0, screenW, screenH);
-		}
+		ShowWindow();
 	}
 
 	if (ImGui::CollapsingHeader("Input")) {
 
-		ImGui::Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
-		ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
-		ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
-		ImGui::Text("Mouse dbl-clicked:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseDoubleClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
-		ImGui::Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseReleased(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
-
-		ImGui::Text("Keys down:");      for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (io.KeysDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("%d (0x%X) (%.02f secs)", i, i, io.KeysDownDuration[i]); }
-		ImGui::Text("Keys pressed:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyPressed(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
-		ImGui::Text("Keys release:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyReleased(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
+		ShowInput();
 	}
 
 	if (ImGui::CollapsingHeader("Textures")) {
-
-		ImGui::Checkbox("Checker", &App->modelLoader->activate_checker);
-
-		if (ImGui::TreeNode("Texture Parameters"))
-		{
-			ImGui::Selectable("Toggle Repeat", &App->textures->repeat);
-			ImGui::Selectable("Toggle Mirrored Repeat", &App->textures->mirrored);
-			ImGui::Selectable("Toggle Clamp to the Edge", &App->textures->edge);
-			ImGui::Selectable("Toggle Clamp to Border", &App->textures->border);
-			ImGui::Selectable("Toggle Nearest Clamp", &App->textures->nearest);
-			ImGui::Selectable("Toggle Mipmap", &App->textures->mipmap);
-
-				
-			ImGui::TreePop();
-		}
-
+	
+		ShowTextures();
 	}
 
 	if (ImGui::CollapsingHeader("Hardware Info")) {
-		ImGui::Text("OS:");
-		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", SDL_GetCurrentVideoDriver());
-
-		ImGui::Text("Number of Logical CPU cores:");
-		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%d", SDL_GetCPUCount());
-
-
-		ImGui::Text("System RAM (Mb):");
-		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%d", SDL_GetSystemRAM());
-
-		ImGui::Text("GPU Name:");
-		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_RENDERER));
-
-		ImGui::Text("GPU Version:");
-		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_VERSION));
-
-		ImGui::Text("Manufacturer:");
-		ImGui::SameLine(); ImGui::TextColored(YELLOW, "%s", glGetString(GL_VENDOR));
-
-		static GLint totalMemoryKb = 0;
-		static GLint currentMemoryKb = 0;
-		glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalMemoryKb);
-		glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &currentMemoryKb);
-		ImGui::Text("VRAM Budget:");
-		ImGui::SameLine();
-		ImGui::TextColored(YELLOW, "%.1f Mb", (float)totalMemoryKb / 1000);
-		ImGui::Text("VRAM Usage:");
-		ImGui::SameLine();
-		ImGui::TextColored(YELLOW, "%.1f Mb", ((float)totalMemoryKb / 1000) - ((float)currentMemoryKb / 1000));
-		ImGui::Text("VRAM Available:");
-		ImGui::SameLine();
-		ImGui::TextColored(YELLOW, "%.1f Mb", (float)currentMemoryKb / 1000);
-		ImGui::Text("VRAM Reserved:");
-		ImGui::SameLine();
-		ImGui::TextColored(YELLOW, "%.1f Mb", 0.0F);
+		
+		ShowHardware();
 
 	}
 
 	if (ImGui::CollapsingHeader("About")) {
+
 		ImGui::Text("Engine name: %s", title);
 		ImGui::Text("This engine's gonna be godlike.");
 		ImGui::Text("The author of this engine is: Toni Ferrari.");
@@ -385,8 +408,6 @@ bool ModuleUI::CleanUp() {
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-	SDL_GL_DeleteContext(App->renderer->context);
-	SDL_DestroyWindow(App->window->window);
-	SDL_Quit();
+
 	return true;
 }

@@ -130,7 +130,7 @@ void ModuleCamera::ResetCamera(bool aspectToo) {
 	model = float4x4::FromTRS(frustum.pos, float3x3::RotateY(0), float3(1.0f, 1.0f, 1.0f));
 }
 
-void ModuleCamera::Focus(float3 target, float target_height) {
+void ModuleCamera::Focus(float3& target, float target_height) {
 
 	//Zoom the camera
 	LookAt(frustum.pos, frustum.pos + target , float3(0, 1, 0));

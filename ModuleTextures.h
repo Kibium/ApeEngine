@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleTextures_H__
+#define __ModuleTextures_H__
+
 #include "Application.h"
 #include "Module.h"
 #include "Globals.h"
@@ -24,20 +26,15 @@ public:
 	ModuleTextures();
 	~ModuleTextures();
 
-	bool Init();
-
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
+	bool Init() override;
+	update_status PreUpdate() override;
+	update_status Update() override;
+	update_status PostUpdate() override;
+	bool CleanUp() override;
 
 	ImageData CreateTexture(ILenum type, const char* path);
 	const void RenderTextures();
 	const std::vector<ImageData> getTextures();
-
-
-	bool CleanUp();
-	GLuint texture1, texture2, texture3;
-	//ILuint kirbo, lenna, muffin;
 
 	int width;
 	int height;
@@ -54,7 +51,7 @@ public:
 private:
 	std::vector<ImageData> images;
 	std::vector<ILinfo*> Iinfo;
-	ImageData kirb;
-	ImageData lenna;
-	ImageData muffin;
+
 	};
+
+#endif

@@ -12,28 +12,20 @@ public:
 
 	ModuleWindow();
 
-	// Destructor
 	virtual ~ModuleWindow();
 
-	// Called before quitting
-	bool Init();
+	bool Init() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
-	update_status Update();
-	// Called before quitting
-	bool CleanUp();
-
-	float GetWidth();
-	float GetHeight();
+	const float GetWidth();
+	const float GetHeight();
 
 	bool fullscreen = false;
 	bool bordered = true;
 	bool fulldesktop = false;
 
-public:
-	//The window we'll be rendering to
 	SDL_Window* window = NULL;
-
-	//The surface contained by the window
 	SDL_Surface* screen_surface = NULL;
 
 	int width;

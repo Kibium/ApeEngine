@@ -149,11 +149,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		vector.z = mesh->mNormals[i].z;
 		vertex.Normal = vector;
 		// texture coordinates
-		if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+		if (mesh->mTextureCoords[0]) 
 		{
-			float2 vec;
-			// a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-			// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+			float2 vec;		
 			vec.x = mesh->mTextureCoords[0][i].x;
 			vec.y = mesh->mTextureCoords[0][i].y;
 			vertex.TexCoords = vec;

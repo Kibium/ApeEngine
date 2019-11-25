@@ -36,7 +36,7 @@ char* ModuleProgram::getShaderText(char* source) {
 	return data;
 }
 
-void ModuleProgram::checkForErrors(GLuint shader, int success, char* infoLog) {
+const void ModuleProgram::checkForErrors(GLuint& shader, int success, char* infoLog) {
 
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success)

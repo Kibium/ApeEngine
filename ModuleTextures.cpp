@@ -4,9 +4,6 @@
 #include "ModuleUI.h"
 #include <iostream>
 
-
-//Always after glew.h
-
 ModuleTextures::ModuleTextures() {}
 ModuleTextures::~ModuleTextures() {}
 
@@ -54,6 +51,8 @@ ImageData ModuleTextures::CreateTexture(ILenum type, const char* path) {
 	id.data = ilGetData();
 	Error = ilGetError();
 	if (id.data) {
+		//The engine's gonna pop this message for every mesh in the 3D model
+		//TODO: Avoid this^
 		App->ui->my_log.AddLog("[TEXTURES] Image created correctly \n");
 		App->ui->my_log.AddLog("[TEXTURES] Path: ");
 		App->ui->my_log.AddLog(path);
@@ -70,7 +69,7 @@ ImageData ModuleTextures::CreateTexture(ILenum type, const char* path) {
 		Error = ilGetError();
 		App->ui->my_log.AddLog("Could not create texture \n");
 		App->ui->my_log.AddLog("%s \n", Error);
-		
+		return id;
 	}
 }
 
