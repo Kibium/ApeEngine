@@ -7,6 +7,17 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+#include <assimp/Logger.hpp>
+#include <assimp/DefaultLogger.hpp>
+
+
+class myStream : public Assimp::LogStream {
+public:
+	void write(const char *message) {
+		App->ui->my_log.AddLog("%s", message);
+	}
+};
+
 Model::Model() {}
 
 Model::Model(const char *_filename, const char* _texture, GLuint _program) : filename(_filename), textureFile(_texture), program(_program) {
@@ -51,6 +62,15 @@ void Model::Draw() {
 
 void Model::loadModel(std::string _path)
 {
+
+	// Assimp logger
+	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
+	Assimp::DefaultLogger::get()->info("this is my info-call");
+	const unsigned int severity = Assimp::Logger::Debugging | Assimp::Logger::Info | Assimp::Logger::Err | Assimp::Logger::Warn;
+	Assimp::DefaultLogger::get()->attachStream(new myStream, severity);
+
+	Assimp::DefaultLogger::kill();
+
 	App->ui->my_log.AddLog("[ASSIMP] Trying model loading...\n");
 	scene = aiImportFile(_path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
 	path = _path + "\n";

@@ -217,20 +217,7 @@ void ModuleUI::ShowRenderer() {
 
 void ModuleUI::ShowConfig() {
 
-	io = ImGui::GetIO();
 	
-	ImGui::Begin("Ape Console");
-	Separate();
-	
-	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::MenuItem("ImGui"))
-			App->RequestBrowser("https://github.com/ocornut/imgui");
-
-		if (ImGui::MenuItem("Ape Doc."))
-			App->RequestBrowser("https://github.com/Kibium/Engine_Master");
-
-		ImGui::EndMainMenuBar();
-	}
 
 
 	if (showLines)
@@ -385,6 +372,24 @@ update_status ModuleUI::PreUpdate() {
 
 update_status ModuleUI::Update() {
 
+	io = ImGui::GetIO();
+
+	ImGui::Begin("Ape Console");
+	Separate();
+
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::MenuItem("ImGui"))
+			App->RequestBrowser("https://github.com/ocornut/imgui");
+
+		if (ImGui::MenuItem("Ape Doc."))
+			App->RequestBrowser("https://github.com/Kibium/Engine_Master");
+
+		if (ImGui::MenuItem("Exit"))
+			return UPDATE_STOP;
+
+		ImGui::EndMainMenuBar();
+	}
+
 	ShowConfig();
 	ShowProperties();
 	//ImGui::ShowDemoWindow();
@@ -411,3 +416,4 @@ bool ModuleUI::CleanUp() {
 
 	return true;
 }
+

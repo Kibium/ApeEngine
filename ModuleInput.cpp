@@ -108,11 +108,11 @@ void ModuleInput::Orbit(float& x, float& y, float& _x, float& _y) {
 }
 
 void ModuleInput::ProcessMovement(const float3& direction) {
-	if (speed_boost)
-		App->camera->camSpeed = 3 * App->camera->speedValue * direction;
-
-	else
+	//if (speed_boost)
 		App->camera->camSpeed = App->camera->speedValue * direction;
+
+	//else if(!speed_boost)
+		//App->camera->camSpeed = App->camera->speedValue * direction;
 }
 
 update_status ModuleInput::Update()
@@ -244,8 +244,6 @@ update_status ModuleInput::Update()
 				App->ui->my_log.AddLog(directory.c_str());
 				App->ui->my_log.AddLog("\n");
 
-				
-
 				if (extension == ".png")
 					App->textures->CreateTexture(IL_PNG, directory.c_str());
 
@@ -273,14 +271,13 @@ update_status ModuleInput::Update()
 		case SDL_KEYDOWN:
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT) {
-				speed_boost = true;
-				App->camera->dirty = true;
+				App->camera->speedValue = 0.3;
 			}
 
-			if (e.key.keysym.scancode == SDL_SCANCODE_LALT)
+			else if (e.key.keysym.scancode == SDL_SCANCODE_LALT)
 				altPressed = true;
 
-			if (e.key.keysym.scancode == SDL_SCANCODE_F) {
+			else if (e.key.keysym.scancode == SDL_SCANCODE_F) {
 
 
 				float angle = App->camera->frustum.front.AngleBetween(App->modelLoader->model.getCenter() - App->camera->frustum.pos);
@@ -314,26 +311,26 @@ update_status ModuleInput::Update()
 					ProcessMovement(App->camera->frustum.front);
 				}
 
-				if (e.key.keysym.scancode == SDL_SCANCODE_S) {
+				else if (e.key.keysym.scancode == SDL_SCANCODE_S) {
 					ProcessMovement(-App->camera->frustum.front);
 				}
 
-				if (e.key.keysym.scancode == SDL_SCANCODE_D) {
+				else if (e.key.keysym.scancode == SDL_SCANCODE_D) {
 					ProcessMovement(App->camera->camRight);
 					
 				}
 
-				if (e.key.keysym.scancode == SDL_SCANCODE_A) {
+				else if (e.key.keysym.scancode == SDL_SCANCODE_A) {
 					ProcessMovement(-App->camera->camRight);
 
 				}
 
-				if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
+				else if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
 					ProcessMovement(App->camera->frustum.up);
 
 				}
 
-				if (e.key.keysym.scancode == SDL_SCANCODE_E) {
+				else if (e.key.keysym.scancode == SDL_SCANCODE_E) {
 					ProcessMovement(-App->camera->frustum.up);
 				}
 			}
@@ -345,7 +342,7 @@ update_status ModuleInput::Update()
 				//App->camera->dirty = true;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
-				speed_boost = false;
+				App->camera->speedValue = 0.1;
 
 			if (e.key.keysym.scancode == SDL_SCANCODE_LALT)
 				altPressed = false;
@@ -364,14 +361,16 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEWHEEL:
 			if (e.wheel.y > 0) // scroll up
 			{
-				App->camera->frustum.pos.z -= 1;
+				App->camera->frustum.pos +=  App->camera->frustum.front;
 				App->camera->dirty = true;
 			}
-			else if (e.wheel.y < 0) // scroll down
+			if (e.wheel.y < 0) // scroll down
 			{
-				App->camera->frustum.pos.z += 1;
+				App->camera->frustum.pos +=  -App->camera->frustum.front;
 				App->camera->dirty = true;
 			}
+			
+				
 			break;
 		}
 

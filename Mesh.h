@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MESH__
+#define __MESH__
+
 #include "MathGeoLib.h"
 #include <vector>
 #include "Shader.h"
@@ -35,3 +37,5 @@ private:
 	/*  Functions    */
 	void setupMesh();
 };
+
+#endif

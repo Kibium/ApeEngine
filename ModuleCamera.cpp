@@ -147,6 +147,8 @@ bool ModuleCamera::Init() {
 	ResetCamera(true);
 	ProcessMatrixs();
 
+
+
 	return true;
 }
 

@@ -30,9 +30,9 @@ public:
 	bool activate_checker = false;
 	bool iterated = false;
 	bool hasChanged = true;
-	bool loadFromAbsolutePath = false;
 private:
 
+	bool loadFromAbsolutePath = false;
 
 };
 
