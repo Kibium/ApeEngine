@@ -244,6 +244,7 @@ update_status ModuleInput::Update()
 
 				std::string textureName;
 
+				//TODO: All textures must be png or dds so the path we create to look for a texture is normalized
 				if (directory.substr(directory.size() - 5, directory.size()) == "e.fbx") {
 					textureName = folderName + ".png";
 					App->ui->my_log.AddLog(modelTexturePath.c_str());
@@ -281,14 +282,8 @@ update_status ModuleInput::Update()
 				App->ui->my_log.AddLog(directory.c_str());
 				App->ui->my_log.AddLog("\n");
 
-				if (extension == ".png")
-					App->textures->CreateTexture(IL_PNG, directory.c_str());
-
-				if (extension == ".jpg")
-					App->textures->CreateTexture(IL_JPG, directory.c_str());
-
-				if (extension == ".dds")
-					App->textures->CreateTexture(IL_DDS, directory.c_str());
+				
+				App->textures->CreateTexture(directory.c_str());
 
 				App->modelLoader->previousTexture = directory.c_str();
 				App->modelLoader->textureDir = directory.c_str();

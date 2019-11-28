@@ -32,7 +32,7 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 
-	ImageData CreateTexture(ILenum type, const char* path);
+	ImageData CreateTexture(const char* path);
 	const void RenderTextures();
 	const std::vector<ImageData> getTextures();
 

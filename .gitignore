@@ -19,3 +19,6 @@
 .vs/Engine/v15/ipch/AutoPCH/f67123415e1a342d/MODULECAMERA.ipch
 *.db
 *.ipch
+*.db
+.vs/Engine/v15/.suo
+.vs/Engine/v15/Browse.VC.db

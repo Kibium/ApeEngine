@@ -22,20 +22,8 @@ Model::Model() {}
 
 Model::Model(const char *_filename, const char* _texture, GLuint _program) : filename(_filename), textureFile(_texture), program(_program) {
 	
-	ILenum type;
-	std::string s = textureFile;
-
-	if (s.substr(s.size() - 4, s.size()) == ".png")
-		type = IL_PNG;
 	
-	if (s.substr(s.size() - 4, s.size()) == ".jpg")
-		type = IL_JPG;
-		
-	if (s.substr(s.size() - 4, s.size()) == ".dds")
-		type = IL_DDS;
-	
-
-	ImageData newTexture = App->textures->CreateTexture(type, textureFile);
+	ImageData newTexture = App->textures->CreateTexture(textureFile);
 	//textures.push_back(newTexture);
 
 	texture = newTexture;

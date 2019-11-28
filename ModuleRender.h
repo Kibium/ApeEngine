@@ -23,6 +23,9 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 
+	void DrawGrid();
+	void DrawAxis();
+
 	void WindowResized(unsigned width, unsigned height);
 	GLuint VAO, VBO, EBO;
 	void* context;
@@ -33,6 +36,8 @@ public:
 	bool enable_cull_face = false, counter_clock_orientation = true;
 	bool front_face = true, back_face = false, front_and_back = false;
 	bool enable_depth_test = true;
+
+	bool enable_grid = true, enable_axis = true;
 };
 
 #endif

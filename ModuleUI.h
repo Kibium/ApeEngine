@@ -177,6 +177,9 @@ private:
 	inline void ShowRenderer();
 	inline void ShowHardware();
 	inline void ShowInput();
+	inline void ShowSceneProp();
+	inline void ShowFigureProperties();
+	
 
 	void ShowConfig();
 	void ShowProperties();

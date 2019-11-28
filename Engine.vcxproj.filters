@@ -160,6 +160,9 @@
     <ClCompile Include="ModuleμSTimer.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleDebugDraw.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -404,6 +407,18 @@
     <ClInclude Include="ModuleμSTimer.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleDebugDraw.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\debug_draw.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\par_shapes.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -423,6 +438,9 @@
     </Filter>
     <Filter Include="ModelLoading">
       <UniqueIdentifier>{5fd7df92-18de-43dd-a09a-f9c42347f247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{5221863c-e5ab-4560-9902-fb251459660d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

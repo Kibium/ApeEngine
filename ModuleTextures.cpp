@@ -22,7 +22,7 @@ const std::vector<ImageData> ModuleTextures::getTextures() {
 	return images;
 }
 
-ImageData ModuleTextures::CreateTexture(ILenum type, const char* path) {
+ImageData ModuleTextures::CreateTexture(const char* path) {
 
 	//I'll handle a single texture for the moment
 	//TODO Handle more than one texture at the time
@@ -32,7 +32,7 @@ ImageData ModuleTextures::CreateTexture(ILenum type, const char* path) {
 
 	ilGenImages(1, &id.imageName);
 	ilBindImage(id.imageName);
-	ilLoad(type, path);
+	ilLoadImage(path);
 
 	ILenum Error;
 	Error = ilGetError();

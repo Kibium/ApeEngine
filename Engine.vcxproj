@@ -78,9 +78,11 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
+    <ClInclude Include="ModuleDebugDraw.h" />
     <ClInclude Include="ModuleMSTimer.h" />
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="IMGUI\imconfig.h" />
@@ -158,6 +160,8 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleμSTimer.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Util\debug_draw.hpp" />
+    <ClInclude Include="Util\par_shapes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -206,6 +210,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
+    <ClCompile Include="ModuleDebugDraw.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleMSTimer.cpp" />
     <ClCompile Include="ModuleProgram.cpp" />
