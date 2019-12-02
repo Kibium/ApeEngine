@@ -9,6 +9,7 @@
 #include "ModuleTextures.h"
 #include "ModelLoader.h"
 #include "ModuleMSTimer.h"
+#include "ModuleDebugDraw.h"
 
 
 
@@ -32,6 +33,7 @@ Application::Application()
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(modelLoader = new ModelLoader());
+	modules.push_back(debugdraw = new ModuleDebugDraw());
 
 	ui->my_log.AddLog("------Engine Init!------\n");
 

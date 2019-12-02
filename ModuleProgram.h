@@ -24,10 +24,12 @@ public:
 	void updateProgram(const GLuint& program, float4x4& v, float4x4& p);
 	inline void Use(const GLuint& program);
 
-	//Default
+	//Programs
 	GLuint defaultProgram, defVS, defFS;
 	GLuint linesProgram, linesVS, linesFS;
-	GLuint modelProgram, progVS, progFS;
+	GLuint phongProgram, phongVS, phongFS;
+
+
 	float4x4 model;
 	float3x3 rotateM;
 

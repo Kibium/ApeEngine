@@ -14,6 +14,7 @@ class ModuleUI;
 class ModuleTextures;
 class ModelLoader;
 class ModuleMSTimer;
+class ModuleDebugDraw;
 
 class Application
 {
@@ -36,6 +37,7 @@ public:
 	ModuleTextures* textures = nullptr;
 	ModelLoader* modelLoader = nullptr;
 	ModuleMSTimer* timer = nullptr;
+	ModuleDebugDraw *debugdraw = nullptr;
 
 
 	void RequestBrowser(char*);

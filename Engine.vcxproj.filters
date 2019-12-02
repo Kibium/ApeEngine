@@ -160,6 +160,9 @@
     <ClCompile Include="ModuleμSTimer.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleDebugDraw.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -404,6 +407,15 @@
     <ClInclude Include="ModuleμSTimer.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleDebugDraw.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Libraries\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\debug_draw.hpp">
+      <Filter>Libraries\DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -423,6 +435,9 @@
     </Filter>
     <Filter Include="ModelLoading">
       <UniqueIdentifier>{5fd7df92-18de-43dd-a09a-f9c42347f247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\DebugDraw">
+      <UniqueIdentifier>{2e027512-0e58-46bd-8b41-23b955b6591d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -460,6 +475,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="lines.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Phong.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Phong.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -120,36 +120,29 @@ bool ModuleProgram::Init() {
 
 	App->ui->my_log.AddLog("Init Program Module\n");
 
-
 	char* defVdata = getShaderText("../default.vs");
 	char* defFdata = getShaderText("../default.fs");
 
 	char* linesVdata = getShaderText("../lines.vs");
 	char* linesFdata = getShaderText("../lines.fs");
 
-	char* modVdata = getShaderText("../model.vs");
-	char* modFdata = getShaderText("../model.fs");
+	char* phongVdata = getShaderText("../Phong.vs");
+	char*phongFdata = getShaderText("../Phong.fs");
 
 	//Initialize
 	InitShader(defaultProgram, defVS, defFS, defVdata, defFdata);
 	InitShader(linesProgram, linesVS, linesFS, linesVdata, linesFdata);
+	InitShader(phongProgram, phongVS, phongFS, phongVdata, phongFdata);
 	
 	rotx = roty = rotz = 0;
 	rotateM = float3x3::RotateX(rotx) * float3x3::RotateY(roty) * float3x3::RotateZ(rotz);
 	model = float4x4::FromTRS(float3(0, 3, 0), rotateM, float3(1, 1, 1));
 
-	//default shader//
-	Use(defaultProgram);
-	glUniformMatrix4fv(glGetUniformLocation(defaultProgram, "model"), 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
-	glUniformMatrix4fv(glGetUniformLocation(defaultProgram, "view"), 1, GL_TRUE, &App->camera->view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(defaultProgram, "proj"), 1, GL_TRUE, &App->camera->proj[0][0]);
+	//Setting values to our shaders
+	updateProgram(defaultProgram, model, App->camera->view, App->camera->proj);	
+	updateProgram(linesProgram, model, App->camera->view, App->camera->proj);
+	updateProgram(phongProgram, model, App->camera->view, App->camera->proj);
 
-	//Lines shader//
-	Use(linesProgram);
-	glUniformMatrix4fv(glGetUniformLocation(linesProgram, "model"), 1, GL_TRUE, &model[0][0]); //Calculating vertexs in the vertex shader
-	glUniformMatrix4fv(glGetUniformLocation(linesProgram, "view"), 1, GL_TRUE, &App->camera->view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(linesProgram, "proj"), 1, GL_TRUE, &App->camera->proj[0][0]);
-	Use(defaultProgram);
 
 	return true;
 

@@ -1,0 +1,59 @@
+﻿  ModelLoader.cpp
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(218): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(219): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(494): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(207): note: vea la declaración de 'fopen'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(558): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(559): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(567): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(568): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(583): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(584): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(592): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(600): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(609): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(619): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(620): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(634): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(634): warning C4244: 'inicializando': conversión de 'double' a 'const float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(635): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(635): warning C4244: 'inicializando': conversión de 'double' a 'const float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(710): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(871): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(927): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1011): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1204): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(132): note: vea la declaración de 'strcpy'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1235): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(132): note: vea la declaración de 'strcpy'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1337): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1339): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1341): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1343): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1205): warning C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(439): note: vea la declaración de 'strtok'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1209): warning C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(439): note: vea la declaración de 'strtok'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1219): warning C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(439): note: vea la declaración de 'strtok'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1236): warning C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(439): note: vea la declaración de 'strtok'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1238): warning C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(439): note: vea la declaración de 'strtok'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1260): warning C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\string.h(439): note: vea la declaración de 'strtok'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1500): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1517): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1518): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1519): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1521): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1774): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1805): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1832): warning C4005: 'ARRAYSIZE': redefinición de macro
+  c:\program files (x86)\windows kits\10\include\10.0.16299.0\um\winnt.h(1315): note: vea la definición anterior de 'ARRAYSIZE'
+  Generando código
+  0 of 2759 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Generación de código finalizada
+  Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe
