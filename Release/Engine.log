@@ -51,9 +51,10 @@ c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1774): warn
 c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1805): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
 c:\users\gt73evr\source\repos\kibium\engine_master\util\par_shapes.h(1832): warning C4005: 'ARRAYSIZE': redefinición de macro
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\um\winnt.h(1315): note: vea la definición anterior de 'ARRAYSIZE'
+c:\users\gt73evr\source\repos\kibium\engine_master\modelloader.cpp(273): warning C4018: '<': no coinciden signed/unsigned
   Generando código
-  0 of 2759 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 2764 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
   Engine.vcxproj -> C:\Users\GT73EVR\source\repos\Kibium\Engine_Master\Release\EngineMaster.exe

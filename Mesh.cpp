@@ -1,5 +1,7 @@
 #include "Mesh.h"
 #include <GL/glew.h>
+#include "Application.h"
+#include "ModuleProgram.h"
 
 using namespace std;
 
@@ -60,6 +62,8 @@ void Mesh::Draw()
 	//	glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	//}
 	//glActiveTexture(GL_TEXTURE0);
+
+	glUseProgram(App->program->defaultProgram);
 
 	// draw mesh
 	glBindVertexArray(VAO);

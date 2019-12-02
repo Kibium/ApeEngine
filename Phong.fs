@@ -23,7 +23,7 @@ out vec4 color;
 
 void main()
 {
-   /* vec3 normal      = normalize(normal);
+    vec3 normal      = normalize(normal);
     vec3 light_dir   = normalize(light_pos-position);
     float diffuse    = max(0.0, dot(normal, light_dir));
     float specular   = 0.0;
@@ -42,6 +42,6 @@ void main()
     }
     
     float intensity = (k_ambient*ambient+k_diffuse*diffuse+k_specular*specular);
-	*/
-    color = vec4(1, 0, 0, 1);//vec4(intensity*object_color.x, intensity*object_color.y, intensity*object_color.z, 1.0);
+	
+    color = vec4(1, 0, 1, 1);//vec4(intensity*object_color.x, intensity*object_color.y, intensity*object_color.z, 1.0);
 }
