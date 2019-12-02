@@ -81,6 +81,10 @@ private:
 		unsigned slices, unsigned stacks, const math::float4& color);
 	void CreateTorus(const char* name, const math::float3& pos, const math::Quat& rot, float inner_r, float outer_r,
 		unsigned slices, unsigned stacks, const math::float4& color);
+	void CreateCylinder(const char* name, const math::float3& pos, const math::Quat& rot, float height,
+		float radius, unsigned slices, unsigned stacks, const math::float4& color);
+	void CreateCube(const char* name, const math::float3& pos, const math::Quat& rot, float size, const math::float4& color);
+
 		bool loadFromAbsolutePath = false;
 	void GenerateMesh(const char* name, const math::float3& pos, const math::Quat& rot, par_shapes_mesh_s* shape);
 	void GenerateMeshes(const aiScene* scene);

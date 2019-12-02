@@ -43,5 +43,5 @@ void main()
     
     float intensity = (k_ambient*ambient+k_diffuse*diffuse+k_specular*specular);
 	
-    color = vec4(1, 0, 1, 1);//vec4(intensity*object_color.x, intensity*object_color.y, intensity*object_color.z, 1.0);
+    color = vec4(intensity*object_color.x, intensity*object_color.y, intensity*object_color.z, 1.0);
 }
