@@ -61,7 +61,7 @@ bool ModuleWindow::Init()
 
 			//Set window icon
 			screen_surface = SDL_GetWindowSurface(window);
-			SDL_Surface* surface = IMG_Load("../ape.png");
+			SDL_Surface* surface = IMG_Load("../Source/ape.png");
 
 
 			if (surface == nullptr)

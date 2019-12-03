@@ -120,14 +120,14 @@ bool ModuleProgram::Init() {
 
 	App->ui->my_log.AddLog("Init Program Module\n");
 
-	char* defVdata = getShaderText("../default.vs");
-	char* defFdata = getShaderText("../default.fs");
+	char* defVdata = getShaderText("../Source/Shaders/default.vs");
+	char* defFdata = getShaderText("../Source/Shaders/default.fs");
 
-	char* linesVdata = getShaderText("../lines.vs");
-	char* linesFdata = getShaderText("../lines.fs");
+	char* linesVdata = getShaderText("../Source/Shaders/lines.vs");
+	char* linesFdata = getShaderText("../Source/Shaders/lines.fs");
 
-	char* phongVdata = getShaderText("../Phong.vs");
-	char*phongFdata = getShaderText("../Phong.fs");
+	char* phongVdata = getShaderText("../Source/Shaders/Phong.vs");
+	char*phongFdata = getShaderText("../Source/Shaders/Phong.fs");
 
 	//Initialize
 	InitShader(defaultProgram, defVS, defFS, defVdata, defFdata);

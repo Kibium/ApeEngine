@@ -30,12 +30,12 @@ bool ModelLoader::Init() {
 	light.pos = math::float3(-2.0f, 0.0f, 6.0f);
 	ambient = 0.3f;
 
-	modelDir = "../models/BakerHouse/BakerHouse.fbx";
+	modelDir = "../Source/models/BakerHouse/BakerHouse.fbx";
 
-	textureDir = "../models/BakerHouse/BakerHouse.png";
+	textureDir = "../Source/models/BakerHouse/BakerHouse.png";
 	previousTexture = textureDir;
 
-	checkerDir = "../models/checker.jpg";
+	checkerDir = "../Source/models/checker.jpg";
 
 	//meshes
 	CreateSphere("sphere0", math::float3(0.0f, 0.0f, 0.0f), math::Quat::identity, 0.5f, 30, 30, float4(1.0f, 1.0f, 1.0f, 1.0f));
