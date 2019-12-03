@@ -1,4 +1,4 @@
-WELCOME TO THE APE ENGINE PAGE!
+# ENGINE PAGE!
 
 Here, I, Toni Ferrari, am creating a game engine from scratch with C++.
 
@@ -23,8 +23,11 @@ https://github.com/Kibium/ApeEngine
 LICENSE
 This repository and all of its content are under the terms of the MIT License
 -----------------------------------------------------------------------------------------
-It would be necessary to install additional files to run the program.
-Those are included in the rlease buils as "vc_redist.x86"
+CONTROLS
+* Left Click + WASD + QE: Move the camera
+* Left Click + Mouse motion: Rotate camera
+* Alt + Left Click: Camera Orbit
+* Drag and drop: Image will be used as texture of a loaded model
 -----------------------------------------------------------------------------------------
 Author: Toni Ferrari Juan
 
