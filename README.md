@@ -10,7 +10,7 @@ This engine and all its code is licesed under the MIT license, see [LICENSE](htt
 
 Supports all fbx and obj 3D models, and will automatically load the the textures from the 3 example models
 
-![](https://github.com/Kibium/ApeEngine/tree/master/Game/captura1.png)
+![](https://github.com/Kibium/ApeEngine/blob/master/Game/Screenshots/captura1.png)
 
 ## Getting Started:
 
